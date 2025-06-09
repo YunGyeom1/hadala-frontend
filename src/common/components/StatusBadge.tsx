@@ -1,4 +1,4 @@
-import { ContractStatus, PaymentStatus } from '../types/common';
+import { ContractStatus, PaymentStatus } from '../../transaction/common/common';
 
 interface StatusBadgeProps {
   status: ContractStatus | PaymentStatus;
@@ -46,4 +46,4 @@ const StatusBadge = ({ status, type }: StatusBadgeProps) => {
   );
 };
 
-export default StatusBadge; 
+export default StatusBadge;

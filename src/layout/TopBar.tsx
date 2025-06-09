@@ -16,9 +16,9 @@ const TopBar = () => {
           <div className="flex">
             <div className="flex space-x-8">
               <Link
-                to="/farmer"
+                to="/farmer/dashboard"
                 className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                  isActive('/farmer')
+                  isActive('/farmer/')
                     ? 'border-green-500 text-green-600'
                     : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                 }`}
@@ -26,9 +26,9 @@ const TopBar = () => {
                 Farmer
               </Link>
               <Link
-                to="/wholesaler"
+                to="/wholesaler/dashboard"
                 className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                  isActive('/wholesaler')
+                  isActive('/wholesaler/')
                     ? 'border-green-500 text-green-600'
                     : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                 }`}
@@ -36,14 +36,24 @@ const TopBar = () => {
                 Wholesaler
               </Link>
               <Link
-                to="/retailer"
+                to="/retailer/dashboard"
                 className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
-                  isActive('/retailer')
+                  isActive('/retailer/')
                     ? 'border-green-500 text-green-600'
                     : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                 }`}
               >
                 Retailer
+              </Link>
+              <Link
+                to="/tester/dashboard"
+                className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                  isActive('/tester/')
+                    ? 'border-green-500 text-green-600'
+                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                }`}
+              >
+                Tester
               </Link>
             </div>
           </div>

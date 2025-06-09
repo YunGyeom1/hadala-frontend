@@ -4,4 +4,4 @@ export interface Wholesaler {
   address?: string | null;
   created_at: string;  // datetime
   updated_at: string;  // datetime
-} 
+}

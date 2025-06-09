@@ -1,32 +1,15 @@
-import { Outlet, useLocation } from 'react-router-dom';
-import type { ReactNode } from 'react';
+import { Outlet } from 'react-router-dom';
 import TopBar from '../layout/TopBar';
 import SideBar from '../layout/SideBar';
 
-interface LayoutProps {
-  children?: ReactNode;
-}
-
-const Layout = ({ children }: LayoutProps) => {
-  const location = useLocation();
-  const path = location.pathname;
-  
-  let type: 'farmer' | 'wholesaler' | 'retailer' | undefined;
-  if (path.startsWith('/farmer')) {
-    type = 'farmer';
-  } else if (path.startsWith('/wholesaler')) {
-    type = 'wholesaler';
-  } else if (path.startsWith('/retailer')) {
-    type = 'retailer';
-  }
-
+const Layout = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       <TopBar />
       <div className="flex">
-        {type && <SideBar type={type} />}
+        <SideBar />
         <main className="flex-1 p-8">
-          {children || <Outlet />}
+          <Outlet />
         </main>
       </div>
     </div>

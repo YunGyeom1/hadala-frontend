@@ -6,7 +6,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   const handleGoogleLogin = () => {
-    navigate('/farmer');
+    navigate('/profile');
   };
 
   return (

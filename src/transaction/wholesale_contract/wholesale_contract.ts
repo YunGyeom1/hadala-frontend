@@ -13,9 +13,9 @@ export interface WholesaleContractItem {
 
 export interface WholesaleContract {
   id: string;
+  farmer_id: string;
   center_id: string;
   wholesaler_id: string;
-  farmer_id: string;
   company_id: string;
   contract_date: string;
   note?: string;
@@ -23,7 +23,7 @@ export interface WholesaleContract {
   total_price?: number;
   contract_status: ContractStatus;
   payment_status: PaymentStatus;
-  created_at: string;
-  updated_at: string;
+  created_at?: string;
+  updated_at?: string;
   items: WholesaleContractItem[];
 } 
