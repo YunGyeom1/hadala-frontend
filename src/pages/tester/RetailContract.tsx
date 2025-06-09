@@ -3,7 +3,7 @@ import { mockRetailContracts } from '../../transaction/retail_contract/retail_co
 import { RetailContractView } from '../../transaction/retail_contract/RetailContractView';
 import type { RetailContract } from '../../transaction/retail_contract/retail_contract';
 
-export const RetailContract: React.FC = () => {
+export const RetailContractPage: React.FC = () => {
   const [contracts, setContracts] = useState<RetailContract[]>(mockRetailContracts);
 
   const handleUpdate = (updatedContract: RetailContract) => {

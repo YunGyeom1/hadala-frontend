@@ -45,7 +45,12 @@ const SideBar = () => {
           { path: '/tester/wholesale-certification', label: '도매인증서' },
           { path: '/tester/retail-certification', label: '소매인증서' },
           { path: '/tester/inventory', label: '재고현황서' },
-          { path: '/tester/inventory-comparison', label: '재고비교' }
+          { path: '/tester/inventory-comparison', label: '재고비교' },
+          { path: '/tester/company', label: '회사정보' },
+          { path: '/tester/company-inventory', label: '회사 재고현황' },
+          { path: '/tester/aggregated-inventory', label: '전체 재고현황' },
+          { path: '/tester/company-center', label: '회사 집하장' },
+          { path: '/tester/daily-settlement', label: '일일 정산' },
         ];
       default:
         return [];

@@ -3,7 +3,7 @@ import { mockRetailShipments } from '../../transaction/retail_shipment/retail_sh
 import { RetailShipmentView } from '../../transaction/retail_shipment/RetailShipmentView';
 import type { RetailShipment } from '../../transaction/retail_shipment/retail_shipment';
 
-export const RetailShipment: React.FC = () => {
+export const RetailShipmentPage: React.FC = () => {
   const [shipments, setShipments] = useState<RetailShipment[]>(mockRetailShipments);
 
   const handleUpdate = (updatedShipment: RetailShipment) => {
@@ -18,7 +18,7 @@ export const RetailShipment: React.FC = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-6">소매출하</h1>
+      <h1 className="text-2xl font-bold mb-6">소매 출하 관리</h1>
       <div className="space-y-6">
         {shipments.map(shipment => (
           <RetailShipmentView

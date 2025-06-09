@@ -3,7 +3,7 @@ import { mockWholesaleContracts } from '../../transaction/wholesale_contract/who
 import { WholesaleContractView } from '../../transaction/wholesale_contract/WholesaleContractView';
 import type { WholesaleContract } from '../../transaction/wholesale_contract/wholesale_contract';
 
-export const WholesaleContract: React.FC = () => {
+export const WholesaleContractPage: React.FC = () => {
   const [contracts, setContracts] = useState<WholesaleContract[]>(mockWholesaleContracts);
 
   const handleUpdate = (updatedContract: WholesaleContract) => {
