@@ -27,3 +27,5 @@ coverage/
 # lock files (선택에 따라)
 pnpm-lock.yaml
 yarn.lock
+*storybook.log
+storybook-static

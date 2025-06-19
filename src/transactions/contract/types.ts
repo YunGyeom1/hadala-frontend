@@ -1,6 +1,9 @@
-import { ContractStatus, PaymentStatus, ProductQuality } from '../common/types';
+import { ContractStatus, ProductQuality } from '../common/types';
+
+
 
 export interface ContractItemBase {
+  product_id: string;
   product_name: string;
   quality: ProductQuality;
   quantity: number;
@@ -16,25 +19,28 @@ export interface ContractItemResponse extends ContractItemBase {
 
 export interface ContractBase {
   title: string;
-  supplier_person_username?: string;
-  supplier_company_name?: string;
-  receiver_person_username?: string;
-  receiver_company_name?: string;
-  departure_center_name?: string;
-  arrival_center_name?: string;
-  delivery_datetime?: Date;
-  contract_datetime?: Date;
-  payment_due_date?: Date;
-  contract_status?: ContractStatus;
-  payment_status?: PaymentStatus;
-  notes?: string;
+  contract_datetime: string;
+  delivery_datetime: string;
+  supplier_company_id: string;
+  supplier_company_name: string;
+  supplier_person_username: string;
+  receiver_company_id: string;
+  receiver_company_name: string;
+  receiver_person_username: string;
+  departure_center_id: string;
+  departure_center_name: string;
+  arrival_center_id: string;
+  arrival_center_name: string;
+  contract_status: ContractStatus;
+  notes: string;
+  items: ContractItemBase[];
 }
 
 export interface ContractCreate extends ContractBase {
   items: ContractItemCreate[];
 }
 
-export interface ContractUpdate extends Omit<ContractBase, 'title'> {
+export interface ContractUpdate extends Omit<ContractBase, 'title' | 'items'> {
   title?: string;
   items?: ContractItemCreate[];
 }

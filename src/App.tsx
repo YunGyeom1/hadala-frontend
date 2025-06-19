@@ -4,12 +4,11 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Login from '@/pages/Login';
 import Profile from '@/pages/Profile';
-import Layout from '@/pages/Layout';
+
+import MainLayout from '@/layout/MainLayout';
 import FarmerRoutes from '@/routes/FarmerRoutes';
 import RetailerRoutes from '@/routes/RetailerRoutes';
 import WholesalerRoutes from '@/routes/WholesalerRoutes';
-import TesterRoutes from '@/routes/TesterRoutes';
-import ShipmentSummaryPage from './transactions/shipment_summary/ShipmentSummaryPage';
 
 const queryClient = new QueryClient();
 
@@ -20,13 +19,11 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route element={<Layout />}>
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/farmer/*" element={<FarmerRoutes />} />
-            <Route path="/retailer/*" element={<RetailerRoutes />} />
-            <Route path="/wholesaler/*" element={<WholesalerRoutes />} />
-            <Route path="/tester/*" element={<TesterRoutes />} />
-            <Route path="/tester/shipment-summary" element={<ShipmentSummaryPage />} />
+          <Route path="/" element={<MainLayout />}>
+            <Route path="profile" element={<Profile />} />
+            <Route path="farmer/*" element={<FarmerRoutes />} />
+            <Route path="retailer/*" element={<RetailerRoutes />} />
+            <Route path="wholesaler/*" element={<WholesalerRoutes />} />
           </Route>
         </Routes>
       </Router>
