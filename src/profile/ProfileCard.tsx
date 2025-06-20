@@ -1,15 +1,23 @@
 import React, { useState } from 'react';
-import { Profile, ProfileType, ProfileRole, ProfileCreateRequest } from './types';
+import { Profile, ProfileCreateRequest } from '@/profile/profile';
 
 interface ProfileCardProps {
   profile?: Profile;
-  type: ProfileType;
+  type: 'farmer' | 'retailer' | 'wholesaler';
   onUpdate?: (profile: Profile) => void;
   onCreate?: (profile: ProfileCreateRequest) => void;
   existingProfiles?: Profile[];
+  isLoading?: boolean;
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ profile, type, onUpdate, onCreate, existingProfiles = [] }) => {
+const ProfileCard: React.FC<ProfileCardProps> = ({ 
+  profile, 
+  type, 
+  onUpdate, 
+  onCreate, 
+  existingProfiles = [],
+  isLoading = false
+}) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedProfile, setEditedProfile] = useState<Profile | ProfileCreateRequest>(
     profile || {
@@ -18,8 +26,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, type, onUpdate, onCr
       name: '',
       phone: '',
       email: '',
-      company_name: '',
-      role: ProfileRole.NONE
     }
   );
 
@@ -85,27 +91,27 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, type, onUpdate, onCr
     return isUsernameValid && isNameValid && isPhoneValid && isEmailValid;
   };
 
-  const getProfileTypeLabel = (type: ProfileType) => {
+  const getProfileTypeLabel = (type: string) => {
     switch (type) {
-      case ProfileType.FARMER:
+      case 'farmer':
         return '농부';
-      case ProfileType.RETAILER:
+      case 'retailer':
         return '소매상';
-      case ProfileType.WHOLESALER:
+      case 'wholesaler':
         return '도매상';
       default:
         return '알 수 없음';
     }
   };
 
-  const getHeaderColor = (type: ProfileType) => {
+  const getHeaderColor = (type: string) => {
     switch (type) {
-      case ProfileType.FARMER:
+      case 'farmer':
         return 'bg-green-600';
-      case ProfileType.RETAILER:
-        return 'bg-blue-600';
-      case ProfileType.WHOLESALER:
+      case 'retailer':
         return 'bg-purple-600';
+      case 'wholesaler':
+        return 'bg-blue-600';
       default:
         return 'bg-gray-600';
     }
@@ -133,8 +139,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ profile, type, onUpdate, onCr
         name: '',
         phone: '',
         email: '',
-        company_name: '',
-        role: ProfileRole.NONE
       });
     }
     setErrors({});

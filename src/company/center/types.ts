@@ -7,25 +7,17 @@ export interface Center {
   longitude?: number;
   phone?: string;
   manager_profile_id?: string;
-  operating_start?: string; // HH:mm 형식
-  operating_end?: string; // HH:mm 형식
-  is_operational?: boolean;
-}
-
-export interface CenterCreate {
-  name: string;
-  address?: string;
-  region?: string;
-  latitude?: number;
-  longitude?: number;
-  phone?: string;
-  manager_profile_id?: string;
   operating_start?: string;
   operating_end?: string;
   is_operational?: boolean;
+  company_name?: string;
 }
 
-export interface CenterUpdate {
+export interface CenterCreateRequest {
+  name: string;
+}
+
+export interface CenterUpdateRequest {
   name?: string;
   address?: string;
   region?: string;

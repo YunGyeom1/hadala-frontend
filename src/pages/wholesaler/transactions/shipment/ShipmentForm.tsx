@@ -3,11 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { format } from 'date-fns';
 import ProfileSearch from '@/profile/ProfileSearch';
 import CompanySearch from '@/company/company/CompanySearch';
-import CenterSearch from '@/center/CenterSearch';
-import { mockProfiles } from '@/profile/mockData';
-import { mockCompanies } from '@/company/company/mockData';
-import { mockCenters } from '@/center/mockData';
-
+import CenterSearch from '@/company/center/CenterSearch';
 interface ShipmentFormData {
   title: string;
   shipment_datetime: string;

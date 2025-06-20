@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Profile } from './types';
-import { mockProfiles } from './mockData';
+import { Profile, ProfileRole, ProfileType } from './types';
+import { profileService, Profile as ProfileServiceProfile } from './profile';
 
 interface ProfileSearchModalProps {
   isOpen: boolean;
@@ -20,20 +20,45 @@ const ProfileSearchModal: React.FC<ProfileSearchModalProps> = ({
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const searchProfiles = () => {
+    const searchProfiles = async () => {
       if (!searchTerm.trim()) {
         setSearchResults([]);
         return;
       }
 
       setIsLoading(true);
-      // 실제 API 연동 시에는 여기서 API 호출
-      const results = mockProfiles.filter(profile => 
-        profile.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        profile.username.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setSearchResults(results);
-      setIsLoading(false);
+      try {
+        // 실제 API 호출
+        const profiles = await profileService.searchProfiles({
+          username: searchTerm,
+          limit: 10
+        });
+        // ProfileServiceProfile을 Profile로 변환
+        const convertedProfiles: Profile[] = profiles.map((p: ProfileServiceProfile) => ({
+          id: p.id,
+          type: p.type === 'farmer' ? ProfileType.FARMER :
+                p.type === 'retailer' ? ProfileType.RETAILER :
+                p.type === 'wholesaler' ? ProfileType.WHOLESALER :
+                ProfileType.WHOLESALER, // 기본값
+          username: p.username,
+          name: p.name,
+          phone: p.phone,
+          email: p.email,
+          company_id: undefined,
+          company_name: p.company_name,
+          role: p.role === 'owner' ? ProfileRole.OWNER : 
+                p.role === 'member' ? ProfileRole.MEMBER : 
+                ProfileRole.MANAGER,
+          created_at: p.created_at,
+          updated_at: p.updated_at,
+        }));
+        setSearchResults(convertedProfiles);
+      } catch (error) {
+        console.error('프로필 검색 실패:', error);
+        setSearchResults([]);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     const debounceTimer = setTimeout(searchProfiles, 300);

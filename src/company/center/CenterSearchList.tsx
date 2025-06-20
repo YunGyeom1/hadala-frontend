@@ -1,6 +1,6 @@
 import React from 'react';
-import { Center } from '@/center/types';
-import SearchList from '@/shared/components/SearchList';
+import { Center } from './types';
+import SearchList from '@/shared/SearchList';
 
 interface CenterSearchListProps {
   centers: Center[];
@@ -21,18 +21,25 @@ const CenterSearchList: React.FC<CenterSearchListProps> = ({
       searchFields={(center) => [
         center.name,
         center.address || '',
-        center.phone || '',
-        center.type || ''
+        center.phone || ''
       ]}
       renderItem={(center) => (
         <div className="flex justify-between items-center">
           <div>
             <p className="font-medium">{center.name}</p>
-            <p className="text-sm text-gray-500">{center.type || '-'}</p>
+            <p className="text-sm text-gray-500">{center.address || '-'}</p>
           </div>
           <div className="text-right">
-            <p className="text-sm text-gray-500">{center.address || '-'}</p>
             <p className="text-sm text-gray-500">{center.phone || '-'}</p>
+            <span
+              className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                center.is_operational
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-red-100 text-red-800'
+              }`}
+            >
+              {center.is_operational ? '운영중' : '운영중지'}
+            </span>
           </div>
         </div>
       )}

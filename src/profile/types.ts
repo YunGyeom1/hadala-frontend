@@ -9,10 +9,9 @@ export enum ProfileType {
 }
 
 export enum ProfileRole {
-  NONE = 'NONE',
-  MEMBER = 'MEMBER',
-  MANAGER = 'MANAGER',
-  OWNER = 'OWNER'
+  MEMBER = 'member',
+  MANAGER = 'manager',
+  OWNER = 'owner'
 }
 
 export interface ProfileBase {

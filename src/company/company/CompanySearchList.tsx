@@ -1,6 +1,6 @@
 import React from 'react';
 import { Company } from './types';
-import SearchList from '@/shared/components/SearchList';
+import SearchList from '@/shared/SearchList';
 
 interface CompanySearchListProps {
   companies: Company[];

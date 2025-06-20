@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Company, CompanyType, CompanyCreateRequest } from './types';
-import { mockCompanies } from './mockData';
 
 interface CompanyCardProps {
   company?: Company;
@@ -39,6 +38,10 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
       wholesale_company_detail_id: ''
     }
   );
+
+  useEffect(() => {
+    if (company) setEditedCompany(company);
+  }, [company]);
 
   const [errors, setErrors] = useState<{
     name?: string;

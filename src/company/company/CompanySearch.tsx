@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Company } from './types';
-import { mockCompanies } from './mockData';
+import { companyService } from './services/companyService';
 
 interface CompanySearchProps {
   onSelect?: (company: Company) => void;
@@ -19,20 +19,27 @@ const CompanySearch: React.FC<CompanySearchProps> = ({
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
 
   useEffect(() => {
-    const searchCompanies = () => {
+    const searchCompanies = async () => {
       if (!searchTerm.trim()) {
         setSearchResults([]);
         return;
       }
 
       setIsLoading(true);
-      // 실제 API 연동 시에는 여기서 API 호출
-      const results = mockCompanies.filter(company => 
-        company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        company.business_number?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setSearchResults(results);
-      setIsLoading(false);
+      try {
+        // 실제 API 호출
+        const companies = await companyService.getCompanies();
+        const results = companies.filter(company => 
+          company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          company.business_number?.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setSearchResults(results);
+      } catch (error) {
+        console.error('회사 검색 실패:', error);
+        setSearchResults([]);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     const debounceTimer = setTimeout(searchCompanies, 300);
