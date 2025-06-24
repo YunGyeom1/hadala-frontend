@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { centerService } from './services/centerService';
 import { Center } from './types';
 import CenterCreateModal from './CenterCreateModal';
+import CenterDetailModal from './CenterDetailModal';
 
 interface CenterListProps {
   companyId?: string;
@@ -12,6 +13,8 @@ const CenterList: React.FC<CenterListProps> = ({ companyId }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCenter, setSelectedCenter] = useState<Center | null>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
 
   const loadCenters = async () => {
     try {
@@ -31,6 +34,15 @@ const CenterList: React.FC<CenterListProps> = ({ companyId }) => {
   }, [companyId]);
 
   const handleCenterCreated = () => {
+    loadCenters();
+  };
+
+  const handleCenterClick = (center: Center) => {
+    setSelectedCenter(center);
+    setIsDetailModalOpen(true);
+  };
+
+  const handleCenterUpdated = () => {
     loadCenters();
   };
 
@@ -80,7 +92,11 @@ const CenterList: React.FC<CenterListProps> = ({ companyId }) => {
       ) : (
         <div className="grid gap-4">
           {centers.map((center) => (
-            <div key={center.id} className="border rounded-lg p-4">
+            <div 
+              key={center.id} 
+              className="border rounded-lg p-4 cursor-pointer hover:bg-gray-50 transition-colors"
+              onClick={() => handleCenterClick(center)}
+            >
               <div className="flex justify-between items-start">
                 <div>
                   <h4 className="font-medium text-gray-900">{center.name}</h4>
@@ -121,6 +137,13 @@ const CenterList: React.FC<CenterListProps> = ({ companyId }) => {
         onClose={() => setIsModalOpen(false)}
         onSuccess={handleCenterCreated}
         companyId={companyId || ''}
+      />
+
+      <CenterDetailModal
+        isOpen={isDetailModalOpen}
+        onClose={() => setIsDetailModalOpen(false)}
+        center={selectedCenter}
+        onSuccess={handleCenterUpdated}
       />
     </div>
   );

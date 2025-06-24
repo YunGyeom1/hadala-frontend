@@ -43,6 +43,31 @@ export const companyService = {
     return response.json();
   },
 
+  // 내가 소속된 회사 조회
+  async getMyCompany(): Promise<Company | null> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/companies/me`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+          'X-Profile-ID': localStorage.getItem('profile_id') || '',
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (!response.ok) {
+        if (response.status === 404) {
+          return null;
+        }
+        throw new Error('내 회사 정보를 불러오는데 실패했습니다.');
+      }
+      
+      return response.json();
+    } catch (error) {
+      console.error('내 회사 조회 실패:', error);
+      return null;
+    }
+  },
+
   // 특정 타입의 회사 조회
   async getCompanyByType(type: CompanyType): Promise<Company | null> {
     const companies = await this.getCompanies();

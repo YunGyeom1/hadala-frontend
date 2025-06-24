@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Profile, ProfileRole, ProfileType } from './types';
 import { profileService, Profile as ProfileServiceProfile } from './profile';
 
@@ -16,7 +16,7 @@ const ProfileSearch: React.FC<ProfileSearchProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<Profile[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const searchProfiles = async () => {
@@ -46,8 +46,8 @@ const ProfileSearch: React.FC<ProfileSearchProps> = ({
           name: p.name,
           phone: p.phone,
           email: p.email,
-          company_id: undefined,
-          company_name: p.company_name,
+          company_id: p.company_id || undefined,
+          company_name: p.company_name || undefined,
           role: p.role === 'owner' ? ProfileRole.OWNER : 
                 p.role === 'member' ? ProfileRole.MEMBER : 
                 ProfileRole.MANAGER,
@@ -68,29 +68,39 @@ const ProfileSearch: React.FC<ProfileSearchProps> = ({
     return () => clearTimeout(debounceTimer);
   }, [searchTerm]);
 
+  // 다른 곳 클릭 시 검색 결과 숨기기
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setSearchResults([]);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const handleSelect = (profile: Profile) => {
-    setSelectedProfile(profile);
-    setSearchTerm(profile.name || profile.username);
+    console.log('ProfileSearch handleSelect 호출됨:', profile);
+    setSearchTerm(''); // 검색창 초기화
     setSearchResults([]);
+    console.log('onSelect 호출 전');
     onSelect?.(profile);
+    console.log('onSelect 호출 후');
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    if (selectedProfile) {
-      setSelectedProfile(null);
-    }
   };
 
   const handleInputClick = () => {
-    if (selectedProfile) {
-      setSearchTerm('');
-      setSelectedProfile(null);
-    }
+    // 클릭 시 아무것도 안 함
   };
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative ${className}`} ref={containerRef}>
       <div className="relative">
         <input
           type="text"
@@ -130,4 +140,4 @@ const ProfileSearch: React.FC<ProfileSearchProps> = ({
   );
 };
 
-export default ProfileSearch; 
+export default ProfileSearch;

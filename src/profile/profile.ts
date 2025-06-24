@@ -18,6 +18,7 @@ export interface Profile {
   name?: string;
   phone?: string;
   email?: string;
+  company_id?: string;
   company_name?: string;
   role?: 'owner' | 'member' | 'none';
   created_at: string;

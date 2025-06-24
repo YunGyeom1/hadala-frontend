@@ -19,8 +19,8 @@ const WholesalerDashboard = () => {
 
   // 도매상 회사 조회
   const { data: wholesalerCompany, refetch: refetchWholesalerCompany } = useQuery({
-    queryKey: ['wholesaler-company'],
-    queryFn: () => companyService.getCompanyByType(CompanyType.WHOLESALER),
+    queryKey: ['my-company'],
+    queryFn: companyService.getMyCompany,
   });
 
   // 도매상 회사 상세 정보 조회
@@ -50,7 +50,7 @@ const WholesalerDashboard = () => {
       
       // 캐시 무효화 및 데이터 다시 불러오기
       await queryClient.invalidateQueries({ queryKey: ['companies'] });
-      await queryClient.invalidateQueries({ queryKey: ['wholesaler-company'] });
+      await queryClient.invalidateQueries({ queryKey: ['my-company'] });
       
       // 도매상 회사와 상세 정보 다시 불러오기
       await refetchWholesalerCompany();
@@ -71,7 +71,7 @@ const WholesalerDashboard = () => {
     onSuccess: (updatedCompany) => {
       setCompany(updatedCompany);
       queryClient.invalidateQueries({ queryKey: ['companies'] });
-      queryClient.invalidateQueries({ queryKey: ['wholesaler-company'] });
+      queryClient.invalidateQueries({ queryKey: ['my-company'] });
     },
   });
 
@@ -134,7 +134,7 @@ const WholesalerDashboard = () => {
       <div className="max-w-7xl mx-auto space-y-6">
         {/* 회사 정보 섹션 */}
         <section>
-          <h2 className="text-xl font-semibold mb-4">회사 정보</h2>
+          <h2 className="text-xl font-semibold mb-4">회사 정보 / 도매 회사</h2>
           <div className="grid grid-cols-2 gap-6">
             <CompanyCard
               company={company}
@@ -145,7 +145,7 @@ const WholesalerDashboard = () => {
             />
             {companyDetail && (
               <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-semibold mb-4">도매상 상세 정보</h3>
+                <h3 className="text-lg font-semibold mb-4">도매 회사 상세 정보</h3>
                 <div className="space-y-3">
                   <div>
                     <label className="block text-sm font-medium text-gray-700">사업자등록번호</label>

@@ -44,7 +44,7 @@ const ProfileSearchModal: React.FC<ProfileSearchModalProps> = ({
           name: p.name,
           phone: p.phone,
           email: p.email,
-          company_id: undefined,
+          company_id: p.company_id,
           company_name: p.company_name,
           role: p.role === 'owner' ? ProfileRole.OWNER : 
                 p.role === 'member' ? ProfileRole.MEMBER : 

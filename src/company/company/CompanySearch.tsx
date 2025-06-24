@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Company } from './types';
 import { companyService } from './services/companyService';
 
@@ -16,7 +16,7 @@ const CompanySearch: React.FC<CompanySearchProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [searchResults, setSearchResults] = useState<Company[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedCompany, setSelectedCompany] = useState<Company | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const searchCompanies = async () => {
@@ -46,29 +46,36 @@ const CompanySearch: React.FC<CompanySearchProps> = ({
     return () => clearTimeout(debounceTimer);
   }, [searchTerm]);
 
+  // 다른 곳 클릭 시 검색 결과 숨기기
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setSearchResults([]);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const handleSelect = (company: Company) => {
-    setSelectedCompany(company);
-    setSearchTerm(company.name);
+    setSearchTerm('');
     setSearchResults([]);
     onSelect?.(company);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
-    if (selectedCompany) {
-      setSelectedCompany(null);
-    }
   };
 
   const handleInputClick = () => {
-    if (selectedCompany) {
-      setSearchTerm('');
-      setSelectedCompany(null);
-    }
+    // 클릭 시 아무것도 안 함
   };
 
   return (
-    <div className={`relative ${className}`}>
+    <div className={`relative ${className}`} ref={containerRef}>
       <div className="relative">
         <input
           type="text"
@@ -76,11 +83,11 @@ const CompanySearch: React.FC<CompanySearchProps> = ({
           onChange={handleInputChange}
           onClick={handleInputClick}
           placeholder={placeholder}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         />
         {isLoading && (
           <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-green-500"></div>
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div>
           </div>
         )}
       </div>

@@ -5,22 +5,26 @@ export enum ProductQuality {
 }
 
 export enum ShipmentStatus {
-  PENDING = 'PENDING',
-  IN_TRANSIT = 'IN_TRANSIT',
-  DELIVERED = 'DELIVERED'
+  PENDING = 'pending',
+  IN_TRANSIT = 'in_transit',
+  DELIVERED = 'delivered'
 }
 
 export enum ContractStatus {
-  DRAFT = 'DRAFT',
-  PENDING = 'PENDING',
-  APPROVED = 'APPROVED',
-  REJECTED = 'REJECTED',
-  CANCELLED = 'CANCELLED',
-  COMPLETED = 'COMPLETED'
+  DRAFT = 'draft',
+  PENDING = 'pending',
+  APPROVED = 'approved',
+  REJECTED = 'rejected',
+  CANCELLED = 'cancelled',
+  COMPLETED = 'completed'
 }
 
 export enum PaymentStatus {
-  PENDING = 'PENDING',
-  PAID = 'PAID',
-  OVERDUE = 'OVERDUE'
+  UNPAID = 'unpaid',
+  PARTIAL = 'partial',
+  PREPARED = 'prepared',
+  OVERDUE = 'overdue',
+  PAID = 'paid',
+  REFUNDED = 'refunded',
+  CANCELLED = 'cancelled',
 } 
