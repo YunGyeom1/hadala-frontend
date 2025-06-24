@@ -23,6 +23,7 @@ export interface ProfileBase {
 export interface Profile extends ProfileBase {
   id: UUID;
   username: string;
+  company_id?: string;
   company_name?: string;
   role: ProfileRole;
   type: ProfileType;

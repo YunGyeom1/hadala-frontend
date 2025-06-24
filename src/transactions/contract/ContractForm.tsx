@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { ContractStatus, ProductQuality, PaymentStatus } from '@/transactions/common/types';
 import { format } from 'date-fns';
-import { companyService } from '@/company/company';
-import { contractService } from '@/transactions/contract/services/contractService';
-import { ContractFormData, Profile, Company, Center, ContractItem } from './types';
 import ContractBasicInfo from './components/ContractBasicInfo';
 import ContractParties from './components/ContractParties';
 import ContractCenters from './components/ContractCenters';
 import ContractItems from './components/ContractItems';
+import { contractService } from './services/contractService';
+import { companyService } from '../../company/company/services/companyService';
+import { Company } from '../../company/company/types';
+import { Profile } from '../../profile/types';
+import { Center } from '../../company/center/types';
+import { ContractStatus, PaymentStatus, ProductQuality } from '../common/types';
+import { ContractItem, ContractFormData } from './types';
 
 const ContractForm = () => {
   const { id } = useParams<{ id: string }>();
@@ -246,10 +249,9 @@ const ContractForm = () => {
       departure_center_id: ''
     }));
     
-    // 유저가 선택되면 자동으로 소속 회사 설정
+    // 유저가 선택되면 company_id로 회사 자동 설정
     if (profile.company_id) {
       console.log('공급자 회사 ID:', profile.company_id);
-      // 회사 정보도 설정
       try {
         const companies = await companyService.getCompanies();
         const company = companies.find((c: Company) => c.id === profile.company_id);
@@ -264,9 +266,8 @@ const ContractForm = () => {
       } catch (error) {
         console.error('회사 정보 조회 실패:', error);
       }
-      console.log('공급자 formData 업데이트 완료');
     } else {
-      console.log('공급자 유저만 설정 (회사 없음)');
+      console.log('공급자 유저만 설정 (회사 ID 없음)');
     }
   };
 
@@ -284,10 +285,9 @@ const ContractForm = () => {
       arrival_center_id: ''
     }));
     
-    // 유저가 선택되면 자동으로 소속 회사 설정
+    // 유저가 선택되면 company_id로 회사 자동 설정
     if (profile.company_id) {
       console.log('수신자 회사 ID:', profile.company_id);
-      // 회사 정보도 설정
       try {
         const companies = await companyService.getCompanies();
         const company = companies.find((c: Company) => c.id === profile.company_id);
@@ -302,9 +302,8 @@ const ContractForm = () => {
       } catch (error) {
         console.error('회사 정보 조회 실패:', error);
       }
-      console.log('수신자 formData 업데이트 완료');
     } else {
-      console.log('수신자 유저만 설정 (회사 없음)');
+      console.log('수신자 유저만 설정 (회사 ID 없음)');
     }
   };
 
