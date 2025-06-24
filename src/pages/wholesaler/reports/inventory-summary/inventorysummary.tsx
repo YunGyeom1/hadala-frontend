@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { format } from 'date-fns';
 import DailyInventorySummary from '@/transactions/inventory/DailyInventorySummary';
 import { mockInventorySnapshot } from '@/transactions/inventory/mock';
 

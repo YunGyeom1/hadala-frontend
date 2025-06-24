@@ -8,7 +8,7 @@ import ShipmentList from '@/transactions/shipment/ShipmentList';
 //import ShipmentForm from '@/transactions/shipment/ShipmentForm';
 import ShipmentDetail from '@/transactions/shipment/ShipmentDetail';
 import { mockShipments } from '@/transactions/shipment/mock';
-import InventorySummaryPage from '@/pages/wholesaler/reports/inventory-summary';
+import InventorySummaryPage from '@/pages/wholesaler/reports/inventory-summary/inventorysummary';
 
 const ShipmentDetailPage = () => {
   const { id } = useParams();

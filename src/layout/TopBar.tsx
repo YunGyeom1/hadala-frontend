@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FiUser } from 'react-icons/fi';
 import { authService } from '../core/auth/auth';
 import { useProfile } from '../profile/ProfileContext';
 

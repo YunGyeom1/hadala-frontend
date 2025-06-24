@@ -1,7 +1,6 @@
 import React from 'react';
 import CenterSearch from '@/company/center/components/search/CenterSearch';
-import { Center } from '@/company/center/types';
-import { Company } from '../types';
+import { Center, Company } from '../types';
 
 interface ContractCentersProps {
   selectedDepartureCenter: Center | null;

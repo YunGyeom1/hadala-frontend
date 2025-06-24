@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import ProfileCard from '@/profile/ProfileCard';
-import { profileService, type Profile, type ProfileCreateRequest } from '@/profile/profile';
+import { profileService, ProfileCreateRequest } from '@/profile/profile';
+import { type Profile, ProfileType } from '@/profile/types';
 
 const Profile = () => {
   const queryClient = useQueryClient();
@@ -66,9 +66,9 @@ const Profile = () => {
 
   // 프로필 타입별로 그룹화
   const profilesByType = {
-    farmer: profiles.find(p => p.type === 'farmer'),
-    retailer: profiles.find(p => p.type === 'retailer'),
-    wholesaler: profiles.find(p => p.type === 'wholesaler'),
+    farmer: profiles.find(p => p.type === ProfileType.FARMER),
+    retailer: profiles.find(p => p.type === ProfileType.RETAILER),
+    wholesaler: profiles.find(p => p.type === ProfileType.WHOLESALER),
   };
 
   return (
@@ -79,28 +79,25 @@ const Profile = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <ProfileCard
-          type="farmer"
+          type={ProfileType.FARMER}
           profile={profilesByType.farmer}
           onUpdate={handleUpdateProfile}
           onCreate={handleCreateProfile}
           existingProfiles={profiles}
-          isLoading={createProfileMutation.isPending}
         />
         <ProfileCard
-          type="wholesaler"
+          type={ProfileType.WHOLESALER}
           profile={profilesByType.wholesaler}
           onUpdate={handleUpdateProfile}
           onCreate={handleCreateProfile}
           existingProfiles={profiles}
-          isLoading={createProfileMutation.isPending}
         />
         <ProfileCard
-          type="retailer"
+          type={ProfileType.RETAILER}
           profile={profilesByType.retailer}
           onUpdate={handleUpdateProfile}
           onCreate={handleCreateProfile}
           existingProfiles={profiles}
-          isLoading={createProfileMutation.isPending}
         />
       </div>
     </div>

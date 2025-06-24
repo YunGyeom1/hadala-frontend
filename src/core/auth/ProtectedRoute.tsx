@@ -1,11 +1,12 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useProfile } from '../../profile/ProfileContext';
+import { ProfileType } from '../../profile/types';
 import { authService } from './auth';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
-  requiredProfileType?: 'farmer' | 'retailer' | 'wholesaler';
+  requiredProfileType?: ProfileType;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
@@ -39,9 +40,9 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              {requiredProfileType === 'farmer' && '농부'}
-              {requiredProfileType === 'retailer' && '소매상'}
-              {requiredProfileType === 'wholesaler' && '도매상'}
+              {requiredProfileType === ProfileType.FARMER && '농부'}
+              {requiredProfileType === ProfileType.RETAILER && '소매상'}
+              {requiredProfileType === ProfileType.WHOLESALER && '도매상'}
               프로필이 필요합니다
             </h2>
             <p className="text-gray-600 mb-6">
@@ -65,9 +66,9 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   }
 
   // 경로에 따른 자동 프로필 타입 확인 (완화된 버전)
-  const pathProfileType = location.pathname.startsWith('/farmer/') ? 'farmer' :
-                         location.pathname.startsWith('/wholesaler/') ? 'wholesaler' :
-                         location.pathname.startsWith('/retailer/') ? 'retailer' : null;
+  const pathProfileType = location.pathname.startsWith('/farmer/') ? ProfileType.FARMER :
+                         location.pathname.startsWith('/wholesaler/') ? ProfileType.WHOLESALER :
+                         location.pathname.startsWith('/retailer/') ? ProfileType.RETAILER : null;
 
   if (pathProfileType) {
     const hasRequiredProfile = allProfiles.some(p => p.type === pathProfileType);

@@ -141,12 +141,11 @@ export const companyService = {
       throw new Error('회사 ID가 필요합니다.');
     }
 
-    // 기존 데이터가 있으면 PUT, 없으면 POST
-    const method = detailData.id ? 'PUT' : 'POST';
+    // 항상 PUT을 사용 (백엔드에서 자동으로 생성/수정 처리)
     const url = `${API_BASE_URL}/companies/wholesale/${companyId}/detail`;
     
     const response = await fetch(url, {
-      method,
+      method: 'PUT',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
         'X-Profile-ID': localStorage.getItem('profile_id') || '',

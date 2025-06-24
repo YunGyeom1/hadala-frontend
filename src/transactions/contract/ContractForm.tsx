@@ -383,8 +383,8 @@ const ContractForm = () => {
 
         {/* 센터 정보 */}
         <ContractCenters
-          selectedDepartureCenter={selectedDepartureCenter as any}
-          selectedArrivalCenter={selectedArrivalCenter as any} 
+          selectedDepartureCenter={selectedDepartureCenter}
+          selectedArrivalCenter={selectedArrivalCenter} 
           selectedSupplierCompany={selectedSupplierCompany}
           selectedReceiverCompany={selectedReceiverCompany}
           onDepartureCenterSelect={(center) => {

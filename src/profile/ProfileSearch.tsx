@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Profile, ProfileRole, ProfileType } from './types';
-import { profileService, Profile as ProfileServiceProfile } from './profile';
+import { Profile } from './types';
+import { profileService } from './profile';
 
 interface ProfileSearchProps {
   onSelect?: (profile: Profile) => void;
@@ -34,28 +34,7 @@ const ProfileSearch: React.FC<ProfileSearchProps> = ({
           limit: 10
         });
         console.log('API 응답:', profiles);
-        
-        // ProfileServiceProfile을 Profile로 변환
-        const convertedProfiles: Profile[] = profiles.map((p: ProfileServiceProfile) => ({
-          id: p.id,
-          type: p.type === 'farmer' ? ProfileType.FARMER :
-                p.type === 'retailer' ? ProfileType.RETAILER :
-                p.type === 'wholesaler' ? ProfileType.WHOLESALER :
-                ProfileType.WHOLESALER, // 기본값
-          username: p.username,
-          name: p.name,
-          phone: p.phone,
-          email: p.email,
-          company_id: p.company_id || undefined,
-          company_name: p.company_name || undefined,
-          role: p.role === 'owner' ? ProfileRole.OWNER : 
-                p.role === 'member' ? ProfileRole.MEMBER : 
-                ProfileRole.MANAGER,
-          created_at: p.created_at,
-          updated_at: p.updated_at,
-        }));
-        console.log('변환된 프로필:', convertedProfiles);
-        setSearchResults(convertedProfiles);
+        setSearchResults(profiles);
       } catch (error) {
         console.error('프로필 검색 실패:', error);
         setSearchResults([]);

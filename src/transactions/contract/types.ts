@@ -1,4 +1,7 @@
 import { ContractStatus, PaymentStatus, ProductQuality } from '../common/types';
+import { Profile } from '@/profile/types';
+import { Company } from '@/company/company/types';
+import { Center } from '@/company/center/types';
 
 export interface ContractItemBase {
   product_name: string;
@@ -53,37 +56,13 @@ export interface ContractResponse extends ContractBase {
   items: ContractItemResponse[];
   
   // 관계 데이터 (백엔드에서 제공하는 경우)
-  supplier_contractor?: {
-    id: string;
-    username: string;
-    name?: string;
-  };
-  supplier_company?: {
-    id: string;
-    name: string;
-  };
-  receiver_contractor?: {
-    id: string;
-    username: string;
-    name?: string;
-  };
-  receiver_company?: {
-    id: string;
-    name: string;
-  };
-  departure_center?: {
-    id: string;
-    name: string;
-  };
-  arrival_center?: {
-    id: string;
-    name: string;
-  };
-  creator?: {
-    id: string;
-    username: string;
-    name?: string;
-  };
+  supplier_contractor?: Profile;
+  supplier_company?: Company;
+  receiver_contractor?: Profile;
+  receiver_company?: Company;
+  departure_center?: Center;
+  arrival_center?: Center;
+  creator?: Profile;
 }
 
 // Additional types for form handling
@@ -112,24 +91,5 @@ export interface ContractFormData {
   items: ContractItem[];
 }
 
-export interface Profile {
-  id: string;
-  name?: string;
-  username: string;
-  company_id?: string;
-  company_name?: string;
-}
-
-export interface Company {
-  id: string;
-  name: string;
-  business_number?: string;
-  address?: string;
-}
-
-export interface Center {
-  id: string;
-  name: string;
-  address?: string;
-  region?: string;
-} 
+// Re-export commonly used types for convenience
+export type { Profile, Company, Center }; 

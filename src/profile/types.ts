@@ -3,9 +3,9 @@
 export type UUID = string; // UUID 형식을 string으로 간주
 
 export enum ProfileType {
-  FARMER = 'FARMER',
-  RETAILER = 'RETAILER',
-  WHOLESALER = 'WHOLESALER'
+  FARMER = 'farmer',
+  RETAILER = 'retailer',
+  WHOLESALER = 'wholesaler'
 }
 
 export enum ProfileRole {
@@ -23,7 +23,6 @@ export interface ProfileBase {
 export interface Profile extends ProfileBase {
   id: UUID;
   username: string;
-  company_id?: UUID;
   company_name?: string;
   role: ProfileRole;
   type: ProfileType;
@@ -48,14 +47,4 @@ export interface ProfileUpdateRequest extends ProfileBase {
 // ✅ 응답 타입
 export interface ProfileResponse extends Profile {
   // Profile 인터페이스를 상속받으므로 추가 필드가 필요 없음
-}
-
-// ✅ 역할 변경용
-export interface ProfileRoleUpdateRequest {
-  role: ProfileRole;
-}
-
-// ✅ 회사 변경용
-export interface ProfileCompanyUpdateRequest {
-  company_id: UUID;
 }

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
-import { profileService, Profile } from './profile';
+import { Profile, ProfileType } from './types';
+import { profileService } from './profile';
 
 interface ProfileContextType {
   currentProfile: Profile | null;
@@ -74,11 +75,11 @@ export const ProfileProvider: React.FC<ProfileProviderProps> = ({ children }) =>
       let targetProfile: Profile | null = null;
       
       if (location.pathname.startsWith('/farmer/')) {
-        targetProfile = allProfiles.find(p => p.type === 'farmer') || null;
+        targetProfile = allProfiles.find(p => p.type === ProfileType.FARMER) || null;
       } else if (location.pathname.startsWith('/wholesaler/')) {
-        targetProfile = allProfiles.find(p => p.type === 'wholesaler') || null;
+        targetProfile = allProfiles.find(p => p.type === ProfileType.WHOLESALER) || null;
       } else if (location.pathname.startsWith('/retailer/')) {
-        targetProfile = allProfiles.find(p => p.type === 'retailer') || null;
+        targetProfile = allProfiles.find(p => p.type === ProfileType.RETAILER) || null;
       }
       
       console.log('선택된 타겟 프로필:', targetProfile);

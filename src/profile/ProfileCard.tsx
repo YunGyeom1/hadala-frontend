@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Profile, ProfileCreateRequest } from '@/profile/profile';
+import { Profile, ProfileType } from './types';
+import { ProfileCreateRequest } from './profile';
 
 interface ProfileCardProps {
   profile?: Profile;
-  type: 'farmer' | 'retailer' | 'wholesaler';
+  type: ProfileType;
   onUpdate?: (profile: Profile) => void;
   onCreate?: (profile: ProfileCreateRequest) => void;
   existingProfiles?: Profile[];
-  isLoading?: boolean;
 }
 
 const ProfileCard: React.FC<ProfileCardProps> = ({ 
@@ -15,8 +15,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   type, 
   onUpdate, 
   onCreate, 
-  existingProfiles = [],
-  isLoading = false
+  existingProfiles = []
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedProfile, setEditedProfile] = useState<Profile | ProfileCreateRequest>(
@@ -91,26 +90,26 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
     return isUsernameValid && isNameValid && isPhoneValid && isEmailValid;
   };
 
-  const getProfileTypeLabel = (type: string) => {
+  const getProfileTypeLabel = (type: ProfileType) => {
     switch (type) {
-      case 'farmer':
+      case ProfileType.FARMER:
         return '농부';
-      case 'retailer':
+      case ProfileType.RETAILER:
         return '소매상';
-      case 'wholesaler':
+      case ProfileType.WHOLESALER:
         return '도매상';
       default:
         return '알 수 없음';
     }
   };
 
-  const getHeaderColor = (type: string) => {
+  const getHeaderColor = (type: ProfileType) => {
     switch (type) {
-      case 'farmer':
+      case ProfileType.FARMER:
         return 'bg-green-600';
-      case 'retailer':
+      case ProfileType.RETAILER:
         return 'bg-purple-600';
-      case 'wholesaler':
+      case ProfileType.WHOLESALER:
         return 'bg-blue-600';
       default:
         return 'bg-gray-600';

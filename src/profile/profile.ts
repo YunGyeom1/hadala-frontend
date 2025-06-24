@@ -1,5 +1,6 @@
 import apiClient from '../core/auth/auth';
 import axios from 'axios';
+import { Profile, ProfileType, ProfileRole } from './types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
@@ -11,23 +12,9 @@ const publicApiClient = axios.create({
   },
 });
 
-export interface Profile {
-  id: string;
-  type: 'farmer' | 'retailer' | 'wholesaler';
-  username: string;
-  name?: string;
-  phone?: string;
-  email?: string;
-  company_id?: string;
-  company_name?: string;
-  role?: 'owner' | 'member' | 'none';
-  created_at: string;
-  updated_at: string;
-}
-
 export interface ProfileCreateRequest {
   username: string;
-  type: 'farmer' | 'retailer' | 'wholesaler';
+  type: ProfileType;
   name?: string;
   phone?: string;
   email?: string;
@@ -62,7 +49,7 @@ export const profileService = {
   // 프로필 검색 (인증 불필요)
   async searchProfiles(params: {
     username?: string;
-    profile_type?: 'farmer' | 'retailer' | 'wholesaler';
+    profile_type?: ProfileType;
     skip?: number;
     limit?: number;
   }): Promise<Profile[]> {
@@ -77,7 +64,7 @@ export const profileService = {
   },
 
   // 프로필 역할 변경
-  async updateProfileRole(profileId: string, role: 'owner' | 'manager' | 'member'): Promise<Profile> {
+  async updateProfileRole(profileId: string, role: ProfileRole): Promise<Profile> {
     const response = await fetch(`${API_BASE_URL}/profile/${profileId}/role`, {
       method: 'PUT',
       headers: {

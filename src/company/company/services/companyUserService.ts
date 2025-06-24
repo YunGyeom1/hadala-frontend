@@ -61,4 +61,26 @@ export const companyUserService = {
 
     return response.json();
   },
+
+  // 유저 역할 수정
+  async updateUserRole(companyId: string, userId: string, role: string): Promise<Profile> {
+    const response = await fetch(`${API_BASE_URL}/profile/${userId}/role`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        'X-Profile-ID': localStorage.getItem('profile_id') || '',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        role: role,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.detail || '역할 수정에 실패했습니다');
+    }
+
+    return response.json();
+  },
 }; 
