@@ -2,16 +2,6 @@ import { Profile } from '@/profile/types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
-export interface CompanyUser {
-  id: string;
-  company_id: string;
-  name: string;
-  email: string;
-  phone: string;
-  role: 'OWNER' | 'MANAGER' | 'STAFF';
-  status: 'ACTIVE' | 'INACTIVE';
-}
-
 export const companyUserService = {
   // 회사 유저 목록 조회
   async getCompanyUsers(companyId: string): Promise<Profile[]> {

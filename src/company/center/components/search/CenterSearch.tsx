@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Center } from './types';
-import { centerService } from './services/centerService';
+import { Center } from '../../types';
+import { centerService } from '../../services/centerService';
 
 interface CenterSearchProps {
   companyId?: string;

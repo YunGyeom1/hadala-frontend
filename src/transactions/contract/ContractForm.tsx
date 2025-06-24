@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ContractStatus, ProductQuality } from '@/transactions/common/types';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { ContractStatus, ProductQuality, PaymentStatus } from '@/transactions/common/types';
 import { format } from 'date-fns';
-import { companyService } from '@/company/company/services/companyService';
+import { companyService } from '@/company/company';
 import { contractService } from '@/transactions/contract/services/contractService';
 import { ContractFormData, Profile, Company, Center, ContractItem } from './types';
 import ContractBasicInfo from './components/ContractBasicInfo';
@@ -61,7 +62,7 @@ const ContractForm = () => {
               ? format(new Date(contract.payment_due_date), 'yyyy-MM-dd')
               : '',
             contract_status: contract.contract_status as ContractStatus,
-            payment_status: contract.payment_status as ContractStatus,
+            payment_status: contract.payment_status as PaymentStatus,
             supplier_person_id: contract.supplier_contractor_id || '',
             supplier_company_id: contract.supplier_company_id || '',
             receiver_person_id: contract.receiver_contractor_id || '',
@@ -160,7 +161,7 @@ const ContractForm = () => {
           delivery_datetime: formData.delivery_datetime ? new Date(formData.delivery_datetime).toISOString() : undefined,
           payment_due_date: formData.payment_due_date ? new Date(formData.payment_due_date).toISOString() : undefined,
           contract_status: formData.contract_status as ContractStatus,
-          payment_status: formData.payment_status || 'unpaid',
+          payment_status: formData.payment_status as PaymentStatus,
           items: formData.items.map(item => {
             const quantity = Number(item.quantity) || 0;
             const unitPrice = Number(item.unit_price) || 0;
@@ -382,8 +383,8 @@ const ContractForm = () => {
 
         {/* 센터 정보 */}
         <ContractCenters
-          selectedDepartureCenter={selectedDepartureCenter}
-          selectedArrivalCenter={selectedArrivalCenter}
+          selectedDepartureCenter={selectedDepartureCenter as any}
+          selectedArrivalCenter={selectedArrivalCenter as any} 
           selectedSupplierCompany={selectedSupplierCompany}
           selectedReceiverCompany={selectedReceiverCompany}
           onDepartureCenterSelect={(center) => {

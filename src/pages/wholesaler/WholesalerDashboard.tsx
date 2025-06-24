@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import CompanyCard from '../../company/company/CompanyCard';
-import CompanyUserList from '../../company/company/CompanyUserList';
-import { Company, CompanyType } from '../../company/company/types';
-import CenterList from '../../company/center/CenterList';
-import { companyService, WholesaleCompanyDetail } from '../../company/company/services/companyService';
+import { CompanyCard, CompanyUserList, Company, CompanyType, companyService, CompanyCreateRequest } from '../../company/company';
+import { CenterList } from '../../company/center';
+import { WholesaleCompanyDetail } from '../../company/company/services/companyService';
+import { Profile } from '@/profile/types';
 
 const WholesalerDashboard = () => {
   const queryClient = useQueryClient();
-  const [company, setCompany] = useState<Company | undefined>();
-  const [companyDetail, setCompanyDetail] = useState<WholesaleCompanyDetail | undefined>();
+  const [company, setCompany] = useState<Company | null>(null);
+  const [companyDetail, setCompanyDetail] = useState<WholesaleCompanyDetail | null>(null);
+  const [selectedUser, setSelectedUser] = useState<Profile | null>(null);
 
   // 회사 목록 조회
   const { data: existingCompanies = [] } = useQuery({
@@ -127,6 +127,15 @@ const WholesalerDashboard = () => {
     }
   };
 
+  const handleUserSelect = (user: Profile | null) => {
+    setSelectedUser(user);
+    if (user) {
+      console.log('선택된 사용자:', user);
+    } else {
+      console.log('사용자 선택 해제');
+    }
+  };
+
   return (
     <div>
       <h1 className="text-2xl font-bold mb-6">도매상 대시보드</h1>
@@ -137,10 +146,10 @@ const WholesalerDashboard = () => {
           <h2 className="text-xl font-semibold mb-4">회사 정보 / 도매 회사</h2>
           <div className="grid grid-cols-2 gap-6">
             <CompanyCard
-              company={company}
+              company={company || undefined}
               type={CompanyType.WHOLESALER}
               onUpdate={handleUpdate}
-              onCreate={handleCreate}
+              onCreate={(company: CompanyCreateRequest) => handleCreate(company as Omit<Company, 'id'>)}
               existingCompanies={existingCompanies}
             />
             {companyDetail && (
@@ -195,7 +204,51 @@ const WholesalerDashboard = () => {
               {/* 회사 유저 관리 */}
               <div>
                 <h3 className="text-lg font-medium mb-4">회사 유저 관리</h3>
-                <CompanyUserList companyId={company.id} />
+                <CompanyUserList 
+                  companyId={company.id} 
+                  onUserSelect={handleUserSelect}
+                  selectedUserId={selectedUser?.id}
+                />
+                
+                {/* 선택된 사용자 상세 정보 */}
+                {selectedUser && (
+                  <div className="mt-4 bg-white rounded-lg shadow p-4">
+                    <div className="flex justify-between items-center mb-3">
+                      <h4 className="text-md font-medium">선택된 사용자 정보</h4>
+                      <button
+                        onClick={() => setSelectedUser(null)}
+                        className="text-gray-400 hover:text-gray-600"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                    <div className="space-y-2 text-sm">
+                      <div>
+                        <span className="font-medium">사용자명:</span> {selectedUser.username}
+                      </div>
+                      <div>
+                        <span className="font-medium">이름:</span> {selectedUser.name}
+                      </div>
+                      <div>
+                        <span className="font-medium">이메일:</span> {selectedUser.email || '-'}
+                      </div>
+                      <div>
+                        <span className="font-medium">역할:</span> 
+                        <span className="ml-1 px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
+                          {selectedUser.role || '역할 없음'}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="font-medium">타입:</span> {selectedUser.type}
+                      </div>
+                      <div>
+                        <span className="font-medium">가입일:</span> {new Date(selectedUser.created_at).toLocaleDateString()}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* 센터 관리 */}

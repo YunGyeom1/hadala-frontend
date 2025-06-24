@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ProfileSearch from '@/profile/ProfileSearch';
-import CompanySearch from '@/company/company/CompanySearch';
+import { CompanySearch } from '@/company/company';
 import { Profile, Company } from '../types';
 
 interface ContractPartiesProps {
@@ -32,6 +32,10 @@ const ContractParties: React.FC<ContractPartiesProps> = ({
   onSupplierCompanyRemove,
   onReceiverCompanyRemove,
 }) => {
+  const onSearch = (query: string) => {
+    console.log('Search query:', query);
+  };
+
   return (
     <div className="mb-8">
       <h2 className="text-lg font-semibold mb-4 border-b pb-2">계약 당사자</h2>
@@ -119,7 +123,7 @@ const ContractParties: React.FC<ContractPartiesProps> = ({
               </div>
             </div>
           ) : (
-            <CompanySearch onSelect={onSupplierCompanySelect} />
+            <CompanySearch onSelect={onSupplierCompanySelect} onSearch={onSearch} />
           )}
         </div>
 
@@ -148,7 +152,7 @@ const ContractParties: React.FC<ContractPartiesProps> = ({
               </div>
             </div>
           ) : (
-            <CompanySearch onSelect={onReceiverCompanySelect} />
+            <CompanySearch onSelect={onReceiverCompanySelect} onSearch={onSearch} />
           )}
         </div>
       </div>

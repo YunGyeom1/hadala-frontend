@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Company, CompanyType, CompanyCreateRequest } from './types';
+import { Company, CompanyType, CompanyCreateRequest } from '../../types';
+import { getCompanyTypeLabel } from '../../utils/companyUtils';
 
 interface CompanyCardProps {
   company?: Company;
@@ -8,19 +9,6 @@ interface CompanyCardProps {
   onCreate?: (company: CompanyCreateRequest) => void;
   existingCompanies?: Company[];
 }
-
-const getCompanyTypeLabel = (type: CompanyType) => {
-  switch (type) {
-    case CompanyType.FARMER:
-      return '농가';
-    case CompanyType.RETAILER:
-      return '소매상';
-    case CompanyType.WHOLESALER:
-      return '도매상';
-    default:
-      return '알 수 없음';
-  }
-};
 
 const CompanyCard: React.FC<CompanyCardProps> = ({ 
   company, 
@@ -38,14 +26,11 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
       wholesale_company_detail_id: ''
     }
   );
+  const [errors, setErrors] = useState<{ name?: string }>({});
 
   useEffect(() => {
     if (company) setEditedCompany(company);
   }, [company]);
-
-  const [errors, setErrors] = useState<{
-    name?: string;
-  }>({});
 
   const validateName = (name: string): boolean => {
     if (!name) {
@@ -60,13 +45,9 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
     return true;
   };
 
-  const validateForm = (): boolean => {
-    return validateName(editedCompany.name);
-  };
-
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateForm()) return;
+    if (!validateName(editedCompany.name)) return;
 
     if (company && onUpdate) {
       onUpdate(editedCompany as Company);
