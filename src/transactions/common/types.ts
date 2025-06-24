@@ -4,6 +4,19 @@ export enum ProductQuality {
   C = 'C'
 }
 
+export const qualityToString = (quality: ProductQuality): string => {
+  switch (quality) {
+    case ProductQuality.A:
+      return 'A등급';
+    case ProductQuality.B:
+      return 'B등급';
+    case ProductQuality.C:
+      return 'C등급';
+    default:
+      return '알 수 없음';
+  }
+};
+
 export enum ShipmentStatus {
   PENDING = 'pending',
   IN_TRANSIT = 'in_transit',

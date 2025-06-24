@@ -1,144 +1,169 @@
 import React from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ShipmentResponse } from './types';
-import { ProductQuality, ShipmentStatus } from '../common/types';
+import { ProductQuality, ShipmentStatus, qualityToString } from '../common/types';
+import { format } from 'date-fns';
+import { shipmentService } from './services/shipmentService';
 
 interface ShipmentDetailProps {
   shipment: ShipmentResponse;
 }
 
-const getStatusLabel = (status: ShipmentStatus) => {
+const getStatusLabel = (status: ShipmentStatus | string) => {
   switch (status) {
     case ShipmentStatus.DELIVERED:
       return '배송완료';
     case ShipmentStatus.IN_TRANSIT:
       return '배송중';
+    case ShipmentStatus.PENDING:
+      return '대기중';
     default:
       return '알 수 없음';
   }
 };
 
-const qualityOrder: ProductQuality[] = [ProductQuality.A, ProductQuality.B, ProductQuality.C] as const;
-
 const ShipmentDetail: React.FC<ShipmentDetailProps> = ({ shipment }) => {
-  // 품목 + 등급별 구조로 변환
-  const grouped: Record<string, Partial<Record<ProductQuality, { quantity: number; price: number; unitPrice: number }>>> = {};
-  const gradeTotalWeight: Record<ProductQuality, number> = { A: 0, B: 0, C: 0 };
-  const gradeTotalPrice: Record<ProductQuality, number> = { A: 0, B: 0, C: 0 };
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const [status, setStatus] = React.useState<ShipmentStatus | string>(shipment.shipment_status);
+  const [saving, setSaving] = React.useState(false);
 
-  shipment.items.forEach((item) => {
-    const { product_name, quality, quantity, total_price, unit_price } = item;
-
-    if (!grouped[product_name]) {
-      grouped[product_name] = {};
+  const handleStatusChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newStatus = e.target.value as ShipmentStatus;
+    setStatus(newStatus);
+    setSaving(true);
+    try {
+      await shipmentService.updateShipment(shipment.id, { ...shipment, shipment_status: newStatus });
+      alert('출하 상태가 변경되었습니다.');
+    } catch (error: any) {
+      alert(error.message || '상태 변경에 실패했습니다.');
+      setStatus(shipment.shipment_status); // 실패 시 원복
+    } finally {
+      setSaving(false);
     }
+  };
 
-    grouped[product_name][quality] = { 
-      quantity, 
-      price: total_price,
-      unitPrice: unit_price
-    };
-    gradeTotalWeight[quality] += quantity;
-    gradeTotalPrice[quality] += total_price;
-  });
-
-  const totalWeight = Object.values(gradeTotalWeight).reduce((sum, weight) => sum + weight, 0);
-  const totalPrice = Object.values(gradeTotalPrice).reduce((sum, price) => sum + price, 0);
+  // 품목 총계 계산
+  const totalPrice = shipment.items.reduce((sum, item) => sum + (item.total_price || 0), 0);
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow">
-      <h2 className="text-xl font-semibold mb-6">{shipment.title}</h2>
+    <div className="max-w-4xl mx-auto p-8">
+      <div className="bg-white rounded-lg shadow">
+        <div className="p-6">
+          <div className="grid grid-cols-2 gap-6">
+            {/* 출하 기본 정보 */}
+            <div>
+              <h2 className="text-lg font-medium mb-4">기본 정보</h2>
+              <dl className="space-y-4">
+                <div>
+                  <dt className="text-sm font-medium text-gray-500">제목</dt>
+                  <dd className="mt-1 text-sm text-gray-900">{shipment.title}</dd>
+                </div>
+                <div>
+                  <dt className="text-sm font-medium text-gray-500">상태</dt>
+                  <dd className="mt-1">
+                    <select
+                      value={status}
+                      onChange={handleStatusChange}
+                      className="select select-bordered"
+                      disabled={saving}
+                    >
+                      {Object.values(ShipmentStatus).map((s) => (
+                        <option key={s} value={s}>{getStatusLabel(s)}</option>
+                      ))}
+                    </select>
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-sm font-medium text-gray-500">출하일시</dt>
+                  <dd className="mt-1 text-sm text-gray-900">
+                    {shipment.shipment_datetime ? format(new Date(shipment.shipment_datetime), 'yyyy-MM-dd HH:mm') : '-'}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-sm font-medium text-gray-500">출하 ID</dt>
+                  <dd className="mt-1 text-sm text-gray-900">{shipment.id}</dd>
+                </div>
+              </dl>
+            </div>
+            {/* 거래처 정보 */}
+            <div>
+              <h2 className="text-lg font-medium mb-4">거래처 정보</h2>
+              <dl className="space-y-4">
+                <div>
+                  <dt className="text-sm font-medium text-gray-500">공급사</dt>
+                  <dd className="mt-1 text-sm text-gray-900">{shipment.supplier_company?.name || '-'}</dd>
+                  {shipment.supplier_person?.username && (
+                    <dd className="text-sm text-gray-500">{shipment.supplier_person.username}</dd>
+                  )}
+                </div>
+                <div>
+                  <dt className="text-sm font-medium text-gray-500">수신사</dt>
+                  <dd className="mt-1 text-sm text-gray-900">{shipment.receiver_company?.name || '-'}</dd>
+                  {shipment.receiver_person?.username && (
+                    <dd className="text-sm text-gray-500">{shipment.receiver_person.username}</dd>
+                  )}
+                </div>
+                <div>
+                  <dt className="text-sm font-medium text-gray-500">출발 센터</dt>
+                  <dd className="mt-1 text-sm text-gray-900">{shipment.departure_center?.name || '-'}</dd>
+                </div>
+                <div>
+                  <dt className="text-sm font-medium text-gray-500">도착 센터</dt>
+                  <dd className="mt-1 text-sm text-gray-900">{shipment.arrival_center?.name || '-'}</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        <div>
-          <p className="text-gray-600">공급사</p>
-          <p className="font-medium">{shipment.supplier_company_name}</p>
-        </div>
-        <div>
-          <p className="text-gray-600">수신사</p>
-          <p className="font-medium">{shipment.receiver_company_name}</p>
-        </div>
-        <div>
-          <p className="text-gray-600">출발지</p>
-          <p className="font-medium">{shipment.departure_center_name}</p>
-        </div>
-        <div>
-          <p className="text-gray-600">도착지</p>
-          <p className="font-medium">{shipment.arrival_center_name}</p>
-        </div>
-        <div>
-          <p className="text-gray-600">출하일시</p>
-          <p className="font-medium">{new Date(shipment.shipment_datetime).toLocaleString()}</p>
-        </div>
-        <div>
-          <p className="text-gray-600">상태</p>
-          <p className="font-medium">{getStatusLabel(shipment.shipment_status)}</p>
-        </div>
-        <div>
-          <p className="text-gray-600">배송 ID</p>
-          <p className="font-medium">{shipment.id}</p>
-        </div>
-      </div>
-
-      {/* 등급별 품목 테이블 */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full border divide-y divide-gray-200 text-center">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="border px-4 py-2">작물명</th>
-              {qualityOrder.map((q) => (
-                <th key={q} className="border px-4 py-2">{q}등급</th>
-              ))}
-              <th className="border px-4 py-2">총 무게</th>
-              <th className="border px-4 py-2">총 금액</th>
-              <th className="border px-4 py-2 text-sm text-gray-600">단가</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.entries(grouped).map(([product, qualities]) => {
-              const productTotalWeight = qualityOrder.reduce((sum, q) => sum + (qualities[q]?.quantity || 0), 0);
-              const productTotalPrice = qualityOrder.reduce((sum, q) => sum + (qualities[q]?.price || 0), 0);
-
-              return (
-                <tr key={product}>
-                  <td className="border px-4 py-2 font-medium">{product}</td>
-                  {qualityOrder.map((q) => (
-                    <td key={q} className="border px-4 py-2 text-green-600 font-medium">
-                      {qualities[q] ? `${qualities[q].quantity}kg` : ''}
-                    </td>
+          <div className="mt-8">
+            <h2 className="text-lg font-medium mb-4">출하 품목</h2>
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">품목명</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">품질</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">수량</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">단가</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">금액</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {shipment.items.map((item) => (
+                    <tr key={item.id}>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.product_name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{qualityToString(item.quality)}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.quantity.toLocaleString()}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.unit_price.toLocaleString()}원</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{item.total_price.toLocaleString()}원</td>
+                    </tr>
                   ))}
-                  <td className="border px-4 py-2 font-medium">{productTotalWeight}kg</td>
-                  <td className="border px-4 py-2 font-medium">{productTotalPrice.toLocaleString()}원</td>
-                  <td className="border px-4 py-2 text-sm text-gray-600 whitespace-pre-line">
-                    {qualityOrder.map(q => 
-                      qualities[q] ? `${q}등급: ${qualities[q].unitPrice.toLocaleString()}원/kg` : ''
-                    ).filter(Boolean).join('\n')}
-                  </td>
-                </tr>
-              );
-            })}
-            <tr className="font-semibold text-black bg-gray-50">
-              <td className="border px-4 py-2">등급별 합계</td>
-              {qualityOrder.map((q) => (
-                <td key={q} className="border px-4 py-2">{gradeTotalWeight[q]}kg</td>
-              ))}
-              <td className="border px-4 py-2">{totalWeight}kg</td>
-              <td className="border px-4 py-2">{totalPrice.toLocaleString()}원</td>
-              <td className="border px-4 py-2 text-sm text-gray-600 whitespace-pre-line">
-                {qualityOrder.map(q => 
-                  gradeTotalWeight[q] > 0 ? `${q}등급: ${Math.round(gradeTotalPrice[q] / gradeTotalWeight[q]).toLocaleString()}원/kg` : ''
-                ).filter(Boolean).join('\n')}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td colSpan={4} className="px-6 py-4 text-right text-sm font-medium text-gray-900">
+                      총계
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      {totalPrice.toLocaleString()}원
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
 
-      {shipment.notes && (
-        <div className="mt-6">
-          <h3 className="text-lg font-semibold mb-2">비고</h3>
-          <p className="text-gray-700">{shipment.notes}</p>
+          {shipment.notes && (
+            <div className="mt-8">
+              <h2 className="text-lg font-medium mb-4">비고</h2>
+              <div className="bg-gray-50 rounded-lg p-4">
+                <p className="text-sm text-gray-900 whitespace-pre-wrap">{shipment.notes}</p>
+              </div>
+            </div>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };

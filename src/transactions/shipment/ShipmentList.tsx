@@ -1,34 +1,151 @@
-import React, { useState } from 'react';
-import { ShipmentResponse } from './types';
-import { mockShipments } from './mock';
-import { format } from 'date-fns';
-import { ko } from 'date-fns/locale';
-import { ShipmentStatus } from '../common/types';
-import ShipmentDetail from './ShipmentDetail';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { shipmentService } from './services/shipmentService';
+import { ShipmentResponse } from './types';
+import { ShipmentStatus } from '../common/types';
+import { format } from 'date-fns';
+import { FiChevronDown, FiChevronRight } from 'react-icons/fi';
+import ShipmentDetail from './ShipmentDetail';
 
-interface ShipmentListProps {
-  shipments?: ShipmentResponse[];
-}
-
-const getStatusLabel = (status: ShipmentStatus) => {
-  switch (status) {
-    case ShipmentStatus.DELIVERED:
-      return '배송완료';
-    case ShipmentStatus.IN_TRANSIT:
-      return '배송중';
-    default:
-      return '알 수 없음';
-  }
-};
-
-const ShipmentList: React.FC<ShipmentListProps> = ({ shipments = mockShipments }) => {
-  const [expandedShipmentId, setExpandedShipmentId] = useState<string | null>(null);
+const ShipmentList = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [expandedShipmentId, setExpandedShipmentId] = useState<string | null>(null);
+
+  // 출하 목록 조회
+  const { data: shipments = [], isLoading, error, refetch } = useQuery({
+    queryKey: ['shipments'],
+    queryFn: () => shipmentService.getShipments(),
+  });
+
+  const getStatusColor = (status: ShipmentStatus) => {
+    switch (status) {
+      case ShipmentStatus.DELIVERED:
+        return 'bg-green-100 text-green-800';
+      case ShipmentStatus.IN_TRANSIT:
+        return 'bg-blue-100 text-blue-800';
+      case ShipmentStatus.PENDING:
+        return 'bg-yellow-100 text-yellow-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
+  const getStatusLabel = (status: ShipmentStatus) => {
+    switch (status) {
+      case ShipmentStatus.DELIVERED:
+        return '배송완료';
+      case ShipmentStatus.IN_TRANSIT:
+        return '배송중';
+      case ShipmentStatus.PENDING:
+        return '출하대기';
+      default:
+        return status;
+    }
+  };
 
   const toggleShipment = (shipmentId: string) => {
     setExpandedShipmentId(expandedShipmentId === shipmentId ? null : shipmentId);
   };
+
+  const handleStatusChange = async (shipmentId: string, newStatus: ShipmentStatus) => {
+    try {
+      await shipmentService.updateShipmentStatus(shipmentId, newStatus);
+      queryClient.invalidateQueries({ queryKey: ['shipments'] });
+    } catch (error: any) {
+      console.error('상태 변경 실패:', error);
+      alert(`상태 변경 실패: ${error.message}`);
+    }
+  };
+
+  interface StatusDropdownProps {
+    shipmentId: string;
+    currentStatus: ShipmentStatus;
+    onStatusChange: (shipmentId: string, newStatus: ShipmentStatus) => void;
+  }
+
+  const StatusDropdown: React.FC<StatusDropdownProps> = ({ shipmentId, currentStatus, onStatusChange }) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
+    const statusOptions = [
+      ShipmentStatus.PENDING,
+      ShipmentStatus.IN_TRANSIT,
+      ShipmentStatus.DELIVERED
+    ];
+
+    useEffect(() => {
+      const handleClickOutside = (event: MouseEvent) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+          setIsOpen(false);
+        }
+      };
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside);
+      };
+    }, []);
+
+    return (
+      <div className="relative inline-block text-left" ref={dropdownRef}>
+        <button
+          type="button"
+          onClick={e => {
+            e.stopPropagation();
+            setIsOpen(!isOpen);
+          }}
+          className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full cursor-pointer hover:opacity-80 ${getStatusColor(currentStatus)}`}
+        >
+          {getStatusLabel(currentStatus)}
+          <FiChevronDown className="ml-1 -mr-1 h-4 w-4" />
+        </button>
+        {isOpen && (
+          <div className="origin-top-right absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
+            <div className="py-1">
+              {statusOptions.map(status => (
+                <a
+                  key={status}
+                  href="#"
+                  onClick={e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onStatusChange(shipmentId, status as ShipmentStatus);
+                    setIsOpen(false);
+                  }}
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  {getStatusLabel(status as ShipmentStatus)}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-red-600 mb-4">출하 목록을 불러오는데 실패했습니다.</p>
+        <button
+          onClick={() => refetch()}
+          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+        >
+          다시 시도
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -41,42 +158,111 @@ const ShipmentList: React.FC<ShipmentListProps> = ({ shipments = mockShipments }
           출하 생성
         </button>
       </div>
-
-      <div className="space-y-4">
-        {shipments.map((shipment) => (
-          <div key={shipment.id} className="bg-white rounded-lg shadow">
-            {/* 간단 정보 */}
-            <div 
-              className="p-4 cursor-pointer hover:bg-gray-50"
-              onClick={() => toggleShipment(shipment.id)}
-            >
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className="text-lg font-semibold">{shipment.title}</h3>
-                  <p className="text-sm text-gray-600">
-                    {shipment.supplier_company_name} → {shipment.receiver_company_name}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm text-gray-600">
-                    {shipment.shipment_datetime && format(shipment.shipment_datetime, 'yyyy-MM-dd HH:mm', { locale: ko })}
-                  </p>
-                  <p className="text-sm font-medium">
-                    {getStatusLabel(shipment.shipment_status)}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* 상세 정보 (토글) */}
-            {expandedShipmentId === shipment.id && (
-              <div className="border-t border-gray-200">
-                <ShipmentDetail shipment={shipment} />
-              </div>
-            )}
+      {shipments.length === 0 ? (
+        <div className="text-center py-8 text-gray-500">
+          <p>등록된 출하가 없습니다.</p>
+          <p className="text-sm mt-1">출하 생성 버튼을 클릭하여 새 출하를 등록하세요.</p>
+        </div>
+      ) : (
+        <div className="bg-white rounded-lg shadow">
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="w-8 px-6 py-3"></th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    제목
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    공급자
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    수신자
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    출하일시
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    상태
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    관리
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {shipments.map((shipment) => (
+                  <React.Fragment key={shipment.id}>
+                    <tr
+                      onClick={() => toggleShipment(shipment.id)}
+                      className="hover:bg-gray-50 cursor-pointer"
+                    >
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        {expandedShipmentId === shipment.id ? (
+                          <FiChevronDown className="h-5 w-5 text-gray-400" />
+                        ) : (
+                          <FiChevronRight className="h-5 w-5 text-gray-400" />
+                        )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm font-medium text-gray-900">{shipment.title}</div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {shipment.supplier_company?.name || '-'}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {shipment.supplier_person?.username || '-'}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {shipment.receiver_company?.name || '-'}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          {shipment.receiver_person?.username || '-'}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {shipment.shipment_datetime
+                            ? format(new Date(shipment.shipment_datetime), 'yyyy-MM-dd')
+                            : '-'}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <StatusDropdown
+                          shipmentId={shipment.id}
+                          currentStatus={shipment.shipment_status}
+                          onStatusChange={handleStatusChange}
+                        />
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/wholesaler/transactions/shipments/${shipment.id}/edit`);
+                          }}
+                          className="text-blue-600 hover:text-blue-900 mr-2"
+                        >
+                          수정
+                        </button>
+                      </td>
+                    </tr>
+                    {expandedShipmentId === shipment.id && (
+                      <tr>
+                        <td colSpan={7} className="px-6 py-4 bg-gray-50">
+                          <ShipmentDetail shipment={shipment} />
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
+                ))}
+              </tbody>
+            </table>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
