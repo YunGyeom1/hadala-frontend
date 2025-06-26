@@ -36,6 +36,8 @@ const Profile = () => {
         name: updatedProfile.name,
         phone: updatedProfile.phone,
         email: updatedProfile.email,
+        company_id: updatedProfile.company_id,
+        company_name: updatedProfile.company_name,
       },
     });
   };

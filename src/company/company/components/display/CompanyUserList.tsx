@@ -98,7 +98,7 @@ const CompanyUserList: React.FC<CompanyUserListProps> = ({
     if (!newRole) return;
 
     try {
-      await companyUserService.updateUserRole(companyId, userId, newRole);
+      await companyUserService.updateUserRole(userId, newRole);
       
       // 사용자 목록 업데이트
       setUsers(users.map(user => 
@@ -169,16 +169,12 @@ const CompanyUserList: React.FC<CompanyUserListProps> = ({
     }
   };
 
-  const getStatusBadge = (isActive: boolean) => {
-    return isActive ? (
-      <span className="px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
-        활성
-      </span>
-    ) : (
-      <span className="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">
-        비활성
-      </span>
-    );
+  const getStatusColor = (isActive: boolean) => {
+    return isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
+  };
+
+  const getStatusLabel = (isActive: boolean) => {
+    return isActive ? '활성' : '비활성';
   };
 
   if (loading) {

@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { companyService } from '../services/companyService';
-import { Company, CompanyUpdateRequest } from '../types';
+import { Company } from '../types';
 
 export const useCompany = (companyId?: string) => {
   const [company, setCompany] = useState<Company | null>(null);

@@ -60,7 +60,7 @@ export const useCompanies = () => {
     }
   }, []);
 
-  const deleteCompany = useCallback(async (companyId: string) => {
+  const deleteCompany = useCallback(async () => {
     setLoading(true);
     setError(null);
     

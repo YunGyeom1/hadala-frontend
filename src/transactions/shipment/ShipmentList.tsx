@@ -21,12 +21,16 @@ const ShipmentList = () => {
 
   const getStatusColor = (status: ShipmentStatus) => {
     switch (status) {
-      case ShipmentStatus.DELIVERED:
-        return 'bg-green-100 text-green-800';
-      case ShipmentStatus.IN_TRANSIT:
-        return 'bg-blue-100 text-blue-800';
       case ShipmentStatus.PENDING:
         return 'bg-yellow-100 text-yellow-800';
+      case ShipmentStatus.READY:
+        return 'bg-blue-100 text-blue-800';
+      case ShipmentStatus.DELIVERED:
+        return 'bg-green-100 text-green-800';
+      case ShipmentStatus.FAILED:
+        return 'bg-red-100 text-red-800';
+      case ShipmentStatus.CANCELLED:
+        return 'bg-gray-100 text-gray-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
@@ -34,12 +38,16 @@ const ShipmentList = () => {
 
   const getStatusLabel = (status: ShipmentStatus) => {
     switch (status) {
-      case ShipmentStatus.DELIVERED:
-        return '배송완료';
-      case ShipmentStatus.IN_TRANSIT:
-        return '배송중';
       case ShipmentStatus.PENDING:
-        return '출하대기';
+        return '출하 대기';
+      case ShipmentStatus.READY:
+        return '운송 준비 완료';
+      case ShipmentStatus.DELIVERED:
+        return '배송 완료';
+      case ShipmentStatus.FAILED:
+        return '배송 실패';
+      case ShipmentStatus.CANCELLED:
+        return '취소';
       default:
         return status;
     }
@@ -71,8 +79,10 @@ const ShipmentList = () => {
 
     const statusOptions = [
       ShipmentStatus.PENDING,
-      ShipmentStatus.IN_TRANSIT,
-      ShipmentStatus.DELIVERED
+      ShipmentStatus.READY,
+      ShipmentStatus.DELIVERED,
+      ShipmentStatus.FAILED,
+      ShipmentStatus.CANCELLED
     ];
 
     useEffect(() => {

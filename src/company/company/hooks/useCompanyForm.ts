@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { CompanyFormData, CompanyType } from '../types';
 import { validateCompanyForm } from '../utils/validation';
 
-export const useCompanyForm = (initialData?: Partial<CompanyFormData>, companyType?: CompanyType) => {
+export const useCompanyForm = (initialData?: Partial<CompanyFormData>) => {
   const [formData, setFormData] = useState<CompanyFormData>({
     name: initialData?.name || '',
     owner_name: initialData?.owner_name || '',

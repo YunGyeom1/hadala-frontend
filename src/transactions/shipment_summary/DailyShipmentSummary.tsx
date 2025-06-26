@@ -1,24 +1,57 @@
 import React from 'react';
-import { ShipmentSummary } from './types';
+import { SummaryResponse } from './types';
 import { ProductQuality } from '../common/types';
 
 const qualityOrder = [ProductQuality.A, ProductQuality.B, ProductQuality.C];
 
 interface DailyShipmentSummaryProps {
   date: string;
-  data: ShipmentSummary;
+  data: SummaryResponse;
 }
 
 const DailyShipmentSummary: React.FC<DailyShipmentSummaryProps> = ({ date, data }) => {
   // 모든 센터 이름 수집
   const centerNames = Array.from(
-    new Set(data.rows.map(row => row.center_name))
+    new Set(data.daily_summaries[0]?.center_summaries.map(center => center.center_name) || [])
   ).sort();
 
   // 모든 작물 이름 수집
   const cropNames = Array.from(
-    new Set(data.rows.map(row => row.product_name))
+    new Set(
+      data.daily_summaries[0]?.center_summaries.flatMap(center => 
+        center.items.map(item => item.product_name)
+      ) || []
+    )
   ).sort();
+
+  const getItemQuantity = (centerName: string, productName: string, quality: ProductQuality): number => {
+    const center = data.daily_summaries[0]?.center_summaries.find(c => c.center_name === centerName);
+    if (!center) return 0;
+    
+    const item = center.items.find(i => i.product_name === productName && i.quality === quality);
+    return item ? item.quantity : 0;
+  };
+
+  const getCenterTotal = (centerName: string, productName: string): number => {
+    const center = data.daily_summaries[0]?.center_summaries.find(c => c.center_name === centerName);
+    if (!center) return 0;
+    
+    return center.items
+      .filter(item => item.product_name === productName)
+      .reduce((sum, item) => sum + item.quantity, 0);
+  };
+
+  const getProductTotal = (productName: string): number => {
+    return data.daily_summaries[0]?.center_summaries.flatMap(center => 
+      center.items.filter(item => item.product_name === productName)
+    ).reduce((sum, item) => sum + item.quantity, 0) || 0;
+  };
+
+  const getGrandTotal = (): number => {
+    return data.daily_summaries[0]?.center_summaries.flatMap(center => 
+      center.items
+    ).reduce((sum, item) => sum + item.quantity, 0) || 0;
+  };
 
   return (
     <div className="space-y-6">
@@ -29,7 +62,7 @@ const DailyShipmentSummary: React.FC<DailyShipmentSummaryProps> = ({ date, data 
             year: 'numeric',
             month: 'long',
             day: 'numeric'
-          })} 출하 현황
+          })} {data.direction === 'outbound' ? '출하' : '입하'} 현황
         </h2>
       </div>
 
@@ -51,13 +84,11 @@ const DailyShipmentSummary: React.FC<DailyShipmentSummaryProps> = ({ date, data 
             {cropNames.map(crop => (
               <React.Fragment key={crop}>
                 {qualityOrder.map(quality => {
-                  const rowData = data.rows.filter(
-                    row => row.product_name === crop && row.quality === quality
+                  const hasData = centerNames.some(center => 
+                    getItemQuantity(center, crop, quality) > 0
                   );
                   
-                  if (rowData.length === 0) return null;
-
-                  const total = rowData.reduce((sum, row) => sum + row.quantity, 0);
+                  if (!hasData) return null;
 
                   return (
                     <tr key={`${crop}-${quality}`} className="hover:bg-gray-50">
@@ -65,15 +96,20 @@ const DailyShipmentSummary: React.FC<DailyShipmentSummaryProps> = ({ date, data 
                         {crop} ({quality})
                       </td>
                       {centerNames.map(center => {
-                        const centerData = rowData.find(row => row.center_name === center);
+                        const quantity = getItemQuantity(center, crop, quality);
                         return (
                           <td key={center} className="px-4 py-2 border-b text-right">
-                            {centerData ? centerData.quantity.toLocaleString() : '-'}
+                            {quantity > 0 ? quantity.toLocaleString() : '-'}
                           </td>
                         );
                       })}
                       <td className="px-4 py-2 border-b text-right font-semibold">
-                        {total.toLocaleString()}
+                        {qualityOrder
+                          .map(q => centerNames.reduce((sum, center) => 
+                            sum + getItemQuantity(center, crop, q), 0
+                          ))
+                          .reduce((sum, qty) => sum + qty, 0)
+                          .toLocaleString()}
                       </td>
                     </tr>
                   );
@@ -83,9 +119,7 @@ const DailyShipmentSummary: React.FC<DailyShipmentSummaryProps> = ({ date, data 
                     {crop} 합계
                   </td>
                   {centerNames.map(center => {
-                    const centerTotal = data.rows
-                      .filter(row => row.product_name === crop && row.center_name === center)
-                      .reduce((sum, row) => sum + row.quantity, 0);
+                    const centerTotal = getCenterTotal(center, crop);
                     return (
                       <td key={center} className="px-4 py-2 border-b text-right font-semibold">
                         {centerTotal.toLocaleString()}
@@ -93,14 +127,28 @@ const DailyShipmentSummary: React.FC<DailyShipmentSummaryProps> = ({ date, data 
                     );
                   })}
                   <td className="px-4 py-2 border-b text-right font-semibold">
-                    {data.rows
-                      .filter(row => row.product_name === crop)
-                      .reduce((sum, row) => sum + row.quantity, 0)
-                      .toLocaleString()}
+                    {getProductTotal(crop).toLocaleString()}
                   </td>
                 </tr>
               </React.Fragment>
             ))}
+            {/* 전체 합계 행 */}
+            <tr className="bg-blue-50">
+              <td className="px-4 py-2 border-b font-bold">전체 합계</td>
+              {centerNames.map(center => {
+                const centerGrandTotal = cropNames.reduce((sum, crop) => 
+                  sum + getCenterTotal(center, crop), 0
+                );
+                return (
+                  <td key={center} className="px-4 py-2 border-b text-right font-bold">
+                    {centerGrandTotal.toLocaleString()}
+                  </td>
+                );
+              })}
+              <td className="px-4 py-2 border-b text-right font-bold">
+                {getGrandTotal().toLocaleString()}
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>

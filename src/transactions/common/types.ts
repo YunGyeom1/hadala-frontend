@@ -19,8 +19,10 @@ export const qualityToString = (quality: ProductQuality): string => {
 
 export enum ShipmentStatus {
   PENDING = 'pending',
-  IN_TRANSIT = 'in_transit',
-  DELIVERED = 'delivered'
+  READY = 'ready',
+  DELIVERED = 'delivered',
+  FAILED = 'failed',
+  CANCELLED = 'cancelled'
 }
 
 export enum ContractStatus {

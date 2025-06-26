@@ -6,7 +6,6 @@ import { COMPANY_TYPE_OPTIONS } from '../../constants/companyConstants';
 interface CompanySearchProps {
   onSearch: (searchTerm: string, type?: CompanyType) => void;
   onSelect: (company: Company) => void;
-  selectedCompany?: Company;
   placeholder?: string;
   className?: string;
 }
@@ -14,7 +13,6 @@ interface CompanySearchProps {
 const CompanySearch: React.FC<CompanySearchProps> = ({
   onSearch,
   onSelect,
-  selectedCompany,
   placeholder = "회사 검색...",
   className = ""
 }) => {

@@ -63,7 +63,7 @@ export const companyUserService = {
   },
 
   // 유저 역할 수정
-  async updateUserRole(companyId: string, userId: string, role: string): Promise<Profile> {
+  async updateUserRole(userId: string, role: string): Promise<Profile> {
     const response = await fetch(`${API_BASE_URL}/profile/${userId}/role`, {
       method: 'PUT',
       headers: {

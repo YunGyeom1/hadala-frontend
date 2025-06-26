@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Profile, ProfileType } from './types';
 import { ProfileCreateRequest } from './profile';
+import CompanySearch from '@/company/company/components/search/CompanySearch';
+import { Company } from '@/company/company/types';
 
 interface ProfileCardProps {
   profile?: Profile;
@@ -114,6 +116,14 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       default:
         return 'bg-gray-600';
     }
+  };
+
+  const handleCompanySelect = (company: Company) => {
+    setEditedProfile({
+      ...editedProfile,
+      company_id: company.id,
+      company_name: company.name,
+    });
   };
 
   const handleSave = (e: React.FormEvent) => {
@@ -277,15 +287,38 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             )}
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-6">
-          <div>
-            <p className="text-gray-600">회사명</p>
-            <p className="font-medium">{profile?.company_name || '-'}</p>
-          </div>
-          <div>
-            <p className="text-gray-600">역할</p>
-            <p className="font-medium">{profile?.role || '-'}</p>
-          </div>
+        
+        {/* 회사 선택 섹션 */}
+        <div>
+          <p className="text-gray-600">회사 선택</p>
+          {isEditing ? (
+            <div className="mt-2">
+              <CompanySearch
+                onSearch={() => {}} // 검색은 CompanySearch 내부에서 처리됨
+                onSelect={handleCompanySelect}
+                placeholder="회사를 검색하여 선택하세요..."
+                className="w-full"
+              />
+              {(editedProfile as any).company_name && (
+                <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded-md">
+                  <p className="text-sm text-green-800">
+                    선택된 회사: <strong>{(editedProfile as any).company_name}</strong>
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-6">
+              <div>
+                <p className="text-gray-600">회사명</p>
+                <p className="font-medium">{profile?.company_name || '-'}</p>
+              </div>
+              <div>
+                <p className="text-gray-600">역할</p>
+                <p className="font-medium">{profile?.role || '-'}</p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

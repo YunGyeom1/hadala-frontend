@@ -12,7 +12,7 @@ interface ProfileContextType {
   getProfileByType: (type: string) => Profile | null;
 }
 
-const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
+export const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
 
 export const useProfile = () => {
   const context = useContext(ProfileContext);

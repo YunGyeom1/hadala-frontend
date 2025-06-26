@@ -32,7 +32,7 @@ export const centerService = {
   },
 
   // 센터 생성
-  async createCenter(centerData: CenterCreateRequest, companyId: string): Promise<Center> {
+  async createCenter(centerData: CenterCreateRequest): Promise<Center> {
     const response = await fetch(`${API_BASE_URL}/centers/`, {
       method: 'POST',
       headers: {

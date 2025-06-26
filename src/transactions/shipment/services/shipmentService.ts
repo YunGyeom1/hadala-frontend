@@ -123,14 +123,23 @@ export const shipmentService = {
 
   // 출하 상태 변경
   async updateShipmentStatus(shipmentId: string, shipmentStatus: string): Promise<ShipmentResponse> {
-    const response = await fetch(`${API_BASE_URL}/shipments/${shipmentId}/status`, {
-      method: 'PATCH',
+    // 먼저 현재 shipment 데이터를 가져옴
+    const currentShipment = await this.getShipment(shipmentId);
+    
+    // 상태만 업데이트
+    const updateData: ShipmentUpdate = {
+      ...currentShipment,
+      shipment_status: shipmentStatus as any, // ShipmentStatus 타입으로 캐스팅
+    };
+
+    const response = await fetch(`${API_BASE_URL}/shipments/${shipmentId}`, {
+      method: 'PUT',
       headers: {
         'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
         'X-Profile-ID': localStorage.getItem('profile_id') || '',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ shipment_status: shipmentStatus }),
+      body: JSON.stringify(updateData),
     });
 
     if (!response.ok) {
