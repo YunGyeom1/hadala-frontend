@@ -64,7 +64,7 @@ export interface ShipmentResponse extends ShipmentBase {
 // Additional types for form handling
 export interface ShipmentItem {
   product_name: string;
-  quality: ProductQuality;
+  quality: string;
   quantity: number;
   unit_price: number;
   total_price?: number;

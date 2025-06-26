@@ -53,6 +53,7 @@ const ContractCenters: React.FC<ContractCentersProps> = ({
             <CenterSearch
               companyId={selectedSupplierCompany?.id || undefined}
               onSelect={onDepartureCenterSelect}
+              placeholder={selectedSupplierCompany?.id ? "공급자 회사 센터 검색..." : "센터명으로 검색..."}
             />
           )}
         </div>
@@ -83,6 +84,7 @@ const ContractCenters: React.FC<ContractCentersProps> = ({
             <CenterSearch
               companyId={selectedReceiverCompany?.id || undefined}
               onSelect={onArrivalCenterSelect}
+              placeholder={selectedReceiverCompany?.id ? "수신자 회사 센터 검색..." : "센터명으로 검색..."}
             />
           )}
         </div>

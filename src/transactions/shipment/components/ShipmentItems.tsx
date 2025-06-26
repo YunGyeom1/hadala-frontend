@@ -1,7 +1,5 @@
 import React from 'react';
-import { TrashIcon } from '@heroicons/react/24/outline';
 import { ShipmentItem } from '../types';
-import { ProductQuality, qualityToString } from '@/transactions/common/types';
 
 interface ShipmentItemsProps {
   items: ShipmentItem[];
@@ -16,77 +14,102 @@ const ShipmentItems: React.FC<ShipmentItemsProps> = ({
   onAddItem,
   onRemoveItem,
 }) => {
-  const handleNumericChange = (index: number, field: 'quantity' | 'unit_price', value: string) => {
-    const numericValue = value.replace(/,/g, '');
-    if (!isNaN(Number(numericValue))) {
-      onItemChange(index, field, Number(numericValue));
+  const handleNumericChange = (index: number, field: string, value: string) => {
+    if (value === '' || /^\d*\.?\d*$/.test(value)) {
+      onItemChange(index, field as keyof ShipmentItem, value);
     }
   };
 
   return (
-    <div className="mb-8">
+    <div className="mt-8">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold border-b pb-2 flex-grow">출하 품목</h2>
-        <button type="button" onClick={onAddItem} className="btn btn-sm btn-outline">
+        <h2 className="text-lg font-medium">출하 품목</h2>
+        <button
+          type="button"
+          onClick={onAddItem}
+          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+        >
           품목 추가
         </button>
       </div>
-
-      <div className="overflow-x-auto">
-        <table className="table w-full">
-          <thead>
-            <tr>
-              <th className="w-1/3">품목명</th>
-              <th>품질</th>
-              <th>수량</th>
-              <th>단가</th>
-              <th>총액</th>
-              <th className="w-12"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((item, index) => (
-              <tr key={index}>
-                <td>
-                  <input
-                    type="text"
-                    value={item.product_name}
-                    onChange={(e) => onItemChange(index, 'product_name', e.target.value)}
-                    className="input input-bordered w-full"
-                  />
-                </td>
-                <td>{qualityToString(item.quality as ProductQuality)}</td>
-                <td>
-                  <input
-                    type="text"
-                    value={Number(item.quantity).toLocaleString()}
-                    onChange={(e) => handleNumericChange(index, 'quantity', e.target.value)}
-                    className="input input-bordered w-full text-right"
-                  />
-                </td>
-                <td>
-                  <input
-                    type="text"
-                    value={Number(item.unit_price).toLocaleString()}
-                    onChange={(e) => handleNumericChange(index, 'unit_price', e.target.value)}
-                    className="input input-bordered w-full text-right"
-                  />
-                </td>
-                <td>
-                  <span className="font-mono text-right block pr-4">
-                    {Number(item.total_price).toLocaleString()}
-                  </span>
-                </td>
-                <td>
-                  <button type="button" onClick={() => onRemoveItem(index)} className="btn btn-ghost btn-sm">
-                    <TrashIcon className="h-5 w-5" />
+      <div className="space-y-4">
+        {items.map((item, index) => (
+          <div key={index} className="flex items-end space-x-4 p-4 bg-gray-50 rounded-lg">
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-700">품목</label>
+              <input
+                type="text"
+                value={item.product_name}
+                onChange={(e) => onItemChange(index, 'product_name', e.target.value)}
+                placeholder="품목명을 입력하세요"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                required
+              />
+            </div>
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-700">품질</label>
+              <div className="flex items-center space-x-2">
+                {['A', 'B', 'C'].map(q => (
+                  <button
+                    key={q}
+                    type="button"
+                    className={`px-2 py-1 rounded border ${item.quality === q ? 'bg-blue-500 text-white' : 'bg-white text-gray-700'}`}
+                    onClick={() => onItemChange(index, 'quality', q)}
+                  >
+                    {q}
                   </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                ))}
+              </div>
+            </div>
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-700">수량</label>
+              <input
+                type="text"
+                value={item.quantity}
+                onChange={(e) => handleNumericChange(index, 'quantity', e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                required
+              />
+            </div>
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-700">단가</label>
+              <input
+                type="text"
+                value={item.unit_price}
+                onChange={(e) => handleNumericChange(index, 'unit_price', e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                required
+              />
+            </div>
+            <div className="flex-1">
+              <label className="block text-sm font-medium text-gray-700">총액</label>
+              <input
+                type="text"
+                value={item.total_price}
+                onChange={(e) => handleNumericChange(index, 'total_price', e.target.value)}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                required
+              />
+            </div>
+            <button
+              type="button"
+              onClick={() => onRemoveItem(index)}
+              className="px-3 py-2 text-sm font-medium text-red-600 hover:text-red-700"
+            >
+              삭제
+            </button>
+          </div>
+        ))}
       </div>
+
+      {/* 출하 품목 미리보기 */}
+      {items.length > 0 && (
+        <div className="mt-4">
+          <span className="text-sm text-gray-700">
+            {items.map(item => `${item.product_name || '품목명 미입력'}(${item.quality}) ${item.quantity}개 x ${item.unit_price}원`).join(', ')}
+          </span>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React from 'react';
 import ProfileSearch from '@/profile/ProfileSearch';
+import CompanySearch from '@/company/company/components/search/CompanySearch';
 import { Company, Profile } from '@/transactions/contract/types';
 
 interface ShipmentPartiesProps {
@@ -11,6 +12,10 @@ interface ShipmentPartiesProps {
   onReceiverPersonSelect: (profile: Profile) => void;
   onSupplierPersonRemove: () => void;
   onReceiverPersonRemove: () => void;
+  onSupplierCompanySelect: (company: Company) => void;
+  onReceiverCompanySelect: (company: Company) => void;
+  onSupplierCompanyRemove: () => void;
+  onReceiverCompanyRemove: () => void;
 }
 
 const ShipmentParties: React.FC<ShipmentPartiesProps> = ({
@@ -22,14 +27,22 @@ const ShipmentParties: React.FC<ShipmentPartiesProps> = ({
   onReceiverPersonSelect,
   onSupplierPersonRemove,
   onReceiverPersonRemove,
+  onSupplierCompanySelect,
+  onReceiverCompanySelect,
+  onSupplierCompanyRemove,
+  onReceiverCompanyRemove,
 }) => {
+  const onSearch = (query: string) => {
+    console.log('Search query:', query);
+  };
+
   return (
     <div className="mb-8">
       <h2 className="text-lg font-semibold mb-4 border-b pb-2">계약 당사자 및 출하 담당자</h2>
       <div className="grid grid-cols-2 gap-6">
-        {/* 공급 담당자 */}
+        {/* 공급자(유저) */}
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">공급 담당자</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">공급자(유저)</label>
           {selectedSupplierPerson ? (
             <div className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50">
               <div className="flex justify-between items-center">
@@ -38,6 +51,9 @@ const ShipmentParties: React.FC<ShipmentPartiesProps> = ({
                   <p className="text-sm text-gray-500">{selectedSupplierPerson.username}</p>
                 </div>
                 <div className="text-right">
+                  <p className="text-sm text-gray-500 overflow-hidden text-ellipsis whitespace-nowrap max-w-[120px]">
+                    {selectedSupplierPerson?.company_name || '-'}
+                  </p>
                   <button
                     type="button"
                     onClick={onSupplierPersonRemove}
@@ -53,9 +69,9 @@ const ShipmentParties: React.FC<ShipmentPartiesProps> = ({
           )}
         </div>
 
-        {/* 수신 담당자 */}
+        {/* 수신자(유저) */}
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">수신 담당자</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">수신자(유저)</label>
           {selectedReceiverPerson ? (
             <div className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50">
               <div className="flex justify-between items-center">
@@ -64,6 +80,9 @@ const ShipmentParties: React.FC<ShipmentPartiesProps> = ({
                   <p className="text-sm text-gray-500">{selectedReceiverPerson.username}</p>
                 </div>
                 <div className="text-right">
+                  <p className="text-sm text-gray-500 overflow-hidden text-ellipsis whitespace-nowrap max-w-[120px]">
+                    {selectedReceiverPerson?.company_name || '-'}
+                  </p>
                   <button
                     type="button"
                     onClick={onReceiverPersonRemove}
@@ -79,12 +98,12 @@ const ShipmentParties: React.FC<ShipmentPartiesProps> = ({
           )}
         </div>
 
-        {/* 공급 회사 (읽기 전용) */}
+        {/* 공급 회사 */}
         <div>
           <label className="block text-xs font-semibold text-gray-600 mb-1">공급 회사</label>
           {selectedSupplierCompany ? (
-            <div className="w-full h-[72px] px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 flex items-center">
-              <div className="flex justify-between items-center w-full">
+            <div className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50">
+              <div className="flex justify-between items-center">
                 <div>
                   <p className="font-medium text-gray-900 overflow-hidden text-ellipsis whitespace-nowrap max-w-[160px]">
                     {selectedSupplierCompany.name}
@@ -93,22 +112,27 @@ const ShipmentParties: React.FC<ShipmentPartiesProps> = ({
                 </div>
                 <div className="text-right">
                   <p className="text-sm text-gray-500">{selectedSupplierCompany.address || '-'}</p>
+                  <button
+                    type="button"
+                    onClick={onSupplierCompanyRemove}
+                    className="text-xs text-red-500 hover:text-red-700"
+                  >
+                    변경
+                  </button>
                 </div>
               </div>
             </div>
           ) : (
-            <div className="w-full h-[72px] px-4 py-3 border border-dashed border-gray-300 rounded-lg bg-gray-50 flex items-center justify-center">
-              <p className="text-sm text-gray-500">계약을 먼저 선택해주세요</p>
-            </div>
+            <CompanySearch onSelect={onSupplierCompanySelect} onSearch={onSearch} />
           )}
         </div>
 
-        {/* 수신 회사 (읽기 전용) */}
+        {/* 수신 회사 */}
         <div>
           <label className="block text-xs font-semibold text-gray-600 mb-1">수신 회사</label>
           {selectedReceiverCompany ? (
-            <div className="w-full h-[72px] px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 flex items-center">
-              <div className="flex justify-between items-center w-full">
+            <div className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50">
+              <div className="flex justify-between items-center">
                 <div>
                   <p className="font-medium text-gray-900 overflow-hidden text-ellipsis whitespace-nowrap max-w-[160px]">
                     {selectedReceiverCompany.name}
@@ -117,13 +141,18 @@ const ShipmentParties: React.FC<ShipmentPartiesProps> = ({
                 </div>
                 <div className="text-right">
                   <p className="text-sm text-gray-500">{selectedReceiverCompany.address || '-'}</p>
+                  <button
+                    type="button"
+                    onClick={onReceiverCompanyRemove}
+                    className="text-xs text-red-500 hover:text-red-700"
+                  >
+                    변경
+                  </button>
                 </div>
               </div>
             </div>
           ) : (
-            <div className="w-full h-[72px] px-4 py-3 border border-dashed border-gray-300 rounded-lg bg-gray-50 flex items-center justify-center">
-              <p className="text-sm text-gray-500">계약을 먼저 선택해주세요</p>
-            </div>
+            <CompanySearch onSelect={onReceiverCompanySelect} onSearch={onSearch} />
           )}
         </div>
       </div>

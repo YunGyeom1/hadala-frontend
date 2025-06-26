@@ -39,12 +39,12 @@ const ShipmentSummaryPage: React.FC = () => {
         end_date: endDate,
       };
 
-      let response: SummaryResponse;
-      if (direction === Direction.OUTBOUND) {
-        response = await shipmentSummaryService.getOutboundSummary(request);
-      } else {
-        response = await shipmentSummaryService.getInboundSummary(request);
-      }
+      // 새로운 통합 API 사용
+      const response = await shipmentSummaryService.getSummary(
+        'shipment',
+        direction === Direction.OUTBOUND ? 'outbound' : 'inbound',
+        request
+      );
 
       setSummaryData(response);
     } catch (err) {
@@ -54,27 +54,6 @@ const ShipmentSummaryPage: React.FC = () => {
     }
   };
 
-  const convertSummaryToShipmentSummary = (summary: SummaryResponse) => {
-    const rows: any[] = [];
-    
-    summary.daily_summaries.forEach(daily => {
-      daily.center_summaries.forEach(center => {
-        center.items.forEach(item => {
-          rows.push({
-            shipment_date: daily.date,
-            center_name: center.center_name,
-            product_name: item.product_name,
-            shipment_type: direction === Direction.OUTBOUND ? '출하' : '입하',
-            quality: item.quality,
-            quantity: item.quantity,
-            destination: direction === Direction.OUTBOUND ? '외부' : '내부'
-          });
-        });
-      });
-    });
-
-    return { rows };
-  };
 
   return (
     <div className="p-6 space-y-6">
@@ -156,10 +135,7 @@ const ShipmentSummaryPage: React.FC = () => {
             <div key={daily.date} className="bg-white rounded-lg shadow-sm border border-gray-200">
               <DailyShipmentSummary
                 date={daily.date}
-                data={convertSummaryToShipmentSummary({
-                  ...summaryData,
-                  daily_summaries: [daily]
-                })}
+                data={summaryData}
               />
             </div>
           ))}

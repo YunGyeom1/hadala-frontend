@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Company, CompanyType } from '../../types';
 import { getCompanyTypeLabel } from '../../utils/companyUtils';
 import { COMPANY_TYPE_OPTIONS } from '../../constants/companyConstants';
+import { companyService } from '../../services/companyService';
 
 interface CompanySearchProps {
   onSearch: (searchTerm: string, type?: CompanyType) => void;
@@ -25,32 +26,24 @@ const CompanySearch: React.FC<CompanySearchProps> = ({
   useEffect(() => {
     if (searchTerm.length >= 2) {
       setLoading(true);
-      // 실제 API 호출 대신 시뮬레이션
-      setTimeout(() => {
-        const filteredCompanies = [
-          {
-            id: '1',
-            name: '테스트 회사 1',
-            type: CompanyType.WHOLESALER,
-            owner_name: '홍길동',
-            created_at: '2024-01-01',
-            updated_at: '2024-01-01'
-          },
-          {
-            id: '2',
-            name: '테스트 회사 2',
-            type: CompanyType.RETAILER,
-            owner_name: '김철수',
-            created_at: '2024-01-01',
-            updated_at: '2024-01-01'
-          }
-        ].filter(company => 
-          company.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-          (!selectedType || company.type === selectedType)
-        );
-        setCompanies(filteredCompanies);
-        setLoading(false);
-      }, 300);
+      // 실제 API 호출
+      const searchCompanies = async () => {
+        try {
+          const allCompanies = await companyService.getCompanies();
+          const filteredCompanies = allCompanies.filter(company => 
+            company.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            (!selectedType || company.type === selectedType)
+          );
+          setCompanies(filteredCompanies);
+        } catch (error) {
+          console.error('회사 검색 실패:', error);
+          setCompanies([]);
+        } finally {
+          setLoading(false);
+        }
+      };
+      
+      searchCompanies();
     } else {
       setCompanies([]);
     }
@@ -93,7 +86,7 @@ const CompanySearch: React.FC<CompanySearchProps> = ({
                 >
                   <div className="font-medium">{company.name}</div>
                   <div className="text-sm text-gray-600">
-                    {getCompanyTypeLabel(company.type)} • {company.owner_name}
+                    {getCompanyTypeLabel(company.type)} • {company.owner_name || company.business_number || '-'}
                   </div>
                 </div>
               ))}
