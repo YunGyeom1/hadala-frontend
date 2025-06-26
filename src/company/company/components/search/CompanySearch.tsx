@@ -54,6 +54,10 @@ const CompanySearch: React.FC<CompanySearchProps> = ({
     onSearch(searchTerm, selectedType || undefined);
   };
 
+  const handleSearchClick = () => {
+    onSearch(searchTerm, selectedType || undefined);
+  };
+
   const handleSelect = (company: Company) => {
     onSelect(company);
     setSearchTerm(company.name);
@@ -62,7 +66,7 @@ const CompanySearch: React.FC<CompanySearchProps> = ({
 
   return (
     <div className={`relative ${className}`}>
-      <form onSubmit={handleSearch} className="flex gap-2">
+      <div className="flex gap-2">
         <div className="flex-1 relative">
           <input
             type="text"
@@ -70,6 +74,12 @@ const CompanySearch: React.FC<CompanySearchProps> = ({
             onChange={(e) => {
               setSearchTerm(e.target.value);
               setIsOpen(true);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                handleSearchClick();
+              }
             }}
             onFocus={() => setIsOpen(true)}
             placeholder={placeholder}
@@ -108,12 +118,13 @@ const CompanySearch: React.FC<CompanySearchProps> = ({
         </select>
         
         <button
-          type="submit"
+          type="button"
+          onClick={handleSearchClick}
           className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
           검색
         </button>
-      </form>
+      </div>
       
       {loading && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-md shadow-lg p-4 text-center text-gray-500">

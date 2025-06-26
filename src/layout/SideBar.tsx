@@ -34,7 +34,7 @@ const MENU_CONFIG: MenuConfig = {
       children: [
         { path: '/wholesaler/reports/shipment-summary', label: '출하 현황' },
         { path: '/wholesaler/reports/inventory-summary', label: '재고 현황' },
-        { path: '/wholesaler/reports/approval', label: '결재 현황' },
+        { path: '/wholesaler/reports/payment-summary', label: '결재 현황' },
       ]
     },
   ],

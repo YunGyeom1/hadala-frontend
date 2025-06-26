@@ -20,6 +20,16 @@ export interface ProfileCreateRequest {
   email?: string;
 }
 
+export interface ExternalProfileCreateRequest {
+  username: string;
+  type: ProfileType;
+  name?: string;
+  phone?: string;
+  email?: string;
+  company_id?: string;
+  role?: ProfileRole;
+}
+
 export interface ProfileUpdateRequest {
   username?: string;
   name?: string;
@@ -37,6 +47,12 @@ export const profileService = {
   // 프로필 생성
   async createProfile(profileData: ProfileCreateRequest): Promise<Profile> {
     const response = await apiClient.post('/profile/me', profileData);
+    return response.data;
+  },
+
+  // 공개 프로필 생성 (user_id 없음)
+  async createExternalProfile(profileData: ExternalProfileCreateRequest): Promise<Profile> {
+    const response = await publicApiClient.post('/profile/public', profileData);
     return response.data;
   },
 

@@ -30,7 +30,7 @@ export const useCenters = (companyId?: string) => {
     setError(null);
     
     try {
-      const newCenter = await centerService.createCenter(centerData, companyId);
+      const newCenter = await centerService.createCenter(centerData);
       setCenters(prev => [...prev, newCenter]);
       return newCenter;
     } catch (err) {

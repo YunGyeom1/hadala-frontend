@@ -9,6 +9,7 @@ import ShipmentForm from '@/transactions/shipment/ShipmentForm';
 import ShipmentDetail from '@/transactions/shipment/ShipmentDetail';
 import InventorySummaryPage from '@/pages/wholesaler/reports/inventory-summary/inventorysummary';
 import ShipmentSummaryPage from '@/transactions/shipment_summary/ShipmentSummaryPage';
+import PaymentSummaryPage from '@/transactions/payment';
 
 const WholesalerRoutes = () => {
   return (
@@ -24,6 +25,7 @@ const WholesalerRoutes = () => {
       <Route path="transactions/shipments/:id/edit" element={<ShipmentForm />} />
       <Route path="reports/inventory-summary" element={<InventorySummaryPage />} />
       <Route path="reports/shipment-summary" element={<ShipmentSummaryPage />} />
+      <Route path="reports/payment-summary" element={<PaymentSummaryPage />} />
     </Routes>
   );
 };

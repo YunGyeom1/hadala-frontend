@@ -323,6 +323,22 @@ const ContractForm = () => {
     }
   };
 
+  const handleDeliveryDateChange = (value: string) => {
+    setFormData(prev => {
+      const newFormData = { ...prev, delivery_datetime: value };
+      
+      // 납기일이 설정되면 해당 월의 말일로 결재 기한 자동 설정
+      if (value) {
+        const deliveryDate = new Date(value);
+        const lastDayOfMonth = new Date(deliveryDate.getFullYear(), deliveryDate.getMonth() + 1, 0);
+        const paymentDueDate = format(lastDayOfMonth, 'yyyy-MM-dd');
+        newFormData.payment_due_date = paymentDueDate;
+      }
+      
+      return newFormData;
+    });
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -346,7 +362,7 @@ const ContractForm = () => {
           payment_status={formData.payment_status}
           onTitleChange={(value) => setFormData({ ...formData, title: value })}
           onContractDateChange={(value) => setFormData({ ...formData, contract_datetime: value })}
-          onDeliveryDateChange={(value) => setFormData({ ...formData, delivery_datetime: value })}
+          onDeliveryDateChange={handleDeliveryDateChange}
           onPaymentDueDateChange={(value) => setFormData({ ...formData, payment_due_date: value })}
           onContractStatusChange={(value) => setFormData({ ...formData, contract_status: value })}
           onPaymentStatusChange={(value) => setFormData({ ...formData, payment_status: value })}
