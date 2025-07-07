@@ -100,7 +100,7 @@ export const CenterFormFields: React.FC<CenterFormFieldsProps> = ({
     <div className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <FormField
-          label="센터명"
+          label="Center Name"
           name="name"
           value={formData.name}
           onChange={(value) => onChange('name', value as string)}
@@ -109,7 +109,7 @@ export const CenterFormFields: React.FC<CenterFormFieldsProps> = ({
           required
         />
         <FormField
-          label="전화번호"
+          label="Phone Number"
           name="phone"
           value={formData.phone}
           onChange={(value) => onChange('phone', value as string)}
@@ -121,28 +121,28 @@ export const CenterFormFields: React.FC<CenterFormFieldsProps> = ({
       </div>
 
       <FormField
-        label="주소"
+        label="Address"
         name="address"
         value={formData.address}
         onChange={(value) => onChange('address', value as string)}
         onBlur={() => onBlur?.('address')}
         error={errors.address}
-        placeholder="서울시 강남구..."
+        placeholder="Seoul, Gangnam-gu..."
       />
 
       <FormField
-        label="지역"
+        label="Region"
         name="region"
         value={formData.region}
         onChange={(value) => onChange('region', value as string)}
         onBlur={() => onBlur?.('region')}
         error={errors.region}
-        placeholder="강남구"
+        placeholder="Gangnam-gu"
       />
 
       <div className="grid grid-cols-2 gap-4">
         <FormField
-          label="위도"
+          label="Latitude"
           name="latitude"
           value={formData.latitude}
           onChange={(value) => onChange('latitude', value as string)}
@@ -153,7 +153,7 @@ export const CenterFormFields: React.FC<CenterFormFieldsProps> = ({
           placeholder="37.5665"
         />
         <FormField
-          label="경도"
+          label="Longitude"
           name="longitude"
           value={formData.longitude}
           onChange={(value) => onChange('longitude', value as string)}
@@ -167,7 +167,7 @@ export const CenterFormFields: React.FC<CenterFormFieldsProps> = ({
 
       <div className="grid grid-cols-2 gap-4">
         <FormField
-          label="운영 시작 시간"
+          label="Operating Start Time"
           name="operating_start"
           value={formData.operating_start}
           onChange={(value) => onChange('operating_start', value as string)}
@@ -176,7 +176,7 @@ export const CenterFormFields: React.FC<CenterFormFieldsProps> = ({
           type="time"
         />
         <FormField
-          label="운영 종료 시간"
+          label="Operating End Time"
           name="operating_end"
           value={formData.operating_end}
           onChange={(value) => onChange('operating_end', value as string)}
@@ -187,7 +187,7 @@ export const CenterFormFields: React.FC<CenterFormFieldsProps> = ({
       </div>
 
       <FormField
-        label="운영중"
+        label="Operational"
         name="is_operational"
         value={formData.is_operational}
         onChange={(value) => onChange('is_operational', value as boolean)}

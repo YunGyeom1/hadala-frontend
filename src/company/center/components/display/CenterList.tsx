@@ -60,7 +60,7 @@ const CenterList: React.FC<CenterListProps> = ({ companyId }) => {
             }}
             className="mt-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
           >
-            다시 시도
+            Try Again
           </button>
         </div>
       </div>
@@ -70,19 +70,19 @@ const CenterList: React.FC<CenterListProps> = ({ companyId }) => {
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-medium">센터 관리</h3>
+        <h3 className="text-lg font-medium">Center Management</h3>
         <button
           onClick={() => setIsModalOpen(true)}
           className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
         >
-          센터 추가
+          Add Center
         </button>
       </div>
 
       {centers.length === 0 ? (
         <div className="text-center py-8 text-gray-500">
-          <p>등록된 센터가 없습니다.</p>
-          <p className="text-sm mt-1">센터 추가 버튼을 클릭하여 새 센터를 등록하세요.</p>
+          <p>No centers registered.</p>
+          <p className="text-sm mt-1">Click the Add Center button to register a new center.</p>
         </div>
       ) : (
         <div className="grid gap-4">

@@ -15,7 +15,7 @@ export const useCompanies = () => {
       const data = await companyService.getCompanies();
       setCompanies(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : '회사 목록을 불러오는데 실패했습니다');
+      setError(err instanceof Error ? err.message : 'Failed to load company list');
     } finally {
       setLoading(false);
     }
@@ -33,7 +33,7 @@ export const useCompanies = () => {
       setCompanies(prev => [...prev, newCompany]);
       return newCompany;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : '회사 생성에 실패했습니다';
+      const errorMessage = err instanceof Error ? err.message : 'Failed to create company';
       setError(errorMessage);
       throw err;
     } finally {
@@ -52,7 +52,7 @@ export const useCompanies = () => {
       ));
       return updatedCompany;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : '회사 수정에 실패했습니다';
+      const errorMessage = err instanceof Error ? err.message : 'Failed to update company';
       setError(errorMessage);
       throw err;
     } finally {
@@ -65,9 +65,9 @@ export const useCompanies = () => {
     setError(null);
     
     try {
-      throw new Error('회사 삭제 기능이 지원되지 않습니다');
+      throw new Error('Company deletion is not supported');
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : '회사 삭제에 실패했습니다';
+      const errorMessage = err instanceof Error ? err.message : 'Failed to delete company';
       setError(errorMessage);
       throw err;
     } finally {

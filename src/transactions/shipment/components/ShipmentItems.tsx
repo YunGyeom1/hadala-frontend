@@ -23,31 +23,31 @@ const ShipmentItems: React.FC<ShipmentItemsProps> = ({
   return (
     <div className="mt-8">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-medium">출하 품목</h2>
+        <h2 className="text-lg font-medium">Shipment Items</h2>
         <button
           type="button"
           onClick={onAddItem}
           className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
         >
-          품목 추가
+          Add Item
         </button>
       </div>
       <div className="space-y-4">
         {items.map((item, index) => (
           <div key={index} className="flex items-end space-x-4 p-4 bg-gray-50 rounded-lg">
             <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700">품목</label>
+              <label className="block text-sm font-medium text-gray-700">Item</label>
               <input
                 type="text"
                 value={item.product_name}
                 onChange={(e) => onItemChange(index, 'product_name', e.target.value)}
-                placeholder="품목명을 입력하세요"
+                placeholder="Enter item name"
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                 required
               />
             </div>
             <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700">품질</label>
+              <label className="block text-sm font-medium text-gray-700">Quality</label>
               <div className="flex items-center space-x-2">
                 {['A', 'B', 'C'].map(q => (
                   <button
@@ -62,7 +62,7 @@ const ShipmentItems: React.FC<ShipmentItemsProps> = ({
               </div>
             </div>
             <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700">수량</label>
+              <label className="block text-sm font-medium text-gray-700">Quantity</label>
               <input
                 type="text"
                 value={item.quantity}
@@ -72,7 +72,7 @@ const ShipmentItems: React.FC<ShipmentItemsProps> = ({
               />
             </div>
             <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700">단가</label>
+              <label className="block text-sm font-medium text-gray-700">Unit Price</label>
               <input
                 type="text"
                 value={item.unit_price}
@@ -82,7 +82,7 @@ const ShipmentItems: React.FC<ShipmentItemsProps> = ({
               />
             </div>
             <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700">총액</label>
+              <label className="block text-sm font-medium text-gray-700">Total Amount</label>
               <input
                 type="text"
                 value={item.total_price}
@@ -96,17 +96,17 @@ const ShipmentItems: React.FC<ShipmentItemsProps> = ({
               onClick={() => onRemoveItem(index)}
               className="px-3 py-2 text-sm font-medium text-red-600 hover:text-red-700"
             >
-              삭제
+              Delete
             </button>
           </div>
         ))}
       </div>
 
-      {/* 출하 품목 미리보기 */}
+      {/* Shipment Items Preview */}
       {items.length > 0 && (
         <div className="mt-4">
           <span className="text-sm text-gray-700">
-            {items.map(item => `${item.product_name || '품목명 미입력'}(${item.quality}) ${item.quantity}개 x ${item.unit_price}원`).join(', ')}
+            {items.map(item => `${item.product_name || 'Item name not entered'}(${item.quality}) ${item.quantity} x ${item.unit_price} KRW`).join(', ')}
           </span>
         </div>
       )}

@@ -15,7 +15,7 @@ const CompanySearchList: React.FC<CompanySearchListProps> = ({
   onSelect,
   selectedCompanyId,
   loading = false,
-  emptyMessage = "검색 결과가 없습니다"
+  emptyMessage = "No search results found"
 }) => {
   if (loading) {
     return (
@@ -65,16 +65,16 @@ const CompanySearchList: React.FC<CompanySearchListProps> = ({
                   </span>
                 </div>
                 <div className="mt-1 text-sm text-gray-500">
-                  대표자: {company.owner_name}
+                  Owner: {company.owner_name}
                 </div>
                 {company.phone && (
                   <div className="mt-1 text-sm text-gray-500">
-                    연락처: {company.phone}
+                    Contact: {company.phone}
                   </div>
                 )}
                 {company.email && (
                   <div className="mt-1 text-sm text-gray-500">
-                    이메일: {company.email}
+                    Email: {company.email}
                   </div>
                 )}
               </div>

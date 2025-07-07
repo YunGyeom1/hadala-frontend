@@ -36,7 +36,7 @@ const TopBar = () => {
                     : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                 }`}
               >
-                농부
+                Farmer
               </Link>
               <Link
                 to="/wholesaler/dashboard"
@@ -46,7 +46,7 @@ const TopBar = () => {
                     : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                 }`}
               >
-                도매상
+                Wholesaler
               </Link>
               <Link
                 to="/retailer/dashboard"
@@ -56,12 +56,12 @@ const TopBar = () => {
                     : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
                 }`}
               >
-                소매상
+                Retailer
               </Link>
             </div>
           </div>
           
-          {/* 구글 프로필 사진 및 드롭다운 */}
+          {/* Google profile picture and dropdown */}
           <div className="flex items-center">
             <div className="relative">
               <button
@@ -93,7 +93,7 @@ const TopBar = () => {
                 </svg>
               </button>
 
-              {/* 드롭다운 메뉴 */}
+              {/* Dropdown menu */}
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
                   <div className="px-4 py-2 border-b border-gray-100">
@@ -107,13 +107,13 @@ const TopBar = () => {
                     }}
                     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
-                    프로필 설정
+                    Profile Settings
                   </button>
                   <button
                     onClick={handleLogout}
                     className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   >
-                    로그아웃
+                    Logout
                   </button>
                 </div>
               )}
@@ -122,7 +122,7 @@ const TopBar = () => {
         </div>
       </div>
 
-      {/* 드롭다운 외부 클릭 시 닫기 */}
+      {/* Close dropdown when clicking outside */}
       {isDropdownOpen && (
         <div
           className="fixed inset-0 z-40"

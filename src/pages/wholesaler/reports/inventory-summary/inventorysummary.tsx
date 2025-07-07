@@ -5,7 +5,7 @@ import { formatDate } from '@/transactions/inventory/services/inventorySnapshotS
 import { useProfile } from '@/profile/ProfileContext';
 
 const InventorySummaryPage = () => {
-  // 오늘 날짜를 기본값으로 설정
+  // Set today's date as default
   const today = formatDate(new Date());
   const [selectedDate, setSelectedDate] = useState<string>(today);
   
@@ -21,7 +21,7 @@ const InventorySummaryPage = () => {
   } = useCompanyInventorySnapshot(companyId || '');
 
   useEffect(() => {
-    // companyId가 유효한 값일 때만 스냅샷 조회
+    // Only fetch snapshot when companyId is valid
     if (companyId && companyId.trim() !== '') {
       fetchSnapshot(selectedDate);
     }
@@ -32,7 +32,7 @@ const InventorySummaryPage = () => {
     clearError();
   };
 
-  // 선택된 날짜의 스냅샷 찾기
+  // Find snapshot for selected date
   const selectedSnapshot = snapshots.find(
     snapshot => snapshot.snapshot_date === selectedDate
   );
@@ -40,9 +40,9 @@ const InventorySummaryPage = () => {
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-4">재고 요약</h1>
+        <h1 className="text-2xl font-bold mb-4">Inventory Summary</h1>
         <div className="flex items-center space-x-4">
-          <label className="text-sm font-medium text-gray-700">날짜 선택:</label>
+          <label className="text-sm font-medium text-gray-700">Select Date:</label>
           <input
             type="date"
             value={selectedDate}
@@ -52,34 +52,34 @@ const InventorySummaryPage = () => {
           {loading && (
             <div className="flex items-center space-x-2">
               <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
-              <span className="text-sm text-gray-500">로딩 중...</span>
+              <span className="text-sm text-gray-500">Loading...</span>
             </div>
           )}
         </div>
       </div>
 
-      {/* companyId가 없을 때 메시지 */}
+      {/* Message when companyId is not available */}
       {(!companyId || companyId.trim() === '') && !loading && (
         <div className="text-center py-8 text-gray-500">
-          <p className="mb-2">회사 정보를 불러올 수 없습니다.</p>
-          <p className="text-sm">프로필 설정에서 회사를 선택해주세요.</p>
+          <p className="mb-2">Unable to load company information.</p>
+          <p className="text-sm">Please select a company in your profile settings.</p>
         </div>
       )}
 
-      {/* 에러 메시지 */}
+      {/* Error message */}
       {error && (
         <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-          <strong>오류:</strong> {error}
+          <strong>Error:</strong> {error}
           <button 
             onClick={clearError}
             className="ml-2 text-red-500 hover:text-red-700 underline"
           >
-            닫기
+            Close
           </button>
         </div>
       )}
 
-      {/* 재고 데이터 표시 */}
+      {/* Display inventory data */}
       {selectedSnapshot ? (
         <DailyInventorySummary
           date={selectedSnapshot.snapshot_date}
@@ -87,11 +87,11 @@ const InventorySummaryPage = () => {
         />
       ) : !loading && companyId && companyId.trim() !== '' ? (
         <div className="text-center py-8 text-gray-500">
-          {error ? '데이터를 불러올 수 없습니다.' : '해당 날짜의 재고 데이터가 없습니다.'}
+          {error ? 'Unable to load data.' : 'No inventory data available for the selected date.'}
         </div>
       ) : null}
 
-      {/* 로딩 중일 때 스켈레톤 */}
+      {/* Loading skeleton */}
       {loading && !selectedSnapshot && (
         <div className="space-y-4">
           <div className="animate-pulse">

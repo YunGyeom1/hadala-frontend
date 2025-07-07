@@ -38,11 +38,11 @@ const ShipmentParties: React.FC<ShipmentPartiesProps> = ({
 
   return (
     <div className="mb-8">
-      <h2 className="text-lg font-semibold mb-4 border-b pb-2">계약 당사자 및 출하 담당자</h2>
+      <h2 className="text-lg font-semibold mb-4 border-b pb-2">Contract Parties and Shipment Personnel</h2>
       <div className="grid grid-cols-2 gap-6">
-        {/* 공급자(유저) */}
+        {/* Supplier (User) */}
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">공급자(유저)</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">Supplier (User)</label>
           {selectedSupplierPerson ? (
             <div className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50">
               <div className="flex justify-between items-center">
@@ -59,7 +59,7 @@ const ShipmentParties: React.FC<ShipmentPartiesProps> = ({
                     onClick={onSupplierPersonRemove}
                     className="text-xs text-red-500 hover:text-red-700"
                   >
-                    변경
+                    Change
                   </button>
                 </div>
               </div>
@@ -69,9 +69,9 @@ const ShipmentParties: React.FC<ShipmentPartiesProps> = ({
           )}
         </div>
 
-        {/* 수신자(유저) */}
+        {/* Receiver (User) */}
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">수신자(유저)</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">Receiver (User)</label>
           {selectedReceiverPerson ? (
             <div className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50">
               <div className="flex justify-between items-center">
@@ -88,7 +88,7 @@ const ShipmentParties: React.FC<ShipmentPartiesProps> = ({
                     onClick={onReceiverPersonRemove}
                     className="text-xs text-red-500 hover:text-red-700"
                   >
-                    변경
+                    Change
                   </button>
                 </div>
               </div>
@@ -98,9 +98,9 @@ const ShipmentParties: React.FC<ShipmentPartiesProps> = ({
           )}
         </div>
 
-        {/* 공급 회사 */}
+        {/* Supplier Company */}
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">공급 회사</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">Supplier Company</label>
           {selectedSupplierCompany ? (
             <div className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50">
               <div className="flex justify-between items-center">
@@ -117,7 +117,7 @@ const ShipmentParties: React.FC<ShipmentPartiesProps> = ({
                     onClick={onSupplierCompanyRemove}
                     className="text-xs text-red-500 hover:text-red-700"
                   >
-                    변경
+                    Change
                   </button>
                 </div>
               </div>
@@ -127,9 +127,9 @@ const ShipmentParties: React.FC<ShipmentPartiesProps> = ({
           )}
         </div>
 
-        {/* 수신 회사 */}
+        {/* Receiver Company */}
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">수신 회사</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">Receiver Company</label>
           {selectedReceiverCompany ? (
             <div className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50">
               <div className="flex justify-between items-center">
@@ -146,7 +146,7 @@ const ShipmentParties: React.FC<ShipmentPartiesProps> = ({
                     onClick={onReceiverCompanyRemove}
                     className="text-xs text-red-500 hover:text-red-700"
                   >
-                    변경
+                    Change
                   </button>
                 </div>
               </div>

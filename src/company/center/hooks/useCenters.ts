@@ -17,14 +17,14 @@ export const useCenters = (companyId?: string) => {
       const data = await centerService.getCenters(companyId);
       setCenters(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : '센터 목록을 불러오는데 실패했습니다');
+      setError(err instanceof Error ? err.message : 'Failed to load center list');
     } finally {
       setLoading(false);
     }
   }, [companyId]);
 
   const createCenter = useCallback(async (centerData: CenterCreateRequest) => {
-    if (!companyId) throw new Error('회사 ID가 필요합니다');
+    if (!companyId) throw new Error('Company ID is required');
     
     setLoading(true);
     setError(null);
@@ -34,7 +34,7 @@ export const useCenters = (companyId?: string) => {
       setCenters(prev => [...prev, newCenter]);
       return newCenter;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : '센터 생성에 실패했습니다';
+      const errorMessage = err instanceof Error ? err.message : 'Failed to create center';
       setError(errorMessage);
       throw err;
     } finally {
@@ -53,7 +53,7 @@ export const useCenters = (companyId?: string) => {
       ));
       return updatedCenter;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : '센터 수정에 실패했습니다';
+      const errorMessage = err instanceof Error ? err.message : 'Failed to update center';
       setError(errorMessage);
       throw err;
     } finally {
@@ -69,7 +69,7 @@ export const useCenters = (companyId?: string) => {
       await centerService.deleteCenter(centerId);
       setCenters(prev => prev.filter(center => center.id !== centerId));
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : '센터 삭제에 실패했습니다';
+      const errorMessage = err instanceof Error ? err.message : 'Failed to delete center';
       setError(errorMessage);
       throw err;
     } finally {

@@ -32,10 +32,10 @@ const ContractBasicInfo: React.FC<ContractBasicInfoProps> = ({
 }) => {
   return (
     <div className="mb-8">
-      <h2 className="text-lg font-semibold mb-4 border-b pb-2">계약 기본 정보</h2>
+      <h2 className="text-lg font-semibold mb-4 border-b pb-2">Contract Basic Information</h2>
       <div className="grid grid-cols-2 gap-6">
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">계약 제목</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">Contract Title</label>
           <input
             type="text"
             value={title}
@@ -45,7 +45,7 @@ const ContractBasicInfo: React.FC<ContractBasicInfoProps> = ({
           />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">계약일</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">Contract Date</label>
           <input
             type="date"
             value={contract_datetime}
@@ -55,7 +55,7 @@ const ContractBasicInfo: React.FC<ContractBasicInfoProps> = ({
           />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">납기일</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">Delivery Date</label>
           <input
             type="date"
             value={delivery_datetime}
@@ -64,7 +64,7 @@ const ContractBasicInfo: React.FC<ContractBasicInfoProps> = ({
           />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">결제 기한</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">Payment Due Date</label>
           <input
             type="date"
             value={payment_due_date}
@@ -73,30 +73,30 @@ const ContractBasicInfo: React.FC<ContractBasicInfoProps> = ({
           />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">계약 상태</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">Contract Status</label>
           <select
             value={contract_status}
             onChange={(e) => onContractStatusChange?.(e.target.value)}
             className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
-            <option value="draft">초안</option>
-            <option value="pending">검토중</option>
-            <option value="approved">승인됨</option>
-            <option value="rejected">거절됨</option>
-            <option value="cancelled">취소됨</option>
-            <option value="completed">완료됨</option>
+            <option value="draft">Draft</option>
+            <option value="pending">Pending</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="completed">Completed</option>
           </select>
         </div>
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">결제 상태</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">Payment Status</label>
           <select
             value={payment_status}
             onChange={(e) => onPaymentStatusChange?.(e.target.value)}
             className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
-            <option value="unpaid">미결제</option>
-            <option value="paid">결제완료</option>
-            <option value="overdue">연체</option>
+            <option value="unpaid">Unpaid</option>
+            <option value="paid">Paid</option>
+            <option value="overdue">Overdue</option>
           </select>
         </div>
       </div>

@@ -16,7 +16,7 @@ const WholesaleCompanyDetailCard: React.FC<WholesaleCompanyDetailCardProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState<Partial<WholesaleCompanyDetail>>({});
 
-  // 도매 회사 상세 정보 조회
+  // Get wholesale company detail information
   const { data: detail, error: detailError } = useQuery({
     queryKey: ['wholesaleCompanyDetail', companyId],
     queryFn: () => companyService.getWholesaleCompanyDetail(companyId),
@@ -54,7 +54,7 @@ const WholesaleCompanyDetailCard: React.FC<WholesaleCompanyDetailCardProps> = ({
       }
     },
     onError: (error) => {
-      console.error('상세 정보 수정 실패:', error);
+      console.error('Detail update failed:', error);
     }
   });
 
@@ -94,10 +94,10 @@ const WholesaleCompanyDetailCard: React.FC<WholesaleCompanyDetailCardProps> = ({
     return (
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold">도매 회사 상세 정보</h3>
+          <h3 className="text-lg font-semibold">Wholesale Company Detail Information</h3>
         </div>
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
-          상세 정보 로드 실패: {detailError.message}
+          Failed to load detail information: {detailError.message}
         </div>
       </div>
     );
@@ -107,9 +107,9 @@ const WholesaleCompanyDetailCard: React.FC<WholesaleCompanyDetailCardProps> = ({
     return (
       <div className="bg-white rounded-lg shadow p-6">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold">도매 회사 상세 정보</h3>
+          <h3 className="text-lg font-semibold">Wholesale Company Detail Information</h3>
         </div>
-        <p className="text-gray-500">상세 정보가 없습니다.</p>
+        <p className="text-gray-500">No detail information available.</p>
       </div>
     );
   }
@@ -117,13 +117,13 @@ const WholesaleCompanyDetailCard: React.FC<WholesaleCompanyDetailCardProps> = ({
   return (
     <div className="bg-white rounded-lg shadow p-6">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold">도매 회사 상세 정보</h3>
+        <h3 className="text-lg font-semibold">Wholesale Company Detail Information</h3>
         {!isEditing ? (
           <button
             onClick={() => setIsEditing(true)}
             className="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
-            수정
+            Edit
           </button>
         ) : (
           <div className="flex space-x-2">
@@ -132,14 +132,14 @@ const WholesaleCompanyDetailCard: React.FC<WholesaleCompanyDetailCardProps> = ({
               className="px-3 py-1 text-sm bg-gray-500 text-white rounded-md hover:bg-gray-600"
               disabled={updateDetailMutation.isPending}
             >
-              취소
+              Cancel
             </button>
             <button
               onClick={handleSave}
               className="px-3 py-1 text-sm bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50"
               disabled={updateDetailMutation.isPending}
             >
-              {updateDetailMutation.isPending ? '저장 중...' : '저장'}
+              {updateDetailMutation.isPending ? 'Saving...' : 'Save'}
             </button>
           </div>
         )}
@@ -147,7 +147,7 @@ const WholesaleCompanyDetailCard: React.FC<WholesaleCompanyDetailCardProps> = ({
       
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">사업자등록번호</label>
+          <label className="block text-sm font-medium text-gray-700">Business Registration Number</label>
           {isEditing ? (
             <input
               type="text"
@@ -161,7 +161,7 @@ const WholesaleCompanyDetailCard: React.FC<WholesaleCompanyDetailCardProps> = ({
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700">주소</label>
+          <label className="block text-sm font-medium text-gray-700">Address</label>
           {isEditing ? (
             <input
               type="text"
@@ -175,7 +175,7 @@ const WholesaleCompanyDetailCard: React.FC<WholesaleCompanyDetailCardProps> = ({
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700">전화번호</label>
+          <label className="block text-sm font-medium text-gray-700">Phone Number</label>
           {isEditing ? (
             <input
               type="text"
@@ -189,7 +189,7 @@ const WholesaleCompanyDetailCard: React.FC<WholesaleCompanyDetailCardProps> = ({
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700">이메일</label>
+          <label className="block text-sm font-medium text-gray-700">Email</label>
           {isEditing ? (
             <input
               type="email"
@@ -203,7 +203,7 @@ const WholesaleCompanyDetailCard: React.FC<WholesaleCompanyDetailCardProps> = ({
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700">대표자</label>
+          <label className="block text-sm font-medium text-gray-700">Representative</label>
           {isEditing ? (
             <input
               type="text"
@@ -217,7 +217,7 @@ const WholesaleCompanyDetailCard: React.FC<WholesaleCompanyDetailCardProps> = ({
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700">설립년도</label>
+          <label className="block text-sm font-medium text-gray-700">Established Year</label>
           {isEditing ? (
             <input
               type="number"
@@ -231,7 +231,7 @@ const WholesaleCompanyDetailCard: React.FC<WholesaleCompanyDetailCardProps> = ({
         </div>
         
         <div className="col-span-2">
-          <label className="block text-sm font-medium text-gray-700">설명</label>
+          <label className="block text-sm font-medium text-gray-700">Description</label>
           {isEditing ? (
             <textarea
               value={editForm.description || ''}
@@ -245,7 +245,7 @@ const WholesaleCompanyDetailCard: React.FC<WholesaleCompanyDetailCardProps> = ({
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700">지역</label>
+          <label className="block text-sm font-medium text-gray-700">Region</label>
           {isEditing ? (
             <input
               type="text"
@@ -259,13 +259,12 @@ const WholesaleCompanyDetailCard: React.FC<WholesaleCompanyDetailCardProps> = ({
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700">월 거래량 (톤)</label>
+          <label className="block text-sm font-medium text-gray-700">Monthly Transaction Volume</label>
           {isEditing ? (
             <input
               type="number"
-              step="0.1"
               value={editForm.monthly_transaction_volume || ''}
-              onChange={(e) => handleFieldChange('monthly_transaction_volume', parseFloat(e.target.value) || 0)}
+              onChange={(e) => handleFieldChange('monthly_transaction_volume', e.target.value ? parseInt(e.target.value) : undefined)}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           ) : (
@@ -274,13 +273,12 @@ const WholesaleCompanyDetailCard: React.FC<WholesaleCompanyDetailCardProps> = ({
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700">일일 운송 능력 (톤)</label>
+          <label className="block text-sm font-medium text-gray-700">Daily Transport Capacity</label>
           {isEditing ? (
             <input
               type="number"
-              step="0.1"
               value={editForm.daily_transport_capacity || ''}
-              onChange={(e) => handleFieldChange('daily_transport_capacity', parseFloat(e.target.value) || 0)}
+              onChange={(e) => handleFieldChange('daily_transport_capacity', e.target.value ? parseInt(e.target.value) : undefined)}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           ) : (
@@ -289,7 +287,7 @@ const WholesaleCompanyDetailCard: React.FC<WholesaleCompanyDetailCardProps> = ({
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700">주요 상품</label>
+          <label className="block text-sm font-medium text-gray-700">Main Products</label>
           {isEditing ? (
             <input
               type="text"
@@ -303,39 +301,32 @@ const WholesaleCompanyDetailCard: React.FC<WholesaleCompanyDetailCardProps> = ({
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700">냉장고 보유</label>
-          {isEditing ? (
-            <input
-              type="checkbox"
-              checked={editForm.has_cold_storage || false}
-              onChange={(e) => handleFieldChange('has_cold_storage', e.target.checked)}
-              className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-            />
-          ) : (
-            <p className="mt-1 text-sm text-gray-900">{detail.has_cold_storage ? '예' : '아니오'}</p>
-          )}
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700">차량 수</label>
+          <label className="block text-sm font-medium text-gray-700">Number of Vehicles</label>
           {isEditing ? (
             <input
               type="number"
               value={editForm.number_of_vehicles || ''}
-              onChange={(e) => handleFieldChange('number_of_vehicles', parseInt(e.target.value) || 0)}
+              onChange={(e) => handleFieldChange('number_of_vehicles', e.target.value ? parseInt(e.target.value) : undefined)}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           ) : (
             <p className="mt-1 text-sm text-gray-900">{detail.number_of_vehicles || '-'}</p>
           )}
         </div>
-      </div>
-      
-      {updateDetailMutation.isError && (
-        <div className="mt-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
-          상세 정보 수정 실패: {updateDetailMutation.error?.message}
+        
+        <div className="col-span-2">
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              checked={editForm.has_cold_storage || false}
+              onChange={(e) => handleFieldChange('has_cold_storage', e.target.checked)}
+              disabled={!isEditing}
+              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+            />
+            <span className="ml-2 text-sm font-medium text-gray-700">Has Cold Storage</span>
+          </label>
         </div>
-      )}
+      </div>
     </div>
   );
 };

@@ -14,7 +14,7 @@ interface CompanySearchProps {
 const CompanySearch: React.FC<CompanySearchProps> = ({
   onSearch,
   onSelect,
-  placeholder = "회사 검색...",
+  placeholder = "Search companies...",
   className = ""
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -26,7 +26,7 @@ const CompanySearch: React.FC<CompanySearchProps> = ({
   useEffect(() => {
     if (searchTerm.length >= 2) {
       setLoading(true);
-      // 실제 API 호출
+      // Actual API call
       const searchCompanies = async () => {
         try {
           const allCompanies = await companyService.getCompanies();
@@ -36,7 +36,7 @@ const CompanySearch: React.FC<CompanySearchProps> = ({
           );
           setCompanies(filteredCompanies);
         } catch (error) {
-          console.error('회사 검색 실패:', error);
+          console.error('Company search failed:', error);
           setCompanies([]);
         } finally {
           setLoading(false);
@@ -109,7 +109,7 @@ const CompanySearch: React.FC<CompanySearchProps> = ({
           onChange={(e) => setSelectedType(e.target.value as CompanyType | '')}
           className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         >
-          <option value="">전체</option>
+          <option value="">All</option>
           {COMPANY_TYPE_OPTIONS.map(option => (
             <option key={option.value} value={option.value}>
               {option.label}
@@ -122,13 +122,13 @@ const CompanySearch: React.FC<CompanySearchProps> = ({
           onClick={handleSearchClick}
           className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
         >
-          검색
+          Search
         </button>
       </div>
       
       {loading && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 rounded-md shadow-lg p-4 text-center text-gray-500">
-          검색 중...
+          Searching...
         </div>
       )}
     </div>

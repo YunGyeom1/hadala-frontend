@@ -22,11 +22,11 @@ const DailyInventorySummary: React.FC<DailyInventorySummaryProps> = ({ date, dat
       {/* 날짜 표시 */}
       <div className="flex items-center space-x-4">
         <h2 className="text-lg font-medium text-gray-900">
-          {new Date(date).toLocaleDateString('ko-KR', {
+          {new Date(date).toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
-          })} 재고 현황
+          })} Inventory Status
         </h2>
       </div>
 
@@ -35,13 +35,13 @@ const DailyInventorySummary: React.FC<DailyInventorySummaryProps> = ({ date, dat
         <table className="min-w-full bg-white border border-gray-200">
           <thead>
             <tr className="bg-gray-50">
-              <th className="px-4 py-2 border-b">작물</th>
+              <th className="px-4 py-2 border-b">Crop</th>
               {data.centers.map(center => (
                 <th key={center.center_id} className="px-4 py-2 border-b">
                   {center.center_name}
                 </th>
               ))}
-              <th className="px-4 py-2 border-b">합계</th>
+              <th className="px-4 py-2 border-b">Total</th>
             </tr>
           </thead>
           <tbody>
@@ -82,7 +82,7 @@ const DailyInventorySummary: React.FC<DailyInventorySummaryProps> = ({ date, dat
                 })}
                 <tr className="bg-gray-50">
                   <td className="px-4 py-2 border-b font-semibold">
-                    {crop} 합계
+                    {crop} Total
                   </td>
                   {data.centers.map(center => {
                     const centerTotal = center.items

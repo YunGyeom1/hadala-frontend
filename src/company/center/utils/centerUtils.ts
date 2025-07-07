@@ -6,7 +6,7 @@ export const formatOperatingHours = (start?: string, end?: string): string => {
 };
 
 export const getCenterStatusText = (isOperational?: boolean): string => {
-  return isOperational ? '운영중' : '운영중지';
+  return isOperational ? 'Operational' : 'Non-operational';
 };
 
 export const getCenterStatusColor = (isOperational?: boolean): string => {
@@ -19,11 +19,11 @@ export const formatCenterAddress = (center: Center): string => {
   const parts = [];
   if (center.address) parts.push(center.address);
   if (center.region) parts.push(center.region);
-  return parts.join(', ') || '주소 정보 없음';
+  return parts.join(', ') || 'No address information';
 };
 
 export const formatCenterContact = (center: Center): string => {
-  return center.phone || '연락처 정보 없음';
+  return center.phone || 'No contact information';
 };
 
 export const sortCentersByName = (centers: Center[]): Center[] => {

@@ -6,13 +6,13 @@ import { type Profile, ProfileType } from '@/profile/types';
 const Profile = () => {
   const queryClient = useQueryClient();
 
-  // 내 프로필 목록 조회
+  // Get my profile list
   const { data: profiles = [], isLoading, error } = useQuery({
     queryKey: ['myProfiles'],
     queryFn: profileService.getMyProfiles,
   });
 
-  // 프로필 생성 뮤테이션
+  // Profile creation mutation
   const createProfileMutation = useMutation({
     mutationFn: (newProfile: ProfileCreateRequest) => profileService.createProfile(newProfile),
     onSuccess: () => {
@@ -20,7 +20,7 @@ const Profile = () => {
     },
   });
 
-  // 프로필 수정 뮤테이션
+  // Profile update mutation
   const updateProfileMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: any }) => profileService.updateProfile(id, data),
     onSuccess: () => {
@@ -60,13 +60,13 @@ const Profile = () => {
     return (
       <div className="p-6">
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md">
-          프로필을 불러오는 중 오류가 발생했습니다.
+          An error occurred while loading profiles.
         </div>
       </div>
     );
   }
 
-  // 프로필 타입별로 그룹화
+  // Group profiles by type
   const profilesByType = {
     farmer: profiles.find(p => p.type === ProfileType.FARMER),
     retailer: profiles.find(p => p.type === ProfileType.RETAILER),
@@ -76,7 +76,7 @@ const Profile = () => {
   return (
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">프로필 관리</h1>
+        <h1 className="text-2xl font-bold">Profile Management</h1>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

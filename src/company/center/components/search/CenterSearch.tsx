@@ -22,14 +22,14 @@ const CenterSearch: React.FC<CenterSearchProps> = ({
   const [isFocused, setIsFocused] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // companyId가 있으면 해당 회사 센터, 없으면 모든 센터 검색
+  // If companyId exists, search centers for that company, otherwise search all centers
   const defaultPlaceholder = companyId 
-    ? "해당 회사 센터 검색..." 
-    : "센터명으로 검색...";
+    ? "Search centers for this company..." 
+    : "Search by center name...";
   
   const finalPlaceholder = placeholder || defaultPlaceholder;
 
-  // 초기 센터 목록 로딩
+  // Load initial center list
   useEffect(() => {
     const loadCenters = async () => {
       if (!companyId) return;
@@ -39,7 +39,7 @@ const CenterSearch: React.FC<CenterSearchProps> = ({
         const centers = await centerService.getCenters(companyId);
         setAllCenters(centers);
       } catch (error) {
-        console.error('센터 목록 로딩 실패:', error);
+        console.error('Failed to load center list:', error);
         setAllCenters([]);
       } finally {
         setIsLoading(false);
@@ -49,10 +49,10 @@ const CenterSearch: React.FC<CenterSearchProps> = ({
     loadCenters();
   }, [companyId]);
 
-  // 검색어에 따른 필터링
+  // Filtering by search term
   useEffect(() => {
     if (!searchTerm.trim()) {
-      // 검색어가 없으면 전체 목록 표시 (회사 ID가 있을 때만)
+      // If no search term, show all list (only when companyId exists)
       if (companyId) {
         setSearchResults(allCenters);
       } else {
@@ -61,7 +61,7 @@ const CenterSearch: React.FC<CenterSearchProps> = ({
       return;
     }
 
-    // 검색어가 있으면 필터링
+    // If search term exists, filter
     const filteredResults = allCenters.filter(center => 
       center.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (center.address && center.address.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -70,7 +70,7 @@ const CenterSearch: React.FC<CenterSearchProps> = ({
     setSearchResults(filteredResults);
   }, [searchTerm, allCenters, companyId]);
 
-  // 다른 곳 클릭 시 검색 결과 숨기기
+  // Hide search results when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -98,20 +98,20 @@ const CenterSearch: React.FC<CenterSearchProps> = ({
 
   const handleInputFocus = () => {
     setIsFocused(true);
-    // 회사 ID가 있고 검색어가 없으면 전체 목록 표시
+    // If companyId exists and no search term, show all list
     if (companyId && !searchTerm.trim()) {
       setSearchResults(allCenters);
     }
   };
 
   const handleInputBlur = () => {
-    // 약간의 지연을 두어 클릭 이벤트가 처리될 수 있도록 함
+    // Small delay to allow click event to be processed
     setTimeout(() => {
       setIsFocused(false);
     }, 200);
   };
 
-  // 표시할 결과 결정
+  // Decide which results to display
   const displayResults = isFocused ? searchResults : [];
 
   return (
@@ -158,7 +158,7 @@ const CenterSearch: React.FC<CenterSearchProps> = ({
       
       {isFocused && displayResults.length === 0 && !isLoading && (
         <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg p-4 text-center text-gray-500">
-          {companyId ? '해당 회사의 센터가 없습니다.' : '검색 결과가 없습니다.'}
+          {companyId ? "No centers for this company." : "No search results found."}
         </div>
       )}
     </div>

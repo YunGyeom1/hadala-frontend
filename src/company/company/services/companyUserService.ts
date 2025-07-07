@@ -3,7 +3,7 @@ import { Profile } from '@/profile/types';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
 export const companyUserService = {
-  // 회사 유저 목록 조회
+  // Get company user list
   async getCompanyUsers(companyId: string): Promise<Profile[]> {
     const response = await fetch(`${API_BASE_URL}/companies/${companyId}/users`, {
       headers: {
@@ -14,13 +14,13 @@ export const companyUserService = {
     });
 
     if (!response.ok) {
-      throw new Error('회사 유저 목록을 불러오는데 실패했습니다');
+      throw new Error('Failed to load company user list');
     }
 
     return response.json();
   },
 
-  // 회사에 유저 추가
+  // Add user to company
   async addCompanyUser(companyId: string, profileId: string, role: string): Promise<Profile> {
     const response = await fetch(`${API_BASE_URL}/companies/${companyId}/users`, {
       method: 'POST',
@@ -37,13 +37,13 @@ export const companyUserService = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.detail || '유저 추가에 실패했습니다');
+      throw new Error(errorData.detail || 'Failed to add user');
     }
 
     return response.json();
   },
 
-  // 회사에서 유저 제거
+  // Remove user from company
   async removeCompanyUser(companyId: string, userId: string): Promise<Profile> {
     const response = await fetch(`${API_BASE_URL}/companies/${companyId}/users/${userId}`, {
       method: 'DELETE',
@@ -56,13 +56,13 @@ export const companyUserService = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.detail || '유저 제거에 실패했습니다');
+      throw new Error(errorData.detail || 'Failed to remove user');
     }
 
     return response.json();
   },
 
-  // 유저 역할 수정
+  // Update user role
   async updateUserRole(userId: string, role: string): Promise<Profile> {
     const response = await fetch(`${API_BASE_URL}/profile/${userId}/role`, {
       method: 'PUT',
@@ -78,7 +78,7 @@ export const companyUserService = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.detail || '역할 수정에 실패했습니다');
+      throw new Error(errorData.detail || 'Failed to update role');
     }
 
     return response.json();

@@ -1,6 +1,6 @@
 // app/types/profile/type.ts
 
-export type UUID = string; // UUID 형식을 string으로 간주
+export type UUID = string; // Consider UUID format as string
 
 export enum ProfileType {
   FARMER = 'farmer',
@@ -31,21 +31,21 @@ export interface Profile extends ProfileBase {
   updated_at: string;
 }
 
-// ✅ 생성 요청용
+// ✅ For creation requests
 export interface ProfileCreateRequest extends ProfileBase {
   user_id?: UUID;
   username: string;
   type: ProfileType;
 }
 
-// ✅ 수정 요청용
+// ✅ For update requests
 export interface ProfileUpdateRequest extends ProfileBase {
   id: UUID;
   user_id?: UUID;
   username?: string;
 }
 
-// ✅ 응답 타입
+// ✅ Response type
 export interface ProfileResponse extends Profile {
-  // Profile 인터페이스를 상속받으므로 추가 필드가 필요 없음
+  // Inherits from Profile interface, so no additional fields needed
 }

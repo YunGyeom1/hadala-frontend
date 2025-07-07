@@ -30,7 +30,7 @@ const CompanyUserList: React.FC<CompanyUserListProps> = ({
         const data = await companyUserService.getCompanyUsers(companyId);
         setUsers(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : '사용자 목록을 불러오는데 실패했습니다');
+        setError(err instanceof Error ? err.message : 'Failed to load user list');
       } finally {
         setLoading(false);
       }
@@ -44,24 +44,24 @@ const CompanyUserList: React.FC<CompanyUserListProps> = ({
   const getRoleLabel = (role?: string) => {
     switch (role) {
       case 'owner':
-        return '소유자';
+        return 'Owner';
       case 'manager':
-        return '관리자';
+        return 'Manager';
       case 'member':
-        return '멤버';
+        return 'Member';
       default:
-        return '역할 없음';
+        return 'No Role';
     }
   };
 
   const getTypeLabel = (type: string) => {
     switch (type) {
       case 'wholesaler':
-        return '도매상';
+        return 'Wholesaler';
       case 'retailer':
-        return '소매상';
+        return 'Retailer';
       case 'farmer':
-        return '농가';
+        return 'Farmer';
       default:
         return type;
     }
@@ -100,12 +100,12 @@ const CompanyUserList: React.FC<CompanyUserListProps> = ({
     try {
       await companyUserService.updateUserRole(userId, newRole);
       
-      // 사용자 목록 업데이트
+      // Update user list
       setUsers(users.map(user => 
         user.id === userId ? { ...user, role: newRole } : user
       ));
       
-      // 편집 상태 초기화
+      // Reset editing state
       const newEditing = new Set(editingRoles);
       newEditing.delete(userId);
       setEditingRoles(newEditing);
@@ -115,8 +115,8 @@ const CompanyUserList: React.FC<CompanyUserListProps> = ({
       setRoleUpdates(newRoleUpdates);
       
     } catch (error) {
-      console.error('역할 수정 실패:', error);
-      alert('역할 수정에 실패했습니다.');
+      console.error('Role update failed:', error);
+      alert('Failed to update role.');
     }
   };
 
@@ -134,38 +134,38 @@ const CompanyUserList: React.FC<CompanyUserListProps> = ({
     try {
       await companyUserService.addCompanyUser(companyId, selectedUserForAdd.id, selectedRoleForAdd);
       
-      // 사용자 목록 새로고침
+      // Update user list
       const updatedUsers = await companyUserService.getCompanyUsers(companyId);
       setUsers(updatedUsers);
       
-      // 모달 닫기
+      // Close modal
       setShowAddUser(false);
       setSelectedUserForAdd(null);
       setSelectedRoleForAdd(ProfileRole.MEMBER);
       
-      alert('사용자가 성공적으로 추가되었습니다.');
+      alert('User added successfully.');
     } catch (error) {
-      console.error('사용자 추가 실패:', error);
-      alert('사용자 추가에 실패했습니다.');
+      console.error('User add failed:', error);
+      alert('Failed to add user.');
     } finally {
       setAddingUser(false);
     }
   };
 
   const handleRemoveUser = async (userId: string) => {
-    if (!confirm('정말로 이 사용자를 회사에서 제거하시겠습니까?')) return;
+    if (!confirm('Are you sure you want to remove this user from the company?')) return;
 
     try {
       await companyUserService.removeCompanyUser(companyId, userId);
       
-      // 사용자 목록 새로고침
+      // Update user list
       const updatedUsers = await companyUserService.getCompanyUsers(companyId);
       setUsers(updatedUsers);
       
-      alert('사용자가 성공적으로 제거되었습니다.');
+      alert('User removed successfully.');
     } catch (error) {
-      console.error('사용자 제거 실패:', error);
-      alert('사용자 제거에 실패했습니다.');
+      console.error('User remove failed:', error);
+      alert('Failed to remove user.');
     }
   };
 
@@ -174,7 +174,7 @@ const CompanyUserList: React.FC<CompanyUserListProps> = ({
   };
 
   const getStatusLabel = (isActive: boolean) => {
-    return isActive ? '활성' : '비활성';
+    return isActive ? 'Active' : 'Inactive';
   };
 
   if (loading) {
@@ -204,7 +204,7 @@ const CompanyUserList: React.FC<CompanyUserListProps> = ({
             onClick={() => window.location.reload()}
             className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
-            다시 시도
+            Try Again
           </button>
         </div>
       </div>
@@ -214,7 +214,7 @@ const CompanyUserList: React.FC<CompanyUserListProps> = ({
   if (users.length === 0) {
     return (
       <div className="bg-white rounded-lg shadow p-6 text-center text-gray-500">
-        등록된 사용자가 없습니다
+        No users registered
       </div>
     );
   }
@@ -224,14 +224,14 @@ const CompanyUserList: React.FC<CompanyUserListProps> = ({
       <div className="px-6 py-4 border-b border-gray-200">
         <div className="flex justify-between items-center">
           <div>
-            <h3 className="text-lg font-medium text-gray-900">회사 사용자 목록</h3>
-            <p className="text-sm text-gray-500 mt-1">총 {users.length}명의 사용자</p>
+            <h3 className="text-lg font-medium text-gray-900">Company User List</h3>
+            <p className="text-sm text-gray-500 mt-1">Total {users.length} users</p>
           </div>
           <button
             onClick={() => setShowAddUser(!showAddUser)}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
           >
-            {showAddUser ? '취소' : '사용자 추가'}
+            {showAddUser ? 'Cancel' : 'Add User'}
           </button>
         </div>
       </div>
@@ -240,12 +240,12 @@ const CompanyUserList: React.FC<CompanyUserListProps> = ({
       {showAddUser && (
         <div className="px-6 py-4 border-b border-gray-200 bg-gray-50">
           <div className="space-y-4">
-            <h4 className="font-medium text-gray-900">사용자 추가</h4>
+            <h4 className="font-medium text-gray-900">Add User</h4>
             
             {/* 사용자 선택 */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                사용자 선택
+                Select User
               </label>
               {selectedUserForAdd ? (
                 <div className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white">
@@ -274,16 +274,16 @@ const CompanyUserList: React.FC<CompanyUserListProps> = ({
             {/* 역할 선택 */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                역할 선택
+                Select Role
               </label>
               <select
                 value={selectedRoleForAdd}
                 onChange={(e) => setSelectedRoleForAdd(e.target.value as ProfileRole)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
-                <option value={ProfileRole.MEMBER}>멤버</option>
-                <option value={ProfileRole.MANAGER}>관리자</option>
-                <option value={ProfileRole.OWNER}>소유자</option>
+                <option value={ProfileRole.MEMBER}>Member</option>
+                <option value={ProfileRole.MANAGER}>Manager</option>
+                <option value={ProfileRole.OWNER}>Owner</option>
               </select>
             </div>
 
@@ -299,7 +299,7 @@ const CompanyUserList: React.FC<CompanyUserListProps> = ({
                 className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
                 disabled={addingUser}
               >
-                취소
+                Cancel
               </button>
               <button
                 type="button"
@@ -307,7 +307,7 @@ const CompanyUserList: React.FC<CompanyUserListProps> = ({
                 className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
                 disabled={addingUser || !selectedUserForAdd}
               >
-                {addingUser ? '추가 중...' : '추가'}
+                {addingUser ? 'Adding...' : 'Add'}
               </button>
             </div>
           </div>
@@ -354,7 +354,7 @@ const CompanyUserList: React.FC<CompanyUserListProps> = ({
                           {getTypeLabel(user.type)}
                         </span>
                         <span className="text-xs text-gray-400">
-                          가입일: {new Date(user.created_at).toLocaleDateString()}
+                          Joined: {new Date(user.created_at).toLocaleDateString()}
                         </span>
                       </div>
                     </div>
@@ -380,27 +380,27 @@ const CompanyUserList: React.FC<CompanyUserListProps> = ({
                     {/* 사용자 상세 정보 */}
                     <div className="grid grid-cols-2 gap-4 text-sm">
                       <div>
-                        <span className="font-medium text-gray-700">사용자명:</span>
+                        <span className="font-medium text-gray-700">Username:</span>
                         <p className="mt-1">{user.username}</p>
                       </div>
                       <div>
-                        <span className="font-medium text-gray-700">이름:</span>
+                        <span className="font-medium text-gray-700">Name:</span>
                         <p className="mt-1">{user.name || '-'}</p>
                       </div>
                       <div>
-                        <span className="font-medium text-gray-700">이메일:</span>
+                        <span className="font-medium text-gray-700">Email:</span>
                         <p className="mt-1">{user.email || '-'}</p>
                       </div>
                       <div>
-                        <span className="font-medium text-gray-700">타입:</span>
+                        <span className="font-medium text-gray-700">Type:</span>
                         <p className="mt-1">{getTypeLabel(user.type)}</p>
                       </div>
                       <div>
-                        <span className="font-medium text-gray-700">가입일:</span>
+                        <span className="font-medium text-gray-700">Joined:</span>
                         <p className="mt-1">{new Date(user.created_at).toLocaleDateString()}</p>
                       </div>
                       <div>
-                        <span className="font-medium text-gray-700">수정일:</span>
+                        <span className="font-medium text-gray-700">Updated:</span>
                         <p className="mt-1">{new Date(user.updated_at).toLocaleDateString()}</p>
                       </div>
                     </div>
@@ -408,7 +408,7 @@ const CompanyUserList: React.FC<CompanyUserListProps> = ({
                     {/* 역할 수정 섹션 */}
                     <div className="border-t pt-4">
                       <div className="flex items-center justify-between mb-3">
-                        <h5 className="font-medium text-gray-900">역할 관리</h5>
+                        <h5 className="font-medium text-gray-900">Role Management</h5>
                         <div className="flex space-x-2">
                           {!isEditingRole ? (
                             <button
@@ -418,7 +418,7 @@ const CompanyUserList: React.FC<CompanyUserListProps> = ({
                               }}
                               className="px-3 py-1 text-sm bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                             >
-                              역할 수정
+                              Edit Role
                             </button>
                           ) : (
                             <>
@@ -429,7 +429,7 @@ const CompanyUserList: React.FC<CompanyUserListProps> = ({
                                 }}
                                 className="px-3 py-1 text-sm bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
                               >
-                                저장
+                                Save
                               </button>
                               <button
                                 onClick={(e) => {
@@ -438,7 +438,7 @@ const CompanyUserList: React.FC<CompanyUserListProps> = ({
                                 }}
                                 className="px-3 py-1 text-sm bg-gray-600 text-white rounded-md hover:bg-gray-700 transition-colors"
                               >
-                                취소
+                                Cancel
                               </button>
                             </>
                           )}
@@ -449,28 +449,28 @@ const CompanyUserList: React.FC<CompanyUserListProps> = ({
                             }}
                             className="px-3 py-1 text-sm bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
                           >
-                            제거
+                            Remove
                           </button>
                         </div>
                       </div>
                       
                       {isEditingRole ? (
                         <div className="space-y-2">
-                          <label className="block text-sm font-medium text-gray-700">역할 선택</label>
+                          <label className="block text-sm font-medium text-gray-700">Select Role</label>
                           <select
                             value={currentRole}
                             onChange={(e) => handleRoleChange(user.id, e.target.value as ProfileRole)}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            <option value={ProfileRole.MEMBER}>멤버</option>
-                            <option value={ProfileRole.MANAGER}>관리자</option>
-                            <option value={ProfileRole.OWNER}>소유자</option>
+                            <option value={ProfileRole.MEMBER}>Member</option>
+                            <option value={ProfileRole.MANAGER}>Manager</option>
+                            <option value={ProfileRole.OWNER}>Owner</option>
                           </select>
                         </div>
                       ) : (
                         <div className="flex items-center space-x-2">
-                          <span className="text-sm text-gray-700">현재 역할:</span>
+                          <span className="text-sm text-gray-700">Current Role:</span>
                           <span className="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
                             {getRoleLabel(user.role)}
                           </span>

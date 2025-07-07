@@ -42,7 +42,7 @@ export const CenterCard: React.FC<CenterCardProps> = ({
       
       {center.operating_start && center.operating_end && (
         <div className="mt-2 text-sm text-gray-600">
-          운영시간: {formatOperatingHours(center.operating_start, center.operating_end)}
+          Operating Hours: {formatOperatingHours(center.operating_start, center.operating_end)}
         </div>
       )}
       
@@ -52,19 +52,19 @@ export const CenterCard: React.FC<CenterCardProps> = ({
             className="px-3 py-1 text-xs font-medium text-blue-600 hover:text-blue-700"
             onClick={(e) => {
               e.stopPropagation();
-              // 편집 액션
+              // Edit action
             }}
           >
-            편집
+            Edit
           </button>
           <button
             className="px-3 py-1 text-xs font-medium text-red-600 hover:text-red-700"
             onClick={(e) => {
               e.stopPropagation();
-              // 삭제 액션
+              // Delete action
             }}
           >
-            삭제
+            Delete
           </button>
         </div>
       )}

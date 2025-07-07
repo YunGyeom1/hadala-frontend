@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
-// Axios 인스턴스 생성
+// Create axios instance
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -10,7 +10,7 @@ const apiClient = axios.create({
   },
 });
 
-// 요청 인터셉터 - 토큰 자동 추가
+// Request interceptor - automatically add token
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('access_token');
@@ -24,7 +24,7 @@ apiClient.interceptors.request.use(
   }
 );
 
-// 응답 인터셉터 - 토큰 만료 시 자동 갱신
+// Response interceptor - auto refresh token when expired
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -47,7 +47,7 @@ apiClient.interceptors.response.use(
           return apiClient(originalRequest);
         }
       } catch (refreshError) {
-        // 리프레시 토큰도 만료된 경우 로그아웃
+        // Logout if refresh token is also expired
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
         localStorage.removeItem('user');
@@ -74,7 +74,7 @@ export interface User {
 }
 
 export const authService = {
-  // 구글 로그인
+  // Google login
   async googleLogin(idToken: string): Promise<GoogleLoginResponse> {
     const response = await apiClient.post('/auth/google-login', {
       id_token: idToken,
@@ -82,36 +82,36 @@ export const authService = {
     return response.data;
   },
 
-  // 토큰 저장
+  // Save tokens
   saveTokens(accessToken: string, refreshToken: string) {
     localStorage.setItem('access_token', accessToken);
     localStorage.setItem('refresh_token', refreshToken);
   },
 
-  // 사용자 정보 저장
+  // Save user information
   saveUser(user: User) {
     localStorage.setItem('user', JSON.stringify(user));
   },
 
-  // 사용자 정보 가져오기
+  // Get user information
   getUser(): User | null {
     const userStr = localStorage.getItem('user');
     return userStr ? JSON.parse(userStr) : null;
   },
 
-  // 로그아웃
+  // Logout
   logout() {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('user');
   },
 
-  // 로그인 상태 확인
+  // Check login status
   isAuthenticated(): boolean {
     return !!localStorage.getItem('access_token');
   },
 
-  // 토큰 가져오기
+  // Get tokens
   getAccessToken(): string | null {
     return localStorage.getItem('access_token');
   },

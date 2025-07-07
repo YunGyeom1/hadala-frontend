@@ -46,7 +46,7 @@ export interface CompanyFormData {
   business_number: string;
 }
 
-// 도매상 회사 상세 정보
+// Wholesale company detail information
 export interface WholesaleCompanyDetail {
   id: string;
   company_id: string;

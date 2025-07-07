@@ -4,27 +4,27 @@ export const validateCompanyForm = (data: CompanyFormData): Record<string, strin
   const errors: Record<string, string> = {};
   
   if (!data.name.trim()) {
-    errors.name = '회사명은 필수입니다';
+    errors.name = 'Company name is required';
   } else if (data.name.length > 100) {
-    errors.name = '회사명은 100자 이하여야 합니다';
+    errors.name = 'Company name must be 100 characters or less';
   }
   
   if (!data.owner_name.trim()) {
-    errors.owner_name = '대표자명은 필수입니다';
+    errors.owner_name = 'Owner name is required';
   } else if (data.owner_name.length > 50) {
-    errors.owner_name = '대표자명은 50자 이하여야 합니다';
+    errors.owner_name = 'Owner name must be 50 characters or less';
   }
   
   if (data.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-    errors.email = '올바른 이메일 형식이 아닙니다';
+    errors.email = 'Invalid email format';
   }
   
   if (data.phone && !/^[0-9-+\s()]+$/.test(data.phone)) {
-    errors.phone = '올바른 전화번호 형식이 아닙니다';
+    errors.phone = 'Invalid phone number format';
   }
   
   if (data.business_number && !/^[0-9-]+$/.test(data.business_number)) {
-    errors.business_number = '올바른 사업자등록번호 형식이 아닙니다';
+    errors.business_number = 'Invalid business registration number format';
   }
   
   return errors;

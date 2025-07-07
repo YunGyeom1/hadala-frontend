@@ -73,25 +73,25 @@ const MainPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-gray-50">
-      <h1 className="text-3xl font-bold mt-10 mb-6">메인 대시보드</h1>
+      <h1 className="text-3xl font-bold mt-10 mb-6">Main Dashboard</h1>
       <div className="flex gap-4 mb-8">
-        <button className="btn" onClick={() => setShowFarmerForm(true)}>Farmer 추가</button>
-        <button className="btn" onClick={() => setShowOrganizationForm(true)}>Organizations 추가</button>
-        <button className="btn" onClick={() => setShowWholesalerForm(true)}>Wholesalers 추가</button>
+        <button className="btn" onClick={() => setShowFarmerForm(true)}>Add Farmer</button>
+        <button className="btn" onClick={() => setShowOrganizationForm(true)}>Add Organizations</button>
+        <button className="btn" onClick={() => setShowWholesalerForm(true)}>Add Wholesalers</button>
       </div>
 
       {showFarmerForm && (
         <div className="modal">
           <div className="modal-content">
-            <h2>Farmer 추가</h2>
+            <h2>Add Farmer</h2>
             <form onSubmit={handleFarmerSubmit}>
-              <input type="text" name="name" placeholder="이름" value={farmerData.name} onChange={handleFarmerChange} required />
-              <input type="text" name="address" placeholder="주소" value={farmerData.address} onChange={handleFarmerChange} />
-              <input type="number" name="farm_size" placeholder="농장 크기" value={farmerData.farm_size} onChange={handleFarmerChange} />
-              <input type="number" name="yearly_yield" placeholder="연간 수확량" value={farmerData.yearly_yield} onChange={handleFarmerChange} />
-              <input type="number" name="farm_members" placeholder="농장 구성원 수" value={farmerData.farm_members} onChange={handleFarmerChange} />
-              <button type="submit">추가</button>
-              <button type="button" onClick={() => setShowFarmerForm(false)}>닫기</button>
+              <input type="text" name="name" placeholder="Name" value={farmerData.name} onChange={handleFarmerChange} required />
+              <input type="text" name="address" placeholder="Address" value={farmerData.address} onChange={handleFarmerChange} />
+              <input type="number" name="farm_size" placeholder="Farm Size" value={farmerData.farm_size} onChange={handleFarmerChange} />
+              <input type="number" name="yearly_yield" placeholder="Yearly Yield" value={farmerData.yearly_yield} onChange={handleFarmerChange} />
+              <input type="number" name="farm_members" placeholder="Farm Members Count" value={farmerData.farm_members} onChange={handleFarmerChange} />
+              <button type="submit">Add</button>
+              <button type="button" onClick={() => setShowFarmerForm(false)}>Close</button>
             </form>
           </div>
         </div>
@@ -100,12 +100,12 @@ const MainPage = () => {
       {showOrganizationForm && (
         <div className="modal">
           <div className="modal-content">
-            <h2>Organizations 추가</h2>
+            <h2>Add Organizations</h2>
             <form onSubmit={handleOrganizationSubmit}>
-              <input type="text" name="name" placeholder="조직명" value={organizationData.name} onChange={handleOrganizationChange} required />
-              <input type="text" name="address" placeholder="주소" value={organizationData.address} onChange={handleOrganizationChange} required />
-              <button type="submit">추가</button>
-              <button type="button" onClick={() => setShowOrganizationForm(false)}>닫기</button>
+              <input type="text" name="name" placeholder="Organization Name" value={organizationData.name} onChange={handleOrganizationChange} required />
+              <input type="text" name="address" placeholder="Address" value={organizationData.address} onChange={handleOrganizationChange} required />
+              <button type="submit">Add</button>
+              <button type="button" onClick={() => setShowOrganizationForm(false)}>Close</button>
             </form>
           </div>
         </div>
@@ -114,17 +114,17 @@ const MainPage = () => {
       {showWholesalerForm && (
         <div className="modal">
           <div className="modal-content">
-            <h2>Wholesalers 추가</h2>
+            <h2>Add Wholesalers</h2>
             <form onSubmit={handleWholesalerSubmit}>
-              <input type="text" name="name" placeholder="이름" value={wholesalerData.name} onChange={handleWholesalerChange} required />
-              <input type="text" name="phone" placeholder="전화번호" value={wholesalerData.phone} onChange={handleWholesalerChange} required />
-              <input type="text" name="address" placeholder="주소" value={wholesalerData.address} onChange={handleWholesalerChange} required />
+              <input type="text" name="name" placeholder="Name" value={wholesalerData.name} onChange={handleWholesalerChange} required />
+              <input type="text" name="phone" placeholder="Phone Number" value={wholesalerData.phone} onChange={handleWholesalerChange} required />
+              <input type="text" name="address" placeholder="Address" value={wholesalerData.address} onChange={handleWholesalerChange} required />
               <select name="role" value={wholesalerData.role} onChange={handleWholesalerChange} required>
-                <option value="manager">매니저</option>
-                <option value="staff">스태프</option>
+                <option value="manager">Manager</option>
+                <option value="staff">Staff</option>
               </select>
-              <button type="submit">추가</button>
-              <button type="button" onClick={() => setShowWholesalerForm(false)}>닫기</button>
+              <button type="submit">Add</button>
+              <button type="button" onClick={() => setShowWholesalerForm(false)}>Close</button>
             </form>
           </div>
         </div>

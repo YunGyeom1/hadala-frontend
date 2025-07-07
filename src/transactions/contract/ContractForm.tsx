@@ -102,26 +102,26 @@ const ContractForm = () => {
             setSelectedArrivalCenter(contract.arrival_center);
           }
         } catch (error) {
-          console.error('계약 정보 조회 실패:', error);
+          console.error('Failed to fetch contract information:', error);
         }
       };
       fetchContract();
     }
   }, [id]);
 
-  // formData 상태 변화 추적
+  // Track formData state changes
   useEffect(() => {
-    console.log('formData 업데이트됨:', formData);
+    console.log('formData updated:', formData);
   }, [formData]);
 
-  // selectedSupplierCompany 상태 변화 추적
+  // Track selectedSupplierCompany state changes
   useEffect(() => {
-    console.log('selectedSupplierCompany 업데이트됨:', selectedSupplierCompany);
+    console.log('selectedSupplierCompany updated:', selectedSupplierCompany);
   }, [selectedSupplierCompany]);
 
-  // selectedReceiverCompany 상태 변화 추적
+  // Track selectedReceiverCompany state changes
   useEffect(() => {
-    console.log('selectedReceiverCompany 업데이트됨:', selectedReceiverCompany);
+    console.log('selectedReceiverCompany updated:', selectedReceiverCompany);
   }, [selectedReceiverCompany]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -181,10 +181,10 @@ const ContractForm = () => {
       }
       
       navigate('/wholesaler/transactions/contracts');
-    } catch (error) {
-      console.error('계약 저장 실패:', error);
-      alert('계약 저장에 실패했습니다.');
-    }
+          } catch (error) {
+        console.error('Contract save failed:', error);
+        alert('Failed to save contract.');
+      }
   };
 
   const handleItemChange = (index: number, field: keyof ContractItem, value: string | number) => {
@@ -236,10 +236,10 @@ const ContractForm = () => {
   };
 
   const handleSupplierSelect = async (profile: Profile) => {
-    console.log('공급자 선택됨:', profile);
+    console.log('Supplier selected:', profile);
     setSelectedSupplier(profile);
     
-    // 기존 선택된 회사와 센터 초기화
+    // Clear previously selected company and center
     setSelectedSupplierCompany(null);
     setSelectedDepartureCenter(null);
     setFormData(prev => ({
@@ -249,14 +249,14 @@ const ContractForm = () => {
       departure_center_id: ''
     }));
     
-    // 유저가 선택되면 company_id로 회사 자동 설정
+    // Auto-set company when user is selected using company_id
     if (profile.company_id) {
-      console.log('공급자 회사 ID:', profile.company_id);
+      console.log('Supplier company ID:', profile.company_id);
       try {
         const companies = await companyService.getCompanies();
         const company = companies.find((c: Company) => c.id === profile.company_id);
         if (company) {
-          console.log('공급자 회사 찾음:', company);
+          console.log('Supplier company found:', company);
           setSelectedSupplierCompany(company);
           setFormData(prev => ({
             ...prev,
@@ -264,18 +264,18 @@ const ContractForm = () => {
           }));
         }
       } catch (error) {
-        console.error('회사 정보 조회 실패:', error);
+        console.error('Failed to fetch company information:', error);
       }
     } else {
-      console.log('공급자 유저만 설정 (회사 ID 없음)');
+      console.log('Supplier user only (no company ID)');
     }
   };
 
   const handleReceiverSelect = async (profile: Profile) => {
-    console.log('수신자 선택됨:', profile);
+    console.log('Receiver selected:', profile);
     setSelectedReceiver(profile);
     
-    // 기존 선택된 회사와 센터 초기화
+    // Clear previously selected company and center
     setSelectedReceiverCompany(null);
     setSelectedArrivalCenter(null);
     setFormData(prev => ({
@@ -285,14 +285,14 @@ const ContractForm = () => {
       arrival_center_id: ''
     }));
     
-    // 유저가 선택되면 company_id로 회사 자동 설정
+    // Auto-set company when user is selected using company_id
     if (profile.company_id) {
-      console.log('수신자 회사 ID:', profile.company_id);
+      console.log('Receiver company ID:', profile.company_id);
       try {
         const companies = await companyService.getCompanies();
         const company = companies.find((c: Company) => c.id === profile.company_id);
         if (company) {
-          console.log('수신자 회사 찾음:', company);
+          console.log('Receiver company found:', company);
           setSelectedReceiverCompany(company);
           setFormData(prev => ({
             ...prev,
@@ -300,15 +300,15 @@ const ContractForm = () => {
           }));
         }
       } catch (error) {
-        console.error('회사 정보 조회 실패:', error);
+        console.error('Failed to fetch company information:', error);
       }
     } else {
-      console.log('수신자 유저만 설정 (회사 ID 없음)');
+      console.log('Receiver user only (no company ID)');
     }
   };
 
   const handleSupplierCompanySelect = (company: Company) => {
-    // 유저가 선택되지 않았을 때만 회사 선택 가능
+    // Only allow company selection when user is not selected
     if (!selectedSupplier) {
       setSelectedSupplierCompany(company);
       setFormData({ ...formData, supplier_company_id: company.id });
@@ -316,7 +316,7 @@ const ContractForm = () => {
   };
 
   const handleReceiverCompanySelect = (company: Company) => {
-    // 유저가 선택되지 않았을 때만 회사 선택 가능
+    // Only allow company selection when user is not selected
     if (!selectedReceiver) {
       setSelectedReceiverCompany(company);
       setFormData({ ...formData, receiver_company_id: company.id });
@@ -327,7 +327,7 @@ const ContractForm = () => {
     setFormData(prev => {
       const newFormData = { ...prev, delivery_datetime: value };
       
-      // 납기일이 설정되면 해당 월의 말일로 결재 기한 자동 설정
+      // Auto-set payment due date to last day of month when delivery date is set
       if (value) {
         const deliveryDate = new Date(value);
         const lastDayOfMonth = new Date(deliveryDate.getFullYear(), deliveryDate.getMonth() + 1, 0);
@@ -342,17 +342,17 @@ const ContractForm = () => {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">{isEdit ? '계약 수정' : '계약 생성'}</h1>
+        <h1 className="text-2xl font-bold">{isEdit ? 'Edit Contract' : 'Create Contract'}</h1>
         <button
           onClick={() => navigate('/wholesaler/transactions/contracts')}
           className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
         >
-          취소
+          Cancel
         </button>
       </div>
 
       <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-8 max-w-3xl mx-auto">
-        {/* 계약 기본 정보 */}
+        {/* Contract Basic Information */}
         <ContractBasicInfo
           title={formData.title}
           contract_datetime={formData.contract_datetime}
@@ -368,7 +368,7 @@ const ContractForm = () => {
           onPaymentStatusChange={(value) => setFormData({ ...formData, payment_status: value })}
         />
 
-        {/* 계약 당사자 정보 */}
+        {/* Contract Parties Information */}
         <ContractParties
           selectedSupplier={selectedSupplier}
           selectedReceiver={selectedReceiver}
@@ -396,7 +396,7 @@ const ContractForm = () => {
           }}
         />
 
-        {/* 센터 정보 */}
+        {/* Center Information */}
         <ContractCenters
           selectedDepartureCenter={selectedDepartureCenter}
           selectedArrivalCenter={selectedArrivalCenter} 
@@ -420,7 +420,7 @@ const ContractForm = () => {
           }}
         />
 
-        {/* 계약 품목 */}
+        {/* Contract Items */}
         <ContractItems
           items={formData.items}
           onItemChange={handleItemChange}
@@ -428,10 +428,10 @@ const ContractForm = () => {
           onRemoveItem={removeItem}
         />
 
-        {/* 비고 */}
+        {/* Notes */}
         <div className="mt-8">
           <label htmlFor="notes" className="block text-sm font-medium text-gray-700">
-            비고
+            Notes
           </label>
           <textarea
             id="notes"
@@ -442,20 +442,20 @@ const ContractForm = () => {
           />
         </div>
 
-        {/* 버튼 */}
+        {/* Buttons */}
         <div className="mt-8 flex justify-end space-x-2">
           <button
             type="button"
             onClick={() => navigate('/wholesaler/transactions/contracts')}
             className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
           >
-            취소
+            Cancel
           </button>
           <button
             type="submit"
             className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
           >
-            {isEdit ? '수정' : '생성'}
+            {isEdit ? 'Update' : 'Create'}
           </button>
         </div>
       </form>

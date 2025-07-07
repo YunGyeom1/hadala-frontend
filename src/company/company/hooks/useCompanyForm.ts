@@ -18,10 +18,10 @@ export const useCompanyForm = (initialData?: Partial<CompanyFormData>) => {
   const handleChange = useCallback((field: keyof CompanyFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     
-    // 필드가 터치되었음을 표시
+    // Mark field as touched
     setTouched(prev => ({ ...prev, [field]: true }));
     
-    // 실시간 검증 (터치된 필드만)
+    // Real-time validation (only for touched fields)
     if (touched[field]) {
       const fieldErrors = validateCompanyForm({ ...formData, [field]: value });
       setErrors(prev => ({ ...prev, [field]: fieldErrors[field] || '' }));

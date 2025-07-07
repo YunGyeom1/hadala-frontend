@@ -31,11 +31,11 @@ const ShipmentBasicInfo: React.FC<ShipmentBasicInfoProps> = ({
 }) => {
   return (
     <div className="mb-8">
-      <h2 className="text-lg font-semibold mb-4 border-b pb-2">기본 정보</h2>
+      <h2 className="text-lg font-semibold mb-4 border-b pb-2">Basic Information</h2>
       <div className="grid grid-cols-2 gap-6">
         <div>
           <label htmlFor="contract_selection" className="block text-xs font-semibold text-gray-600 mb-1">
-            계약 연결 방식
+            Contract Connection Method
           </label>
           <div className="space-y-2">
             <div className="flex items-center space-x-2">
@@ -48,7 +48,7 @@ const ShipmentBasicInfo: React.FC<ShipmentBasicInfoProps> = ({
                 disabled={isEditMode}
                 className="radio radio-primary"
               />
-              <label htmlFor="existing_contract" className="text-sm">기존 계약 연결</label>
+              <label htmlFor="existing_contract" className="text-sm">Connect Existing Contract</label>
             </div>
             <div className="flex items-center space-x-2">
               <input
@@ -60,7 +60,7 @@ const ShipmentBasicInfo: React.FC<ShipmentBasicInfoProps> = ({
                 disabled={isEditMode}
                 className="radio radio-primary"
               />
-              <label htmlFor="new_contract" className="text-sm">새 계약 생성</label>
+              <label htmlFor="new_contract" className="text-sm">Create New Contract</label>
             </div>
           </div>
         </div>
@@ -68,7 +68,7 @@ const ShipmentBasicInfo: React.FC<ShipmentBasicInfoProps> = ({
         {!createNewContract ? (
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">
-              연결된 계약
+              Connected Contract
             </label>
             {selectedContract ? (
               <div className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50">
@@ -76,23 +76,23 @@ const ShipmentBasicInfo: React.FC<ShipmentBasicInfoProps> = ({
                   <div className="flex-1">
                     <p className="font-medium text-gray-900">{selectedContract.title}</p>
                     <div className="flex items-center space-x-4 mt-1 text-sm text-gray-500">
-                      <span>공급: {selectedContract.supplier_company?.name || '-'}</span>
-                      <span>수신: {selectedContract.receiver_company?.name || '-'}</span>
+                      <span>Supplier: {selectedContract.supplier_company?.name || '-'}</span>
+                      <span>Receiver: {selectedContract.receiver_company?.name || '-'}</span>
                     </div>
                     <div className="flex items-center space-x-4 mt-1 text-xs text-gray-400">
-                      <span>계약일: {selectedContract.contract_datetime ? new Date(selectedContract.contract_datetime).toLocaleDateString() : '-'}</span>
-                      <span>상태: {selectedContract.contract_status || '-'}</span>
-                      <span>결제: {selectedContract.payment_status || '-'}</span>
+                      <span>Contract Date: {selectedContract.contract_datetime ? new Date(selectedContract.contract_datetime).toLocaleDateString() : '-'}</span>
+                      <span>Status: {selectedContract.contract_status || '-'}</span>
+                      <span>Payment: {selectedContract.payment_status || '-'}</span>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm text-gray-500 font-medium">{selectedContract.total_price?.toLocaleString()}원</p>
+                    <p className="text-sm text-gray-500 font-medium">{selectedContract.total_price?.toLocaleString()} KRW</p>
                     <button
                       type="button"
                       onClick={onContractRemove}
                       className="text-xs text-red-500 hover:text-red-700 mt-1"
                     >
-                      변경
+                      Change
                     </button>
                   </div>
                 </div>
@@ -100,7 +100,7 @@ const ShipmentBasicInfo: React.FC<ShipmentBasicInfoProps> = ({
             ) : (
               <ContractSearch
                 onSelect={onContractSelect}
-                placeholder="계약을 검색하세요..."
+                placeholder="Search for contracts..."
                 disabled={isEditMode}
               />
             )}
@@ -108,17 +108,17 @@ const ShipmentBasicInfo: React.FC<ShipmentBasicInfoProps> = ({
         ) : (
           <div>
             <label className="block text-xs font-semibold text-gray-600 mb-1">
-              새 계약 정보
+              New Contract Information
             </label>
             <div className="p-3 bg-blue-50 border border-blue-200 rounded-lg">
               <p className="text-sm text-blue-800">
-                출하와 함께 새로운 계약이 생성됩니다.
+                A new contract will be created with the shipment.
               </p>
               <p className="text-xs text-blue-600 mt-1">
-                • 계약일/배송일: 출하일과 동일<br/>
-                • 결제기한: 출하월 말일<br/>
-                • 계약상태: 자동 설정<br/>
-                • 결제상태: 미결제
+                • Contract Date/Delivery Date: Same as shipment date<br/>
+                • Payment Due Date: End of shipment month<br/>
+                • Contract Status: Auto-set<br/>
+                • Payment Status: Unpaid
               </p>
             </div>
           </div>
@@ -126,7 +126,7 @@ const ShipmentBasicInfo: React.FC<ShipmentBasicInfoProps> = ({
 
         <div>
           <label htmlFor="title" className="block text-xs font-semibold text-gray-600 mb-1">
-            출하명
+            Shipment Name
           </label>
           <input
             type="text"
@@ -135,13 +135,13 @@ const ShipmentBasicInfo: React.FC<ShipmentBasicInfoProps> = ({
             value={title}
             onChange={(e) => onTitleChange(e.target.value)}
             className="input input-bordered w-full"
-            placeholder="예: 2024년 5월 정기 출하"
+            placeholder="e.g., May 2024 Regular Shipment"
           />
         </div>
         
         <div>
           <label htmlFor="shipment_datetime" className="block text-xs font-semibold text-gray-600 mb-1">
-            출하일
+            Shipment Date
           </label>
           <input
             type="date"

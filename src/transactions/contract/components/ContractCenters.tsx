@@ -25,11 +25,11 @@ const ContractCenters: React.FC<ContractCentersProps> = ({
 }) => {
   return (
     <div className="mb-8">
-      <h2 className="text-lg font-semibold mb-4 border-b pb-2">센터 정보</h2>
+      <h2 className="text-lg font-semibold mb-4 border-b pb-2">Center Information</h2>
       <div className="grid grid-cols-2 gap-6">
-        {/* 출발 센터 */}
+        {/* Departure Center */}
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">출발 센터</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">Departure Center</label>
           {selectedDepartureCenter ? (
             <div className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50">
               <div className="flex justify-between items-center">
@@ -44,7 +44,7 @@ const ContractCenters: React.FC<ContractCentersProps> = ({
                     onClick={onDepartureCenterRemove}
                     className="text-xs text-red-500 hover:text-red-700"
                   >
-                    변경
+                    Change
                   </button>
                 </div>
               </div>
@@ -53,14 +53,14 @@ const ContractCenters: React.FC<ContractCentersProps> = ({
             <CenterSearch
               companyId={selectedSupplierCompany?.id || undefined}
               onSelect={onDepartureCenterSelect}
-              placeholder={selectedSupplierCompany?.id ? "공급자 회사 센터 검색..." : "센터명으로 검색..."}
+              placeholder={selectedSupplierCompany?.id ? "Search supplier company centers..." : "Search by center name..."}
             />
           )}
         </div>
 
-        {/* 도착 센터 */}
+        {/* Arrival Center */}
         <div>
-          <label className="block text-xs font-semibold text-gray-600 mb-1">도착 센터</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">Arrival Center</label>
           {selectedArrivalCenter ? (
             <div className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-50">
               <div className="flex justify-between items-center">
@@ -75,7 +75,7 @@ const ContractCenters: React.FC<ContractCentersProps> = ({
                     onClick={onArrivalCenterRemove}
                     className="text-xs text-red-500 hover:text-red-700"
                   >
-                    변경
+                    Change
                   </button>
                 </div>
               </div>
@@ -84,7 +84,7 @@ const ContractCenters: React.FC<ContractCentersProps> = ({
             <CenterSearch
               companyId={selectedReceiverCompany?.id || undefined}
               onSelect={onArrivalCenterSelect}
-              placeholder={selectedReceiverCompany?.id ? "수신자 회사 센터 검색..." : "센터명으로 검색..."}
+              placeholder={selectedReceiverCompany?.id ? "Search receiver company centers..." : "Search by center name..."}
             />
           )}
         </div>

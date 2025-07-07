@@ -2,7 +2,7 @@ import { Company, CompanyType } from '../types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
-// 도매상 회사 상세 정보 타입 정의
+// Wholesale company detail information type definition
 export interface WholesaleCompanyDetail {
   id?: string;
   company_id: string;
@@ -26,7 +26,7 @@ export interface WholesaleCompanyDetail {
 }
 
 export const companyService = {
-  // 회사 목록 조회
+  // Get company list
   async getCompanies(): Promise<Company[]> {
     const response = await fetch(`${API_BASE_URL}/companies/search`, {
       headers: {
@@ -37,13 +37,13 @@ export const companyService = {
     });
     
     if (!response.ok) {
-      throw new Error('회사 목록을 불러오는데 실패했습니다.');
+      throw new Error('Failed to load company list.');
     }
     
     return response.json();
   },
 
-  // 내가 소속된 회사 조회
+  // Get my company
   async getMyCompany(): Promise<Company | null> {
     try {
       const response = await fetch(`${API_BASE_URL}/companies/me`, {
@@ -58,23 +58,23 @@ export const companyService = {
         if (response.status === 404) {
           return null;
         }
-        throw new Error('내 회사 정보를 불러오는데 실패했습니다.');
+        throw new Error('Failed to load my company information.');
       }
       
       return response.json();
     } catch (error) {
-      console.error('내 회사 조회 실패:', error);
+      console.error('Failed to get my company:', error);
       return null;
     }
   },
 
-  // 특정 타입의 회사 조회
+  // Get company by type
   async getCompanyByType(type: CompanyType): Promise<Company | null> {
     const companies = await this.getCompanies();
     return companies.find(c => c.type === type) || null;
   },
 
-  // 회사 생성
+  // Create company
   async createCompany(companyData: Omit<Company, 'id'>): Promise<Company> {
     const response = await fetch(`${API_BASE_URL}/companies/create`, {
       method: 'POST',
@@ -87,13 +87,13 @@ export const companyService = {
     });
     
     if (!response.ok) {
-      throw new Error('회사 생성에 실패했습니다.');
+      throw new Error('Failed to create company.');
     }
     
     return response.json();
   },
 
-  // 회사 수정
+  // Update company
   async updateCompany(companyId: string, companyData: Partial<Company>): Promise<Company> {
     const response = await fetch(`${API_BASE_URL}/companies/${companyId}`, {
       method: 'PUT',
@@ -106,13 +106,13 @@ export const companyService = {
     });
     
     if (!response.ok) {
-      throw new Error('회사 수정에 실패했습니다.');
+      throw new Error('Failed to update company.');
     }
     
     return response.json();
   },
 
-  // 도매상 회사 상세 정보 조회
+  // Get wholesale company detail information
   async getWholesaleCompanyDetail(companyId: string): Promise<WholesaleCompanyDetail | null> {
     const response = await fetch(`${API_BASE_URL}/companies/wholesale/${companyId}/detail`, {
       headers: {
@@ -128,20 +128,20 @@ export const companyService = {
         return null;
       }
       const errorText = await response.text();
-      throw new Error(`도매상 회사 상세 정보를 불러오는데 실패했습니다: ${errorText}`);
+      throw new Error(`Failed to load wholesale company detail information: ${errorText}`);
     }
     
     return response.json();
   },
 
-  // 도매상 회사 상세 정보 생성/수정
+  // Create/update wholesale company detail information
   async upsertWholesaleCompanyDetail(detailData: WholesaleCompanyDetail): Promise<WholesaleCompanyDetail> {
     const companyId = detailData.company_id;
     if (!companyId) {
-      throw new Error('회사 ID가 필요합니다.');
+      throw new Error('Company ID is required.');
     }
 
-    // 항상 PUT을 사용 (백엔드에서 자동으로 생성/수정 처리)
+    // Always use PUT (backend handles create/update automatically)
     const url = `${API_BASE_URL}/companies/wholesale/${companyId}/detail`;
     
     const response = await fetch(url, {
@@ -156,7 +156,7 @@ export const companyService = {
     
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.detail || '도매상 회사 상세 정보 저장에 실패했습니다.');
+      throw new Error(errorData.detail || 'Failed to save wholesale company detail information.');
     }
     
     return response.json();

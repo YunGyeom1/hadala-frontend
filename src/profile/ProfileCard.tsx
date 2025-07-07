@@ -39,15 +39,15 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
 
   const validateUsername = (username: string): boolean => {
     if (!username) {
-      setErrors(prev => ({ ...prev, username: '사용자명은 필수입니다.' }));
+      setErrors(prev => ({ ...prev, username: 'Username is required.' }));
       return false;
     }
     if (!/^[a-zA-Z0-9]+$/.test(username)) {
-      setErrors(prev => ({ ...prev, username: '영문자와 숫자만 사용 가능합니다.' }));
+      setErrors(prev => ({ ...prev, username: 'Only letters and numbers are allowed.' }));
       return false;
     }
     if (existingProfiles.some(p => p.username === username && (!profile || p.id !== profile.id))) {
-      setErrors(prev => ({ ...prev, username: '이미 사용 중인 사용자명입니다.' }));
+      setErrors(prev => ({ ...prev, username: 'Username is already in use.' }));
       return false;
     }
     setErrors(prev => ({ ...prev, username: undefined }));
@@ -55,9 +55,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   };
 
   const validateName = (name: string): boolean => {
-    if (!name) return true; // 선택사항
+    if (!name) return true; // Optional
     if (!/^[a-zA-Z\s]+$/.test(name)) {
-      setErrors(prev => ({ ...prev, name: '영문자만 사용 가능합니다.' }));
+      setErrors(prev => ({ ...prev, name: 'Only letters are allowed.' }));
       return false;
     }
     setErrors(prev => ({ ...prev, name: undefined }));
@@ -65,9 +65,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   };
 
   const validatePhone = (phone: string): boolean => {
-    if (!phone) return true; // 선택사항
+    if (!phone) return true; // Optional
     if (!/^\d+$/.test(phone)) {
-      setErrors(prev => ({ ...prev, phone: '숫자만 입력 가능합니다.' }));
+      setErrors(prev => ({ ...prev, phone: 'Only numbers are allowed.' }));
       return false;
     }
     setErrors(prev => ({ ...prev, phone: undefined }));
@@ -75,9 +75,9 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   };
 
   const validateEmail = (email: string): boolean => {
-    if (!email) return true; // 선택사항
+    if (!email) return true; // Optional
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setErrors(prev => ({ ...prev, email: '올바른 이메일 형식이 아닙니다.' }));
+      setErrors(prev => ({ ...prev, email: 'Invalid email format.' }));
       return false;
     }
     setErrors(prev => ({ ...prev, email: undefined }));
@@ -95,13 +95,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   const getProfileTypeLabel = (type: ProfileType) => {
     switch (type) {
       case ProfileType.FARMER:
-        return '농부';
+        return 'Farmer';
       case ProfileType.RETAILER:
-        return '소매상';
+        return 'Retailer';
       case ProfileType.WHOLESALER:
-        return '도매상';
+        return 'Wholesaler';
       default:
-        return '알 수 없음';
+        return 'Unknown';
     }
   };
 
@@ -158,7 +158,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
     <div className={`${getHeaderColor(type)} px-6 py-4 rounded-t-lg`}>
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-xl font-semibold text-white">프로필 정보</h2>
+          <h2 className="text-xl font-semibold text-white">Profile Information</h2>
           <p className="text-white/80 mt-1">{getProfileTypeLabel(type)}</p>
         </div>
         {!isEditing ? (
@@ -166,7 +166,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             onClick={() => setIsEditing(true)}
             className="px-4 py-2 text-sm font-medium text-white bg-white/20 border border-white/30 rounded-md hover:bg-white/30"
           >
-            {profile ? '수정' : '생성'}
+            {profile ? 'Edit' : 'Create'}
           </button>
         ) : (
           <div className="flex space-x-2">
@@ -174,13 +174,13 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               onClick={handleCancel}
               className="px-4 py-2 text-sm font-medium text-white bg-white/20 border border-white/30 rounded-md hover:bg-white/30"
             >
-              취소
+              Cancel
             </button>
             <button
               onClick={handleSave}
               className="px-4 py-2 text-sm font-medium text-white bg-white/20 border border-white/30 rounded-md hover:bg-white/30"
             >
-              저장
+              Save
             </button>
           </div>
         )}
@@ -193,7 +193,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       <div className="space-y-6">
         <div className="grid grid-cols-2 gap-6">
           <div>
-            <p className="text-gray-600">사용자명 <span className="text-red-500">*</span></p>
+            <p className="text-gray-600">Username <span className="text-red-500">*</span></p>
             {isEditing ? (
               <div>
                 <input
@@ -216,7 +216,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             )}
           </div>
           <div>
-            <p className="text-gray-600">이름</p>
+            <p className="text-gray-600">Name</p>
             {isEditing ? (
               <div>
                 <input
@@ -241,7 +241,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         </div>
         <div className="grid grid-cols-2 gap-6">
           <div>
-            <p className="text-gray-600">전화번호</p>
+            <p className="text-gray-600">Phone Number</p>
             {isEditing ? (
               <div>
                 <input
@@ -264,7 +264,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             )}
           </div>
           <div>
-            <p className="text-gray-600">이메일</p>
+            <p className="text-gray-600">Email</p>
             {isEditing ? (
               <div>
                 <input
@@ -288,21 +288,21 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           </div>
         </div>
         
-        {/* 회사 선택 섹션 */}
+        {/* Company selection section */}
         <div>
-          <p className="text-gray-600">회사 선택</p>
+          <p className="text-gray-600">Company Selection</p>
           {isEditing ? (
             <div className="mt-2">
               <CompanySearch
-                onSearch={() => {}} // 검색은 CompanySearch 내부에서 처리됨
+                onSearch={() => {}} // Search is handled inside CompanySearch
                 onSelect={handleCompanySelect}
-                placeholder="회사를 검색하여 선택하세요..."
+                placeholder="Search and select a company..."
                 className="w-full"
               />
               {(editedProfile as any).company_name && (
                 <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded-md">
                   <p className="text-sm text-green-800">
-                    선택된 회사: <strong>{(editedProfile as any).company_name}</strong>
+                    Selected company: <strong>{(editedProfile as any).company_name}</strong>
                   </p>
                 </div>
               )}
@@ -310,11 +310,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           ) : (
             <div className="grid grid-cols-2 gap-6">
               <div>
-                <p className="text-gray-600">회사명</p>
+                <p className="text-gray-600">Company Name</p>
                 <p className="font-medium">{profile?.company_name || '-'}</p>
               </div>
               <div>
-                <p className="text-gray-600">역할</p>
+                <p className="text-gray-600">Role</p>
                 <p className="font-medium">{profile?.role || '-'}</p>
               </div>
             </div>

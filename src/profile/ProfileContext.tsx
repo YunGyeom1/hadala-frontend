@@ -37,15 +37,15 @@ export const ProfileProvider: React.FC<ProfileProviderProps> = ({ children }) =>
     return allProfiles.find(p => p.type === type) || null;
   }, [allProfiles]);
 
-  // 프로필 데이터만 가져오기 (경로와 무관)
+  // Get profile data only (independent of route)
   const refreshProfiles = useCallback(async () => {
     try {
       setIsLoading(true);
       const profiles = await profileService.getMyProfiles();
-      console.log('프로필 로드 완료:', profiles);
+      console.log('Profile loading completed:', profiles);
       setAllProfiles(profiles);
     } catch (error) {
-      console.error('프로필 정보를 가져오는데 실패했습니다:', error);
+      console.error('Failed to get profile information:', error);
     } finally {
       setIsLoading(false);
       setIsInitialized(true);
@@ -53,24 +53,24 @@ export const ProfileProvider: React.FC<ProfileProviderProps> = ({ children }) =>
   }, []);
 
   const handleSetCurrentProfile = useCallback((profile: Profile) => {
-    console.log('프로필 변경:', profile);
+    console.log('Profile changed:', profile);
     setCurrentProfile(profile);
     localStorage.setItem('profile_id', profile.id);
   }, []);
 
-  // 초기 로드 시에만 프로필 가져오기
+  // Get profiles only on initial load
   useEffect(() => {
     if (!isInitialized) {
       refreshProfiles();
     }
   }, [isInitialized, refreshProfiles]);
 
-  // 경로 변경 시 메모리에서 프로필 선택 (API 호출 없음)
+  // Select profile from memory on route change (no API call)
   useEffect(() => {
     if (isInitialized && allProfiles.length > 0) {
-      console.log('경로 변경 감지:', location.pathname);
-      console.log('현재 프로필:', currentProfile);
-      console.log('사용 가능한 프로필:', allProfiles);
+      console.log('Route change detected:', location.pathname);
+      console.log('Current profile:', currentProfile);
+      console.log('Available profiles:', allProfiles);
       
       let targetProfile: Profile | null = null;
       
@@ -82,10 +82,10 @@ export const ProfileProvider: React.FC<ProfileProviderProps> = ({ children }) =>
         targetProfile = allProfiles.find(p => p.type === ProfileType.RETAILER) || null;
       }
       
-      console.log('선택된 타겟 프로필:', targetProfile);
+      console.log('Selected target profile:', targetProfile);
       
       if (targetProfile && targetProfile.id !== currentProfile?.id) {
-        console.log('프로필 변경 실행:', targetProfile);
+        console.log('Executing profile change:', targetProfile);
         setCurrentProfile(targetProfile);
         localStorage.setItem('profile_id', targetProfile.id);
       }

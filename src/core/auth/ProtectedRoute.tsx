@@ -17,12 +17,12 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   const { currentProfile, allProfiles, isLoading } = useProfile();
   const isAuthenticated = authService.isAuthenticated();
 
-  // 인증되지 않은 경우 로그인 페이지로
+  // Redirect to login page if not authenticated
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
 
-  // 프로필 로딩 중
+  // Loading profiles
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -31,7 +31,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
-  // 특정 프로필 타입이 필요한 경우
+  // If specific profile type is required
   if (requiredProfileType) {
     const hasRequiredProfile = allProfiles.some(p => p.type === requiredProfileType);
     
@@ -40,32 +40,32 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-center">
             <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              {requiredProfileType === ProfileType.FARMER && '농부'}
-              {requiredProfileType === ProfileType.RETAILER && '소매상'}
-              {requiredProfileType === ProfileType.WHOLESALER && '도매상'}
-              프로필이 필요합니다
+              {requiredProfileType === ProfileType.FARMER && 'Farmer'}
+              {requiredProfileType === ProfileType.RETAILER && 'Retailer'}
+              {requiredProfileType === ProfileType.WHOLESALER && 'Wholesaler'}
+              profile is required
             </h2>
             <p className="text-gray-600 mb-6">
-              이 페이지에 접근하려면 해당 프로필을 먼저 생성해야 합니다.
+              You need to create a profile first to access this page.
             </p>
             <button
               onClick={() => window.location.href = '/profile'}
               className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
             >
-              프로필 관리로 이동
+              Go to Profile Management
             </button>
           </div>
         </div>
       );
     }
 
-    // 현재 프로필이 필요한 타입과 다르면 프로필 페이지로
+    // Redirect to profile page if current profile doesn't match required type
     if (currentProfile?.type !== requiredProfileType) {
       return <Navigate to="/profile" replace />;
     }
   }
 
-  // 경로에 따른 자동 프로필 타입 확인 (완화된 버전)
+  // Auto profile type check based on path (relaxed version)
   const pathProfileType = location.pathname.startsWith('/farmer/') ? ProfileType.FARMER :
                          location.pathname.startsWith('/wholesaler/') ? ProfileType.WHOLESALER :
                          location.pathname.startsWith('/retailer/') ? ProfileType.RETAILER : null;
@@ -73,17 +73,17 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   if (pathProfileType) {
     const hasRequiredProfile = allProfiles.some(p => p.type === pathProfileType);
     
-    // 프로필이 없으면 프로필 페이지로 이동 (차단하지 않음)
+    // Redirect to profile page if profile doesn't exist (don't block)
     if (!hasRequiredProfile) {
       return <Navigate to="/profile" replace />;
     }
 
-    // 현재 프로필이 경로와 맞지 않으면 해당 프로필로 변경 (차단하지 않음)
+    // Change to matching profile if current profile doesn't match path (don't block)
     if (currentProfile?.type !== pathProfileType) {
       const targetProfile = allProfiles.find(p => p.type === pathProfileType);
       if (targetProfile) {
-        // ProfileContext에서 자동으로 처리되므로 여기서는 아무것도 하지 않음
-        // 단순히 렌더링 허용
+        // ProfileContext handles this automatically, so do nothing here
+        // Just allow rendering
       }
     }
   }

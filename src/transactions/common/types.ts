@@ -7,13 +7,13 @@ export enum ProductQuality {
 export const qualityToString = (quality: ProductQuality): string => {
   switch (quality) {
     case ProductQuality.A:
-      return 'A등급';
+      return 'Grade A';
     case ProductQuality.B:
-      return 'B등급';
+      return 'Grade B';
     case ProductQuality.C:
-      return 'C등급';
+      return 'Grade C';
     default:
-      return '알 수 없음';
+      return 'Unknown';
   }
 };
 

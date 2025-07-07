@@ -8,19 +8,19 @@ const WholesalerDashboard = () => {
   const queryClient = useQueryClient();
   const [company, setCompany] = useState<Company | null>(null);
 
-  // 회사 목록 조회
+  // Get company list
   const { data: companies = [] } = useQuery({
     queryKey: ['companies'],
     queryFn: companyService.getCompanies,
   });
 
-  // 내 회사 조회
+  // Get my company
   const { data: myCompany } = useQuery({
     queryKey: ['myCompany'],
     queryFn: companyService.getMyCompany,
   });
 
-  // 회사 생성 mutation
+  // Company creation mutation
   const createCompanyMutation = useMutation({
     mutationFn: companyService.createCompany,
     onSuccess: (newCompany) => {
@@ -30,7 +30,7 @@ const WholesalerDashboard = () => {
     },
   });
 
-  // 회사 수정 mutation
+  // Company update mutation
   const updateCompanyMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<Company> }) =>
       companyService.updateCompany(id, data),
@@ -41,7 +41,7 @@ const WholesalerDashboard = () => {
     },
   });
 
-  // 회사 정보 설정
+  // Set company information
   useEffect(() => {
     if (myCompany) {
       setCompany(myCompany);
@@ -65,12 +65,12 @@ const WholesalerDashboard = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">도매상 대시보드</h1>
+      <h1 className="text-2xl font-bold mb-6">Wholesaler Dashboard</h1>
       
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* 회사 정보 섹션 */}
+        {/* Company information section */}
         <section>
-          <h2 className="text-xl font-semibold mb-4">회사 정보 / 도매 회사</h2>
+          <h2 className="text-xl font-semibold mb-4">Company Information / Wholesale Company</h2>
           <div className="grid grid-cols-2 gap-6">
             <CompanyCard
               company={company || undefined}
@@ -87,22 +87,22 @@ const WholesalerDashboard = () => {
           </div>
         </section>
 
-        {/* 회사 유저 관리와 센터 관리 */}
+        {/* Company user management and center management */}
         {company && (
           <section>
-            <h2 className="text-xl font-semibold mb-4">회사 관리</h2>
+            <h2 className="text-xl font-semibold mb-4">Company Management</h2>
             <div className="grid grid-cols-2 gap-6">
-              {/* 회사 유저 관리 */}
+              {/* Company user management */}
               <div>
-                <h3 className="text-lg font-medium mb-4">회사 유저 관리</h3>
+                <h3 className="text-lg font-medium mb-4">Company User Management</h3>
                 <CompanyUserList 
                   companyId={company.id} 
                 />
               </div>
 
-              {/* 센터 관리 */}
+              {/* Center management */}
               <div>
-                <h3 className="text-lg font-medium mb-4">센터 관리</h3>
+                <h3 className="text-lg font-medium mb-4">Center Management</h3>
                 <CenterList companyId={company.id} />
               </div>
             </div>

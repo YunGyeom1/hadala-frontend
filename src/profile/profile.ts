@@ -4,7 +4,7 @@ import { Profile, ProfileType, ProfileRole } from './types';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
-// 인증이 필요 없는 API 클라이언트
+// API client that doesn't require authentication
 const publicApiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -38,31 +38,31 @@ export interface ProfileUpdateRequest {
 }
 
 export const profileService = {
-  // 내 프로필 목록 조회
+  // Get my profile list
   async getMyProfiles(): Promise<Profile[]> {
     const response = await apiClient.get('/profile/me');
     return response.data;
   },
 
-  // 프로필 생성
+  // Create profile
   async createProfile(profileData: ProfileCreateRequest): Promise<Profile> {
     const response = await apiClient.post('/profile/me', profileData);
     return response.data;
   },
 
-  // 공개 프로필 생성 (user_id 없음)
+  // Create public profile (no user_id)
   async createExternalProfile(profileData: ExternalProfileCreateRequest): Promise<Profile> {
     const response = await publicApiClient.post('/profile/public', profileData);
     return response.data;
   },
 
-  // 프로필 수정
+  // Update profile
   async updateProfile(profileId: string, profileData: ProfileUpdateRequest): Promise<Profile> {
     const response = await apiClient.put(`/profile/${profileId}`, profileData);
     return response.data;
   },
 
-  // 프로필 검색 (인증 불필요)
+  // Search profiles (no authentication required)
   async searchProfiles(params: {
     username?: string;
     profile_type?: ProfileType;
@@ -73,13 +73,13 @@ export const profileService = {
     return response.data;
   },
 
-  // 특정 프로필 조회
+  // Get specific profile
   async getProfile(profileId: string): Promise<Profile> {
     const response = await apiClient.get(`/profile/${profileId}`);
     return response.data;
   },
 
-  // 프로필 역할 변경
+  // Update profile role
   async updateProfileRole(profileId: string, role: ProfileRole): Promise<Profile> {
     const response = await fetch(`${API_BASE_URL}/profile/${profileId}/role`, {
       method: 'PUT',
@@ -93,7 +93,7 @@ export const profileService = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.detail || '역할 변경에 실패했습니다');
+      throw new Error(errorData.detail || 'Failed to update role');
     }
 
     return response.json();

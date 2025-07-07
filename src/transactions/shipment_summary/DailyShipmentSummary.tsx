@@ -10,7 +10,7 @@ interface DailyShipmentSummaryProps {
 }
 
 const DailyShipmentSummary: React.FC<DailyShipmentSummaryProps> = ({ date, data }) => {
-  // 모든 센터 이름 수집
+  // Collect all center names
   const centerNames = Array.from(
     new Set(data.daily_summaries[0]?.center_summaries.map(center => center.center_name) || [])
   ).sort();
@@ -62,7 +62,7 @@ const DailyShipmentSummary: React.FC<DailyShipmentSummaryProps> = ({ date, data 
             year: 'numeric',
             month: 'long',
             day: 'numeric'
-          })} {data.direction === 'outbound' ? '출하' : '입하'} 현황
+          })} {data.direction === 'outbound' ? 'Outbound' : 'Inbound'} Status
         </h2>
       </div>
 
@@ -71,13 +71,13 @@ const DailyShipmentSummary: React.FC<DailyShipmentSummaryProps> = ({ date, data 
         <table className="min-w-full bg-white border border-gray-200">
           <thead>
             <tr className="bg-gray-50">
-              <th className="px-4 py-2 border-b">작물</th>
+              <th className="px-4 py-2 border-b">Crop</th>
               {centerNames.map(center => (
                 <th key={center} className="px-4 py-2 border-b">
                   {center}
                 </th>
               ))}
-              <th className="px-4 py-2 border-b">합계</th>
+              <th className="px-4 py-2 border-b">Total</th>
             </tr>
           </thead>
           <tbody>
@@ -116,7 +116,7 @@ const DailyShipmentSummary: React.FC<DailyShipmentSummaryProps> = ({ date, data 
                 })}
                 <tr className="bg-gray-50">
                   <td className="px-4 py-2 border-b font-semibold">
-                    {crop} 합계
+                    {crop} Total
                   </td>
                   {centerNames.map(center => {
                     const centerTotal = getCenterTotal(center, crop);
@@ -134,7 +134,7 @@ const DailyShipmentSummary: React.FC<DailyShipmentSummaryProps> = ({ date, data 
             ))}
             {/* 전체 합계 행 */}
             <tr className="bg-blue-50">
-              <td className="px-4 py-2 border-b font-bold">전체 합계</td>
+              <td className="px-4 py-2 border-b font-bold">Grand Total</td>
               {centerNames.map(center => {
                 const centerGrandTotal = cropNames.reduce((sum, crop) => 
                   sum + getCenterTotal(center, crop), 0

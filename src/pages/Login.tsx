@@ -4,7 +4,7 @@ import { authService, User } from '../core/auth/auth';
 import { useProfile } from '../profile/ProfileContext';
 import { profileService } from '../profile/profile';
 
-// Google OAuth 클라이언트 타입 정의
+// Google OAuth client type definition
 declare global {
   interface Window {
     google: {
@@ -25,12 +25,12 @@ const Login: React.FC = () => {
   const [error, setError] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // 이미 로그인된 사용자 체크
+  // Check if user is already logged in
   useEffect(() => {
     if (authService.isAuthenticated()) {
       const user = authService.getUser();
       if (user) {
-        // 프로필이 있으면 첫 번째 프로필의 대시보드로, 없으면 프로필 페이지로
+        // If profile exists, navigate to first profile's dashboard, otherwise to profile page
         if (allProfiles.length > 0) {
           const firstProfile = allProfiles[0];
           navigate(`/${firstProfile.type}/dashboard`);
@@ -41,7 +41,7 @@ const Login: React.FC = () => {
     }
   }, [navigate, allProfiles]);
 
-  // Google 스크립트 로드
+  // Load Google script
   useEffect(() => {
     const loadGoogleScript = () => {
       return new Promise<void>((resolve) => {
@@ -75,20 +75,20 @@ const Login: React.FC = () => {
     initializeGoogleAuth();
   }, []);
 
-  // Google 로그인 응답 처리
+  // Handle Google login response
   const handleCredentialResponse = useCallback(async (response: any) => {
     try {
       setIsLoading(true);
       setError('');
       console.log('Google ID Token received');
       
-      // 백엔드로 ID 토큰 전송
+      // Send ID token to backend
       const loginResponse = await authService.googleLogin(response.credential);
       
-      // 토큰 저장
+      // Save tokens
       authService.saveTokens(loginResponse.access_token, loginResponse.refresh_token);
       
-      // 사용자 정보 디코딩 및 저장
+      // Decode and save user information
       const userInfo = decodeJwtResponse(response.credential);
       const user: User = {
         id: userInfo.sub,
@@ -99,12 +99,12 @@ const Login: React.FC = () => {
       
       authService.saveUser(user);
       
-      // 프로필 정보 가져오기
+      // Get profile information
       await refreshProfiles();
       
-      console.log('로그인 성공:', user);
+      console.log('Login successful:', user);
       
-      // 프로필이 있으면 첫 번째 프로필의 대시보드로, 없으면 프로필 페이지로
+      // If profile exists, navigate to first profile's dashboard, otherwise to profile page
       const profiles = await profileService.getMyProfiles();
       if (profiles.length > 0) {
         const firstProfile = profiles[0];
@@ -115,14 +115,14 @@ const Login: React.FC = () => {
       
     } catch (error: any) {
       console.error('Google login error:', error);
-      const errorMessage = error.response?.data?.detail || '로그인 중 오류가 발생했습니다.';
+      const errorMessage = error.response?.data?.detail || 'An error occurred during login.';
       setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
   }, [navigate, refreshProfiles]);
 
-  // JWT 토큰 디코딩 (클라이언트 사이드)
+  // Decode JWT token (client-side)
   const decodeJwtResponse = (token: string) => {
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -135,7 +135,7 @@ const Login: React.FC = () => {
     return JSON.parse(jsonPayload);
   };
 
-  // Google 로그인 버튼 렌더링
+  // Render Google login button
   useEffect(() => {
     const renderGoogleButton = () => {
       const buttonElement = document.getElementById('google-login-button');
@@ -152,7 +152,7 @@ const Login: React.FC = () => {
       }
     };
 
-    // Google 스크립트 로드 확인 후 버튼 렌더링
+    // Check Google script loading and render button
     const checkAndRender = () => {
       if (window.google && window.google.accounts) {
         renderGoogleButton();
@@ -185,10 +185,10 @@ const Login: React.FC = () => {
             </svg>
           </div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            하달라에 오신 것을 환영합니다
+            Welcome to HADALA
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            농산물 거래 플랫폼
+            Agricultural Product Trading Platform
           </p>
         </div>
 
@@ -203,7 +203,7 @@ const Login: React.FC = () => {
             <div className="flex flex-col items-center space-y-4">
               <div id="google-login-button"></div>
               <p className="text-sm text-gray-600">
-                구글 계정으로 안전하게 로그인하세요
+                Sign in securely with your Google account
               </p>
             </div>
           </div>
@@ -216,15 +216,15 @@ const Login: React.FC = () => {
 
           <div className="text-center">
             <p className="text-xs text-gray-500">
-              로그인함으로써{' '}
+              By signing in, you agree to our{' '}
               <a href="#" className="text-green-600 hover:text-green-500">
-                이용약관
+                Terms of Service
               </a>{' '}
-              및{' '}
+              and{' '}
               <a href="#" className="text-green-600 hover:text-green-500">
-                개인정보처리방침
+                Privacy Policy
               </a>
-              에 동의합니다.
+              .
             </p>
           </div>
         </div>

@@ -25,7 +25,7 @@ const CreateProfileModal: React.FC<CreateProfileModalProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // searchTerm이 변경될 때 formData 업데이트
+  // Update formData when searchTerm changes
   useEffect(() => {
     if (searchTerm) {
       setFormData(prev => ({
@@ -39,16 +39,16 @@ const CreateProfileModal: React.FC<CreateProfileModalProps> = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    console.log('CreateProfileModal handleSubmit 시작');
+    console.log('CreateProfileModal handleSubmit started');
     console.log('formData:', formData);
     
     if (!formData.username.trim()) {
-      setError('사용자명을 입력해주세요.');
+      setError('Please enter a username.');
       return;
     }
 
     if (!formData.name.trim()) {
-      setError('이름을 입력해주세요.');
+      setError('Please enter a name.');
       return;
     }
 
@@ -64,19 +64,19 @@ const CreateProfileModal: React.FC<CreateProfileModalProps> = ({
         email: formData.email.trim() || undefined,
       };
 
-      console.log('API 호출 전 profileData:', profileData);
-      console.log('API 엔드포인트: /profile/public');
+      console.log('API call profileData:', profileData);
+      console.log('API endpoint: /profile/public');
 
       const newProfile = await profileService.createExternalProfile(profileData);
       
-      console.log('API 응답 성공:', newProfile);
+      console.log('API response success:', newProfile);
       
       onProfileCreated(newProfile);
       onClose();
     } catch (error: any) {
-      console.error('프로필 생성 실패:', error);
-      console.error('에러 상세:', error.response?.data || error.message);
-      setError(error.message || '프로필 생성에 실패했습니다.');
+      console.error('Profile creation failed:', error);
+      console.error('Error details:', error.response?.data || error.message);
+      setError(error.message || 'Failed to create profile.');
     } finally {
       setIsLoading(false);
     }
@@ -84,7 +84,7 @@ const CreateProfileModal: React.FC<CreateProfileModalProps> = ({
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    setError(''); // 입력 시 에러 메시지 초기화
+    setError(''); // Clear error message on input
   };
 
   if (!isOpen) return null;
@@ -93,7 +93,7 @@ const CreateProfileModal: React.FC<CreateProfileModalProps> = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold">새 프로필 생성</h2>
+          <h2 className="text-lg font-semibold">Create New Profile</h2>
           <button
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600"
@@ -108,70 +108,70 @@ const CreateProfileModal: React.FC<CreateProfileModalProps> = ({
         <div className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              사용자명 *
+              Username *
             </label>
             <input
               type="text"
               value={formData.username}
               onChange={(e) => handleInputChange('username', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="사용자명을 입력하세요"
+              placeholder="Enter username"
               required
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              이름 *
+              Name *
             </label>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => handleInputChange('name', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="이름을 입력하세요"
+              placeholder="Enter name"
               required
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              유형 *
+              Type *
             </label>
             <select
               value={formData.type}
               onChange={(e) => handleInputChange('type', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
-              <option value={ProfileType.FARMER}>농부</option>
-              <option value={ProfileType.RETAILER}>소매상</option>
-              <option value={ProfileType.WHOLESALER}>도매상</option>
+              <option value={ProfileType.FARMER}>Farmer</option>
+              <option value={ProfileType.RETAILER}>Retailer</option>
+              <option value={ProfileType.WHOLESALER}>Wholesaler</option>
             </select>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              전화번호
+              Phone Number
             </label>
             <input
               type="tel"
               value={formData.phone}
               onChange={(e) => handleInputChange('phone', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="전화번호를 입력하세요"
+              placeholder="Enter phone number"
             />
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              이메일
+              Email
             </label>
             <input
               type="email"
               value={formData.email}
               onChange={(e) => handleInputChange('email', e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="이메일을 입력하세요"
+              placeholder="Enter email"
             />
           </div>
 
@@ -188,7 +188,7 @@ const CreateProfileModal: React.FC<CreateProfileModalProps> = ({
               className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
               disabled={isLoading}
             >
-              취소
+              Cancel
             </button>
             <button
               type="button"
@@ -196,7 +196,7 @@ const CreateProfileModal: React.FC<CreateProfileModalProps> = ({
               className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
               disabled={isLoading}
             >
-              {isLoading ? '생성 중...' : '생성'}
+              {isLoading ? 'Creating...' : 'Create'}
             </button>
           </div>
         </div>

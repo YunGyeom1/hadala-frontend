@@ -13,24 +13,24 @@ const getStatusLabel = (status: ContractStatus | string) => {
   switch (statusStr) {
     case ContractStatus.DRAFT:
     case 'draft':
-      return '초안';
+      return 'Draft';
     case ContractStatus.PENDING:
     case 'pending':
-      return '검토중';
+      return 'Pending';
     case ContractStatus.APPROVED:
     case 'approved':
-      return '승인됨';
+      return 'Approved';
     case ContractStatus.REJECTED:
     case 'rejected':
-      return '거절됨';
+      return 'Rejected';
     case ContractStatus.CANCELLED:
     case 'cancelled':
-      return '취소됨';
+      return 'Cancelled';
     case ContractStatus.COMPLETED:
     case 'completed':
-      return '완료됨';
+      return 'Completed';
     default:
-      return '알 수 없음';
+      return 'Unknown';
   }
 };
 
@@ -54,7 +54,7 @@ const ContractDetail: React.FC<ContractDetailProps> = ({ contract: propContract 
   }, [id, propContract]);
 
   if (!contract) {
-    return <div>계약을 찾을 수 없습니다.</div>;
+    return <div>Contract not found.</div>;
   }
 
   const getStatusColor = (status: ContractStatus) => {
@@ -81,17 +81,17 @@ const ContractDetail: React.FC<ContractDetailProps> = ({ contract: propContract 
     const statusStr = typeof status === 'string' ? status.toLowerCase() : status;
     switch (statusStr) {
       case 'draft':
-        return '임시저장';
+        return 'Draft';
       case 'pending':
-        return '대기중';
+        return 'Pending';
       case 'approved':
-        return '승인됨';
+        return 'Approved';
       case 'rejected':
-        return '거절됨';
+        return 'Rejected';
       case 'cancelled':
-        return '취소됨';
+        return 'Cancelled';
       case 'completed':
-        return '완료됨';
+        return 'Completed';
       default:
         return status;
     }
@@ -100,13 +100,13 @@ const ContractDetail: React.FC<ContractDetailProps> = ({ contract: propContract 
   const getPaymentStatusLabel = (status: string) => {
     switch (status) {
       case 'unpaid':
-        return '미결제';
+        return 'Unpaid';
       case 'paid':
-        return '결제완료';
+        return 'Paid';
       case 'partial':
-        return '부분결제';
+        return 'Partial';
       case 'overdue':
-        return '연체';
+        return 'Overdue';
       default:
         return status;
     }
@@ -117,19 +117,19 @@ const ContractDetail: React.FC<ContractDetailProps> = ({ contract: propContract 
     return (
       <div>
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">계약 상세</h1>
+          <h1 className="text-2xl font-bold">Contract Details</h1>
           <div className="space-x-2">
             <button
               onClick={() => navigate('/wholesaler/transactions/contracts')}
               className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
             >
-              목록으로
+              Back to List
             </button>
             <button
               onClick={() => navigate(`/wholesaler/transactions/contracts/${id}/edit`)}
               className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
             >
-              수정
+              Edit
             </button>
           </div>
         </div>
@@ -138,14 +138,14 @@ const ContractDetail: React.FC<ContractDetailProps> = ({ contract: propContract 
           <div className="p-6">
             <div className="grid grid-cols-2 gap-6">
               <div>
-                <h2 className="text-lg font-medium mb-4">기본 정보</h2>
+                <h2 className="text-lg font-medium mb-4">Basic Information</h2>
                 <dl className="space-y-4">
                   <div>
-                    <dt className="text-sm font-medium text-gray-500">제목</dt>
+                    <dt className="text-sm font-medium text-gray-500">Title</dt>
                     <dd className="mt-1 text-sm text-gray-900">{contract.title}</dd>
                   </div>
                   <div>
-                    <dt className="text-sm font-medium text-gray-500">상태</dt>
+                    <dt className="text-sm font-medium text-gray-500">Status</dt>
                     <dd className="mt-1">
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(contract.contract_status)}`}>
                         {getStatusLabel(contract.contract_status)}
@@ -153,13 +153,13 @@ const ContractDetail: React.FC<ContractDetailProps> = ({ contract: propContract 
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-sm font-medium text-gray-500">결제 상태</dt>
+                    <dt className="text-sm font-medium text-gray-500">Payment Status</dt>
                     <dd className="mt-1 text-sm text-gray-900">
                       {getPaymentStatusLabel(contract.payment_status || 'unpaid')}
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-sm font-medium text-gray-500">계약일</dt>
+                    <dt className="text-sm font-medium text-gray-500">Contract Date</dt>
                     <dd className="mt-1 text-sm text-gray-900">
                       {contract.contract_datetime
                         ? format(new Date(contract.contract_datetime), 'yyyy-MM-dd')
@@ -167,7 +167,7 @@ const ContractDetail: React.FC<ContractDetailProps> = ({ contract: propContract 
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-sm font-medium text-gray-500">납기일</dt>
+                    <dt className="text-sm font-medium text-gray-500">Delivery Date</dt>
                     <dd className="mt-1 text-sm text-gray-900">
                       {contract.delivery_datetime
                         ? format(new Date(contract.delivery_datetime), 'yyyy-MM-dd')
@@ -177,24 +177,24 @@ const ContractDetail: React.FC<ContractDetailProps> = ({ contract: propContract 
                 </dl>
               </div>
               <div>
-                <h2 className="text-lg font-medium mb-4">거래처 정보</h2>
+                <h2 className="text-lg font-medium mb-4">Company Information</h2>
                 <dl className="space-y-4">
                   <div>
-                    <dt className="text-sm font-medium text-gray-500">공급자</dt>
+                    <dt className="text-sm font-medium text-gray-500">Supplier</dt>
                     <dd className="mt-1 text-sm text-gray-900">{contract.supplier_company?.name || '-'}</dd>
                     <dd className="text-sm text-gray-500">{contract.supplier_contractor?.username || '-'}</dd>
                   </div>
                   <div>
-                    <dt className="text-sm font-medium text-gray-500">수신자</dt>
+                    <dt className="text-sm font-medium text-gray-500">Receiver</dt>
                     <dd className="mt-1 text-sm text-gray-900">{contract.receiver_company?.name || '-'}</dd>
                     <dd className="text-sm text-gray-500">{contract.receiver_contractor?.username || '-'}</dd>
                   </div>
                   <div>
-                    <dt className="text-sm font-medium text-gray-500">출발 센터</dt>
+                    <dt className="text-sm font-medium text-gray-500">Departure Center</dt>
                     <dd className="mt-1 text-sm text-gray-900">{contract.departure_center?.name || '-'}</dd>
                   </div>
                   <div>
-                    <dt className="text-sm font-medium text-gray-500">도착 센터</dt>
+                    <dt className="text-sm font-medium text-gray-500">Arrival Center</dt>
                     <dd className="mt-1 text-sm text-gray-900">{contract.arrival_center?.name || '-'}</dd>
                   </div>
                 </dl>
@@ -202,25 +202,25 @@ const ContractDetail: React.FC<ContractDetailProps> = ({ contract: propContract 
             </div>
 
             <div className="mt-8">
-              <h2 className="text-lg font-medium mb-4">계약 품목</h2>
+              <h2 className="text-lg font-medium mb-4">Contract Items</h2>
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        품목명
+                        Item Name
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        품질
+                        Quality
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        수량
+                        Quantity
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        단가
+                        Unit Price
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        금액
+                        Amount
                       </th>
                     </tr>
                   </thead>
@@ -237,10 +237,10 @@ const ContractDetail: React.FC<ContractDetailProps> = ({ contract: propContract 
                           {item.quantity.toLocaleString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {item.unit_price.toLocaleString()}원
+                          {item.unit_price.toLocaleString()} KRW
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {item.total_price.toLocaleString()}원
+                          {item.total_price.toLocaleString()} KRW
                         </td>
                       </tr>
                     ))}
@@ -248,10 +248,10 @@ const ContractDetail: React.FC<ContractDetailProps> = ({ contract: propContract 
                   <tfoot>
                     <tr>
                       <td colSpan={4} className="px-6 py-4 text-right text-sm font-medium text-gray-900">
-                        총계
+                        Total
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {contract.total_price.toLocaleString()}원
+                        {contract.total_price.toLocaleString()} KRW
                       </td>
                     </tr>
                   </tfoot>
@@ -261,7 +261,7 @@ const ContractDetail: React.FC<ContractDetailProps> = ({ contract: propContract 
 
             {contract.notes && (
               <div className="mt-8">
-                <h2 className="text-lg font-medium mb-4">비고</h2>
+                <h2 className="text-lg font-medium mb-4">Notes</h2>
                 <div className="bg-gray-50 rounded-lg p-4">
                   <p className="text-sm text-gray-900 whitespace-pre-wrap">{contract.notes}</p>
                 </div>
@@ -278,10 +278,10 @@ const ContractDetail: React.FC<ContractDetailProps> = ({ contract: propContract 
     <div className="bg-white">
       <div className="grid grid-cols-2 gap-6">
         <div>
-          <h3 className="text-base font-medium mb-3">기본 정보</h3>
+          <h3 className="text-base font-medium mb-3">Basic Information</h3>
           <dl className="space-y-2">
             <div>
-              <dt className="text-xs font-medium text-gray-500">상태</dt>
+              <dt className="text-xs font-medium text-gray-500">Status</dt>
               <dd className="mt-1">
                 <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(contract.contract_status)}`}>
                   {getStatusLabel(contract.contract_status)}
@@ -289,13 +289,13 @@ const ContractDetail: React.FC<ContractDetailProps> = ({ contract: propContract 
               </dd>
             </div>
             <div>
-              <dt className="text-xs font-medium text-gray-500">결제 상태</dt>
+              <dt className="text-xs font-medium text-gray-500">Payment Status</dt>
               <dd className="mt-1 text-xs text-gray-900">
                 {getPaymentStatusLabel(contract.payment_status || 'unpaid')}
               </dd>
             </div>
             <div>
-              <dt className="text-xs font-medium text-gray-500">납기일</dt>
+              <dt className="text-xs font-medium text-gray-500">Delivery Date</dt>
               <dd className="mt-1 text-xs text-gray-900">
                 {contract.delivery_datetime
                   ? format(new Date(contract.delivery_datetime), 'yyyy-MM-dd')
@@ -305,14 +305,14 @@ const ContractDetail: React.FC<ContractDetailProps> = ({ contract: propContract 
           </dl>
         </div>
         <div>
-          <h3 className="text-base font-medium mb-3">센터 정보</h3>
+          <h3 className="text-base font-medium mb-3">Center Information</h3>
           <dl className="space-y-2">
             <div>
-              <dt className="text-xs font-medium text-gray-500">출발 센터</dt>
+              <dt className="text-xs font-medium text-gray-500">Departure Center</dt>
               <dd className="mt-1 text-xs text-gray-900">{contract.departure_center?.name || '-'}</dd>
             </div>
             <div>
-              <dt className="text-xs font-medium text-gray-500">도착 센터</dt>
+              <dt className="text-xs font-medium text-gray-500">Arrival Center</dt>
               <dd className="mt-1 text-xs text-gray-900">{contract.arrival_center?.name || '-'}</dd>
             </div>
           </dl>
@@ -320,25 +320,25 @@ const ContractDetail: React.FC<ContractDetailProps> = ({ contract: propContract 
       </div>
 
       <div className="mt-4">
-        <h3 className="text-base font-medium mb-3">계약 품목</h3>
+        <h3 className="text-base font-medium mb-3">Contract Items</h3>
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  품목명
+                  Item Name
                 </th>
                 <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  품질
+                  Quality
                 </th>
                 <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  수량
+                  Quantity
                 </th>
                 <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  단가
+                  Unit Price
                 </th>
                 <th className="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  금액
+                  Amount
                 </th>
               </tr>
             </thead>
@@ -355,10 +355,10 @@ const ContractDetail: React.FC<ContractDetailProps> = ({ contract: propContract 
                     {item.quantity.toLocaleString()}
                   </td>
                   <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-900">
-                    {item.unit_price.toLocaleString()}원
+                    {item.unit_price.toLocaleString()} KRW
                   </td>
                   <td className="px-4 py-2 whitespace-nowrap text-xs text-gray-900">
-                    {item.total_price.toLocaleString()}원
+                    {item.total_price.toLocaleString()} KRW
                   </td>
                 </tr>
               ))}
@@ -366,10 +366,10 @@ const ContractDetail: React.FC<ContractDetailProps> = ({ contract: propContract 
             <tfoot>
               <tr>
                 <td colSpan={4} className="px-4 py-2 text-right text-xs font-medium text-gray-900">
-                  총계
+                  Total
                 </td>
                 <td className="px-4 py-2 whitespace-nowrap text-xs font-medium text-gray-900">
-                  {contract.total_price.toLocaleString()}원
+                  {contract.total_price.toLocaleString()} KRW
                 </td>
               </tr>
             </tfoot>
@@ -379,7 +379,7 @@ const ContractDetail: React.FC<ContractDetailProps> = ({ contract: propContract 
 
       {contract.notes && (
         <div className="mt-4">
-          <h3 className="text-base font-medium mb-3">비고</h3>
+          <h3 className="text-base font-medium mb-3">Notes</h3>
           <div className="bg-gray-50 rounded-lg p-3">
             <p className="text-xs text-gray-900 whitespace-pre-wrap">{contract.notes}</p>
           </div>

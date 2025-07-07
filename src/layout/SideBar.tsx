@@ -16,30 +16,30 @@ export interface MenuConfig {
 // Constants
 const MENU_CONFIG: MenuConfig = {
   farmer: [
-    { path: '/farmer/dashboard', label: '대시보드' },
+    { path: '/farmer/dashboard', label: 'Dashboard' },
   ],
   wholesaler: [
-    { path: '/wholesaler/dashboard', label: '대시보드' },
+    { path: '/wholesaler/dashboard', label: 'Dashboard' },
     {
       path: '/wholesaler/transactions',
-      label: '거래 관리',
+      label: 'Transaction Management',
       children: [
-        { path: '/wholesaler/transactions/contracts', label: '계약 관리' },
-        { path: '/wholesaler/transactions/shipments', label: '출하 관리' },
+        { path: '/wholesaler/transactions/contracts', label: 'Contract Management' },
+        { path: '/wholesaler/transactions/shipments', label: 'Shipment Management' },
       ]
     },
     {
       path: '/wholesaler/reports',
-      label: '보고서',
+      label: 'Reports',
       children: [
-        { path: '/wholesaler/reports/shipment-summary', label: '출하 현황' },
-        { path: '/wholesaler/reports/inventory-summary', label: '재고 현황' },
-        { path: '/wholesaler/reports/payment-summary', label: '결재 현황' },
+        { path: '/wholesaler/reports/shipment-summary', label: 'Shipment Status' },
+        { path: '/wholesaler/reports/inventory-summary', label: 'Inventory Status' },
+        { path: '/wholesaler/reports/payment-summary', label: 'Payment Status' },
       ]
     },
   ],
   retailer: [
-    { path: '/retailer/dashboard', label: '대시보드' },
+    { path: '/retailer/dashboard', label: 'Dashboard' },
   ],
 };
 
@@ -102,7 +102,7 @@ const SideBar: React.FC = () => {
               className="flex items-center flex-1"
               type="button"
               aria-expanded={isExpanded}
-              aria-label={`${item.label} 메뉴 ${isExpanded ? '접기' : '펼치기'}`}
+              aria-label={`${item.label} menu ${isExpanded ? 'collapse' : 'expand'}`}
             >
               {isExpanded ? (
                 <FiChevronDown className="mr-2 h-5 w-5" aria-hidden="true" />
@@ -140,7 +140,7 @@ const SideBar: React.FC = () => {
 
   return (
     <aside className="fixed top-16 left-0 w-64 h-[calc(100vh-4rem)] bg-white shadow-md overflow-y-auto">
-      <nav className="mt-5 px-2" role="navigation" aria-label="사이드바 네비게이션">
+      <nav className="mt-5 px-2" role="navigation" aria-label="Sidebar navigation">
         <div className="space-y-1">
           {menuItems.map(renderMenuItem)}
         </div>

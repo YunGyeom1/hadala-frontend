@@ -12,7 +12,7 @@ interface ContractSearchProps {
 
 const ContractSearch: React.FC<ContractSearchProps> = ({ 
   onSelect,
-  placeholder = "계약명으로 검색...",
+  placeholder = "Search by contract name...",
   className = "",
   disabled = false
 }) => {
@@ -23,7 +23,7 @@ const ContractSearch: React.FC<ContractSearchProps> = ({
   const [isFocused, setIsFocused] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // 초기 계약 목록 로딩
+  // Load initial contract list
   useEffect(() => {
     const loadContracts = async () => {
       setIsLoading(true);
@@ -31,7 +31,7 @@ const ContractSearch: React.FC<ContractSearchProps> = ({
         const contracts = await contractService.getContracts();
         setAllContracts(contracts);
       } catch (error) {
-        console.error('계약 목록 로딩 실패:', error);
+        console.error('Failed to load contract list:', error);
         setAllContracts([]);
       } finally {
         setIsLoading(false);
@@ -41,15 +41,15 @@ const ContractSearch: React.FC<ContractSearchProps> = ({
     loadContracts();
   }, []);
 
-  // 검색어에 따른 필터링
+  // Filter based on search term
   useEffect(() => {
     if (!searchTerm.trim()) {
-      // 검색어가 없으면 전체 목록 표시
+      // Show all contracts when no search term
       setSearchResults(allContracts);
       return;
     }
 
-    // 검색어가 있으면 필터링
+    // Filter when search term exists
     const filteredResults = allContracts.filter(contract => 
       contract.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (contract.supplier_company?.name && contract.supplier_company.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
@@ -59,7 +59,7 @@ const ContractSearch: React.FC<ContractSearchProps> = ({
     setSearchResults(filteredResults);
   }, [searchTerm, allContracts]);
 
-  // 다른 곳 클릭 시 검색 결과 숨기기
+  // Hide search results when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -87,20 +87,20 @@ const ContractSearch: React.FC<ContractSearchProps> = ({
 
   const handleInputFocus = () => {
     setIsFocused(true);
-    // 검색어가 없으면 전체 목록 표시
+    // Show all contracts when no search term
     if (!searchTerm.trim()) {
       setSearchResults(allContracts);
     }
   };
 
   const handleInputBlur = () => {
-    // 약간의 지연을 두어 클릭 이벤트가 처리될 수 있도록 함
+    // Add slight delay to allow click events to be processed
     setTimeout(() => {
       setIsFocused(false);
     }, 200);
   };
 
-  // 표시할 결과 결정
+  // Determine results to display
   const displayResults = isFocused ? searchResults : [];
 
   return (
@@ -135,17 +135,17 @@ const ContractSearch: React.FC<ContractSearchProps> = ({
                 <div className="flex-1">
                   <p className="font-medium text-gray-900">{contract.title}</p>
                   <div className="flex items-center space-x-4 mt-1 text-sm text-gray-500">
-                    <span>공급: {contract.supplier_company?.name || '-'}</span>
-                    <span>수신: {contract.receiver_company?.name || '-'}</span>
+                    <span>Supplier: {contract.supplier_company?.name || '-'}</span>
+                    <span>Receiver: {contract.receiver_company?.name || '-'}</span>
                   </div>
                   <div className="flex items-center space-x-4 mt-1 text-xs text-gray-400">
-                    <span>계약일: {contract.contract_datetime ? format(new Date(contract.contract_datetime), 'yyyy-MM-dd') : '-'}</span>
-                    <span>상태: {contract.contract_status || '-'}</span>
-                    <span>결제: {contract.payment_status || '-'}</span>
+                    <span>Contract Date: {contract.contract_datetime ? format(new Date(contract.contract_datetime), 'yyyy-MM-dd') : '-'}</span>
+                    <span>Status: {contract.contract_status || '-'}</span>
+                    <span>Payment: {contract.payment_status || '-'}</span>
                   </div>
                 </div>
                 <div className="text-right text-sm text-gray-500">
-                  <p className="font-medium">{contract.total_price?.toLocaleString()}원</p>
+                                      <p className="font-medium">{contract.total_price?.toLocaleString()} KRW</p>
                 </div>
               </div>
             </div>
@@ -155,7 +155,7 @@ const ContractSearch: React.FC<ContractSearchProps> = ({
       
       {isFocused && displayResults.length === 0 && !isLoading && (
         <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg p-4 text-center text-gray-500">
-          검색 결과가 없습니다.
+          No search results found.
         </div>
       )}
     </div>

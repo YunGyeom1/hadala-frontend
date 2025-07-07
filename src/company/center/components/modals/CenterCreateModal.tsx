@@ -45,7 +45,7 @@ const CenterCreateModal: React.FC<CenterCreateModalProps> = ({
       onClose();
       resetForm();
     } catch (err) {
-      // 에러는 useCenters 훅에서 처리됨
+      // Error is handled in useCenters hook
     }
   };
 
@@ -60,7 +60,7 @@ const CenterCreateModal: React.FC<CenterCreateModalProps> = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold">새 센터 추가</h2>
+          <h2 className="text-xl font-semibold">Add New Center</h2>
           <button
             onClick={handleClose}
             className="text-gray-400 hover:text-gray-600"
@@ -92,14 +92,14 @@ const CenterCreateModal: React.FC<CenterCreateModalProps> = ({
               className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
               disabled={loading}
             >
-              취소
+              Cancel
             </button>
             <button
               type="submit"
               className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
               disabled={loading || !formData.name.trim()}
             >
-              {loading ? '생성 중...' : '생성'}
+              {loading ? 'Creating...' : 'Create'}
             </button>
           </div>
         </form>

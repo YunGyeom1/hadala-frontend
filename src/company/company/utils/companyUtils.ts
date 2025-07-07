@@ -3,13 +3,13 @@ import { CompanyType } from '../types';
 export const getCompanyTypeLabel = (type: CompanyType): string => {
   switch (type) {
     case CompanyType.FARMER:
-      return '농가';
+      return 'Farmer';
     case CompanyType.RETAILER:
-      return '소매상';
+      return 'Retailer';
     case CompanyType.WHOLESALER:
-      return '도매상';
+      return 'Wholesaler';
     default:
-      return '알 수 없음';
+      return 'Unknown';
   }
 };
 
@@ -29,7 +29,7 @@ export const getCompanyTypeColor = (type: CompanyType): string => {
 export const formatPhoneNumber = (phone: string): string => {
   if (!phone) return '';
   
-  // 숫자만 추출
+  // Extract only numbers
   const numbers = phone.replace(/[^0-9]/g, '');
   
   if (numbers.length === 11) {

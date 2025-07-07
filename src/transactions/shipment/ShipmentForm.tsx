@@ -47,8 +47,8 @@ const defaultForm: ShipmentFormData = {
 };
 
 /**
- * ContractForm의 컴포넌트 기반 구조를 완벽하게 모방한 최종 ShipmentForm.
- * 각 섹션이 하위 컴포넌트로 분리되어 있으며, 데이터 흐름과 상태 관리가 중앙에서 이루어집니다.
+ * Final ShipmentForm based on ContractForm's component-based structure.
+ * Each section is separated into child components, with data flow and state management centralized.
  */
 const ShipmentForm = () => {
   const { id } = useParams<{ id: string }>();
@@ -72,7 +72,7 @@ const ShipmentForm = () => {
 
   // --- Utility Functions ---
   
-  // 월말 날짜 계산 함수
+  // Calculate month end date function
   const getMonthEndDate = (dateString: string): string => {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -81,7 +81,7 @@ const ShipmentForm = () => {
     return format(new Date(year, month, lastDay), 'yyyy-MM-dd');
   };
 
-  // 총 가격 계산 함수
+  // Calculate total price function
   const calculateTotalPrice = (items: ShipmentItem[]): number => {
     return items.reduce((total, item) => total + (item.total_price || 0), 0);
   };
@@ -116,8 +116,8 @@ const ShipmentForm = () => {
           setSelectedReceiverPerson(receiver);
 
         } catch (error) {
-          console.error("출하 및 관련 정보 로딩 실패:", error);
-          alert("데이터를 불러오는 데 실패했습니다.");
+          console.error("Failed to load shipment and related information:", error);
+          alert("Failed to load data.");
         } finally {
           setLoading(false);
         }
@@ -133,7 +133,7 @@ const ShipmentForm = () => {
     }
   }, [isEdit]);
 
-  // 새로운 contract 생성 모드가 변경될 때 form 데이터 초기화
+  // Reset form data when new contract creation mode changes
   useEffect(() => {
     if (createNewContract) {
       setFormData(prev => ({
@@ -165,7 +165,7 @@ const ShipmentForm = () => {
 
       setFormData(prev => ({
         ...prev,
-        title: prev.title || `${contract.title} - 출하`,
+        title: prev.title || `${contract.title} - Shipment`,
         contract_id: contract.id,
         supplier_person_id: contract.supplier_contractor_id || '',
         supplier_company_id: contract.supplier_company_id || '',
@@ -182,8 +182,8 @@ const ShipmentForm = () => {
         })) : [{ ...defaultItem }],
       }));
     } catch (error) {
-      console.error("계약 정보 로딩 실패:", error);
-      alert("선택한 계약 정보를 불러오는 데 실패했습니다.");
+      console.error("Failed to load contract information:", error);
+      alert("Failed to load selected contract information.");
     } finally {
       setLoading(false);
     }
@@ -215,7 +215,7 @@ const ShipmentForm = () => {
 
       setFormData(prev => ({
         ...prev,
-        title: prev.title || `${contract.title} - 출하`,
+        title: prev.title || `${contract.title} - Shipment`,
         contract_id: contract.id,
         supplier_person_id: contract.supplier_contractor_id || '',
         supplier_company_id: contract.supplier_company_id || '',
@@ -232,8 +232,8 @@ const ShipmentForm = () => {
         })) : [{ ...defaultItem }],
       }));
     } catch (error) {
-      console.error("계약 정보 로딩 실패:", error);
-      alert("선택한 계약 정보를 불러오는 데 실패했습니다.");
+      console.error("Failed to load contract information:", error);
+      alert("Failed to load selected contract information.");
     } finally {
       setLoading(false);
     }
@@ -291,38 +291,38 @@ const ShipmentForm = () => {
     e.preventDefault();
     
     if (!createNewContract && !formData.contract_id) {
-        alert('연결된 계약을 선택해주세요.');
+        alert('Please select a linked contract.');
         return;
     }
 
-    // 새로운 contract 생성 시 필수 필드 검증
+    // Required field validation for new contract creation
     if (createNewContract) {
       if (!formData.title.trim()) {
-        alert('출하명을 입력해주세요.');
+        alert('Please enter a shipment name.');
         return;
       }
       if (!formData.shipment_datetime) {
-        alert('출하일을 선택해주세요.');
+        alert('Please select a shipment date.');
         return;
       }
       if (!formData.supplier_company_id && !formData.supplier_person_id) {
-        alert('공급자(회사 또는 개인)를 선택해주세요.');
+        alert('Please select a supplier (company or individual).');
         return;
       }
       if (!formData.receiver_company_id && !formData.receiver_person_id) {
-        alert('수신자(회사 또는 개인)를 선택해주세요.');
+        alert('Please select a receiver (company or individual).');
         return;
       }
       if (!formData.departure_center_id) {
-        alert('출발 센터를 선택해주세요.');
+        alert('Please select a departure center.');
         return;
       }
       if (!formData.arrival_center_id) {
-        alert('도착 센터를 선택해주세요.');
+        alert('Please select an arrival center.');
         return;
       }
       if (formData.items.length === 0 || formData.items.every(item => !item.product_name.trim())) {
-        alert('최소 하나의 상품을 입력해주세요.');
+        alert('Please enter at least one product.');
         return;
       }
     }
@@ -335,8 +335,8 @@ const ShipmentForm = () => {
       // 새로운 contract 생성이 필요한 경우
       if (createNewContract) {
         const contractTitle = formData.title 
-          ? `${formData.title} - 계약`
-          : `출하 계약 - ${format(new Date(formData.shipment_datetime), 'yyyy년 MM월 dd일')}`;
+          ? `${formData.title} - Contract`
+          : `Shipment Contract - ${format(new Date(formData.shipment_datetime), 'yyyy-MM-dd')}`;
           
         const contractData: ContractCreate = {
           title: contractTitle,
@@ -384,19 +384,19 @@ const ShipmentForm = () => {
 
       if (isEdit && id) {
         await shipmentService.updateShipment(id, shipmentPayload);
-        alert('출하 정보가 수정되었습니다.');
+        alert('Shipment information has been updated.');
       } else {
         await shipmentService.createShipment(shipmentPayload);
         if (createNewContract) {
-          alert('새 계약과 함께 출하가 성공적으로 생성되었습니다.');
+          alert('New contract and shipment created successfully.');
         } else {
-          alert('출하가 성공적으로 생성되었습니다.');
+          alert('Shipment created successfully.');
         }
       }
       navigate('/wholesaler/transactions/shipments');
     } catch (error: any) {
-      console.error("출하 저장 실패:", error);
-      alert(`저장에 실패했습니다: ${error.message || '알 수 없는 오류'}`);
+      console.error("Failed to save shipment:", error);
+      alert(`Failed to save: ${error.message || 'Unknown error'}`);
     } finally {
       setLoading(false);
     }
@@ -404,10 +404,10 @@ const ShipmentForm = () => {
 
   // ContractForm의 회사 선택 로직 적용
   const handleSupplierPersonSelect = async (profile: Profile) => {
-    console.log('공급자 선택됨:', profile);
+    console.log('Supplier selected:', profile);
     setSelectedSupplierPerson(profile);
     
-    // 기존 선택된 회사 초기화
+    // Reset selected company
     setSelectedSupplierCompany(null);
     setFormData(prev => ({
       ...prev,
@@ -415,14 +415,14 @@ const ShipmentForm = () => {
       supplier_company_id: ''
     }));
     
-    // 유저가 선택되면 company_id로 회사 자동 설정
+    // If user has company_id, auto-select company
     if (profile.company_id) {
-      console.log('공급자 회사 ID:', profile.company_id);
+      console.log('Supplier company ID:', profile.company_id);
       try {
         const companies = await companyService.getCompanies();
         const company = companies.find((c: Company) => c.id === profile.company_id);
         if (company) {
-          console.log('공급자 회사 찾음:', company);
+          console.log('Supplier company found:', company);
           setSelectedSupplierCompany(company);
           setFormData(prev => ({
             ...prev,
@@ -430,18 +430,18 @@ const ShipmentForm = () => {
           }));
         }
       } catch (error) {
-        console.error('회사 정보 조회 실패:', error);
+        console.error('Failed to load company information:', error);
       }
     } else {
-      console.log('공급자 유저만 설정 (회사 ID 없음)');
+      console.log('Only supplier user set (no company ID)');
     }
   };
 
   const handleReceiverPersonSelect = async (profile: Profile) => {
-    console.log('수신자 선택됨:', profile);
+    console.log('Receiver selected:', profile);
     setSelectedReceiverPerson(profile);
     
-    // 기존 선택된 회사 초기화
+    // Reset selected company
     setSelectedReceiverCompany(null);
     setFormData(prev => ({
       ...prev,
@@ -449,14 +449,14 @@ const ShipmentForm = () => {
       receiver_company_id: ''
     }));
     
-    // 유저가 선택되면 company_id로 회사 자동 설정
+    // If user has company_id, auto-select company
     if (profile.company_id) {
-      console.log('수신자 회사 ID:', profile.company_id);
+      console.log('Receiver company ID:', profile.company_id);
       try {
         const companies = await companyService.getCompanies();
         const company = companies.find((c: Company) => c.id === profile.company_id);
         if (company) {
-          console.log('수신자 회사 찾음:', company);
+          console.log('Receiver company found:', company);
           setSelectedReceiverCompany(company);
           setFormData(prev => ({
             ...prev,
@@ -464,10 +464,10 @@ const ShipmentForm = () => {
           }));
         }
       } catch (error) {
-        console.error('회사 정보 조회 실패:', error);
+        console.error('Failed to load company information:', error);
       }
     } else {
-      console.log('수신자 유저만 설정 (회사 ID 없음)');
+      console.log('Only receiver user set (no company ID)');
     }
   };
 
@@ -489,18 +489,18 @@ const ShipmentForm = () => {
 
   // --- Render ---
   if (loading && isEdit) {
-    return <div className="p-8">데이터를 불러오는 중...</div>;
+    return <div className="p-8">Loading data...</div>;
   }
   
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white shadow-md rounded-lg">
       <div className="flex justify-between items-center mb-6 border-b pb-4">
-        <h1 className="text-2xl font-bold">{isEdit ? '출하 수정' : '출하 생성'}</h1>
+        <h1 className="text-2xl font-bold">{isEdit ? 'Edit Shipment' : 'Create Shipment'}</h1>
         <button
           onClick={() => navigate('/wholesaler/transactions/shipments')}
           className="btn btn-ghost"
         >
-          목록으로
+          Back to List
         </button>
       </div>
       
@@ -590,39 +590,39 @@ const ShipmentForm = () => {
         />
 
         <div className="mb-8">
-            <h2 className="text-lg font-semibold mb-4 border-b pb-2">비고</h2>
+            <h2 className="text-lg font-semibold mb-4 border-b pb-2">Notes</h2>
             <textarea
                 name="notes"
                 value={formData.notes}
                 onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
                 className="textarea textarea-bordered w-full h-24"
-                placeholder="출하 관련 특이사항을 입력하세요."
+                placeholder="Enter shipment-related notes."
             />
         </div>
 
         <div className="flex justify-end gap-x-4 pt-4">
-          <button type="button" onClick={() => navigate('/wholesaler/transactions/shipments')} className="btn btn-ghost">취소</button>
+          <button type="button" onClick={() => navigate('/wholesaler/transactions/shipments')} className="btn btn-ghost">Cancel</button>
           {isEdit && (
             <button
               type="button"
               className="btn btn-error"
               onClick={async () => {
-                if (window.confirm('정말로 이 출하 정보를 삭제하시겠습니까?')) {
+                if (window.confirm('Are you sure you want to delete this shipment?')) {
                   try {
                     await shipmentService.deleteShipment(id!);
-                    alert('출하 정보가 삭제되었습니다.');
+                    alert('Shipment has been deleted.');
                     navigate('/wholesaler/transactions/shipments');
                   } catch (error: any) {
-                    alert(error.message || '삭제에 실패했습니다.');
+                    alert(error.message || 'Failed to delete.');
                   }
                 }
               }}
             >
-              삭제
+              Delete
             </button>
           )}
           <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? '저장 중...' : (isEdit ? '출하 정보 수정' : '출하 생성')}
+            {loading ? 'Saving...' : (isEdit ? 'Update Shipment' : 'Create Shipment')}
           </button>
         </div>
       </form>

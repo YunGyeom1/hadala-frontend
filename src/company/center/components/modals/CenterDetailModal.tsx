@@ -51,7 +51,7 @@ const CenterDetailModal: React.FC<CenterDetailModalProps> = ({
       onSuccess();
       onClose();
     } catch (err) {
-      // 에러는 useCenter 훅에서 처리됨
+      // Error is handled in useCenter hook
     }
   };
 
@@ -66,7 +66,7 @@ const CenterDetailModal: React.FC<CenterDetailModalProps> = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold">센터 정보 수정</h2>
+          <h2 className="text-xl font-semibold">Edit Center Information</h2>
           <button
             onClick={handleClose}
             className="text-gray-400 hover:text-gray-600"
@@ -98,14 +98,14 @@ const CenterDetailModal: React.FC<CenterDetailModalProps> = ({
               className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
               disabled={loading}
             >
-              취소
+              Cancel
             </button>
             <button
               type="submit"
               className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50"
               disabled={loading}
             >
-              {loading ? '수정 중...' : '수정'}
+              {loading ? 'Updating...' : 'Update'}
             </button>
           </div>
         </form>

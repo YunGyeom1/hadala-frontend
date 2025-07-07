@@ -13,7 +13,7 @@ const ContractList = () => {
   const queryClient = useQueryClient();
   const [expandedContractId, setExpandedContractId] = useState<string | null>(null);
 
-  // 계약 목록 조회
+  // Get contract list
   const { data: contracts = [], isLoading, error, refetch } = useQuery({
     queryKey: ['contracts'],
     queryFn: () => contractService.getContracts(),
@@ -41,17 +41,17 @@ const ContractList = () => {
   const getStatusLabel = (status: ContractStatus) => {
     switch (status) {
       case ContractStatus.DRAFT:
-        return '임시저장';
+        return 'Draft';
       case ContractStatus.PENDING:
-        return '대기중';
+        return 'Pending';
       case ContractStatus.APPROVED:
-        return '승인됨';
+        return 'Approved';
       case ContractStatus.REJECTED:
-        return '거절됨';
+        return 'Rejected';
       case ContractStatus.CANCELLED:
-        return '취소됨';
+        return 'Cancelled';
       case ContractStatus.COMPLETED:
-        return '완료됨';
+        return 'Completed';
       default:
         return status;
     }
@@ -60,19 +60,19 @@ const ContractList = () => {
   const getPaymentStatusLabel = (status: PaymentStatus) => {
     switch (status) {
       case PaymentStatus.UNPAID:
-        return '미결제';
+        return 'Unpaid';
       case PaymentStatus.PAID:
-        return '결제완료';
+        return 'Paid';
       case PaymentStatus.PARTIAL:
-        return '부분결제';
+        return 'Partial';
       case PaymentStatus.OVERDUE:
-        return '연체';
+        return 'Overdue';
       case PaymentStatus.PREPARED:
-        return '결제 준비됨';
+        return 'Prepared';
       case PaymentStatus.REFUNDED:
-        return '환불됨';
+        return 'Refunded';
       case PaymentStatus.CANCELLED:
-        return '결제 취소';
+        return 'Payment Cancelled';
       default:
         return status;
     }
@@ -108,8 +108,8 @@ const ContractList = () => {
       await contractService.updateContractStatus(contractId, newStatus);
       queryClient.invalidateQueries({ queryKey: ['contracts'] });
     } catch (error: any) {
-      console.error('상태 변경 실패:', error);
-      alert(`상태 변경 실패: ${error.message}`);
+      console.error('Status change failed:', error);
+      alert(`Status change failed: ${error.message}`);
     }
   };
 
@@ -118,8 +118,8 @@ const ContractList = () => {
       await contractService.updatePaymentStatus(contractId, newStatus);
       queryClient.invalidateQueries({ queryKey: ['contracts'] });
     } catch (error: any) {
-      console.error('결제 상태 변경 실패:', error);
-      alert(`결제 상태 변경 실패: ${error.message}`);
+      console.error('Payment status change failed:', error);
+      alert(`Payment status change failed: ${error.message}`);
     }
   };
 
@@ -210,12 +210,12 @@ const ContractList = () => {
   if (error) {
     return (
       <div className="text-center py-8">
-        <p className="text-red-600 mb-4">계약 목록을 불러오는데 실패했습니다.</p>
+        <p className="text-red-600 mb-4">Failed to load contract list.</p>
         <button
           onClick={() => refetch()}
           className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
         >
-          다시 시도
+          Try Again
         </button>
       </div>
     );
@@ -224,19 +224,19 @@ const ContractList = () => {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">계약 관리</h1>
+        <h1 className="text-2xl font-bold">Contract Management</h1>
         <button
           onClick={() => navigate('/wholesaler/transactions/contracts/new')}
           className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
         >
-          계약 생성
+          Create Contract
         </button>
       </div>
 
       {contracts.length === 0 ? (
         <div className="text-center py-8 text-gray-500">
-          <p>등록된 계약이 없습니다.</p>
-          <p className="text-sm mt-1">계약 생성 버튼을 클릭하여 새 계약을 등록하세요.</p>
+          <p>No contracts registered.</p>
+          <p className="text-sm mt-1">Click the Create Contract button to register a new contract.</p>
         </div>
       ) : (
         <div className="bg-white rounded-lg shadow">
@@ -246,25 +246,25 @@ const ContractList = () => {
                 <tr>
                   <th className="w-8 px-6 py-3"></th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    제목
+                    Title
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    공급자
+                    Supplier
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    수신자
+                    Receiver
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    계약일
+                    Contract Date
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    계약상태
+                    Contract Status
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    결제상태
+                    Payment Status
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    관리
+                    Actions
                   </th>
                 </tr>
               </thead>
@@ -334,7 +334,7 @@ const ContractList = () => {
                           }}
                           className="text-blue-600 hover:text-blue-900 mr-2"
                         >
-                          수정
+                          Edit
                         </button>
                       </td>
                     </tr>

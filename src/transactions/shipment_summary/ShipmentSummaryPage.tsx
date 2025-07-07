@@ -21,12 +21,12 @@ const ShipmentSummaryPage: React.FC = () => {
 
   const handleSearch = async () => {
     if (!startDate || !endDate) {
-      setError('시작일과 종료일을 선택해주세요.');
+      setError('Please select start and end dates.');
       return;
     }
 
     if (new Date(startDate) > new Date(endDate)) {
-      setError('시작일은 종료일보다 이전이어야 합니다.');
+      setError('Start date must be before end date.');
       return;
     }
 
@@ -48,7 +48,7 @@ const ShipmentSummaryPage: React.FC = () => {
 
       setSummaryData(response);
     } catch (err) {
-      setError(err instanceof Error ? err.message : '데이터를 불러오는데 실패했습니다.');
+      setError(err instanceof Error ? err.message : 'Failed to load data.');
     } finally {
       setLoading(false);
     }
@@ -60,7 +60,7 @@ const ShipmentSummaryPage: React.FC = () => {
       {/* 페이지 제목 */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-gray-900">
-          {direction === Direction.OUTBOUND ? '출하' : '입하'} 현황
+          {direction === Direction.OUTBOUND ? 'Outbound' : 'Inbound'} Status
         </h1>
       </div>
 
@@ -70,22 +70,22 @@ const ShipmentSummaryPage: React.FC = () => {
           {/* 방향 선택 */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              거래 방향
+              Transaction Direction
             </label>
             <select
               value={direction}
               onChange={(e) => setDirection(e.target.value as Direction)}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value={Direction.OUTBOUND}>출하</option>
-              <option value={Direction.INBOUND}>입하</option>
+              <option value={Direction.OUTBOUND}>Outbound</option>
+              <option value={Direction.INBOUND}>Inbound</option>
             </select>
           </div>
 
           {/* 시작일 */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              시작일
+              Start Date
             </label>
             <input
               type="date"
@@ -98,7 +98,7 @@ const ShipmentSummaryPage: React.FC = () => {
           {/* 종료일 */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              종료일
+              End Date
             </label>
             <input
               type="date"
@@ -115,7 +115,7 @@ const ShipmentSummaryPage: React.FC = () => {
               disabled={loading}
               className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? '검색 중...' : '검색'}
+              {loading ? 'Searching...' : 'Search'}
             </button>
           </div>
         </div>
@@ -146,7 +146,7 @@ const ShipmentSummaryPage: React.FC = () => {
       {summaryData && summaryData.daily_summaries.length === 0 && (
         <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-200 text-center">
           <p className="text-gray-500 text-lg">
-            선택한 기간에 {direction === Direction.OUTBOUND ? '출하' : '입하'} 데이터가 없습니다.
+            No {direction === Direction.OUTBOUND ? 'outbound' : 'inbound'} data for the selected period.
           </p>
         </div>
       )}

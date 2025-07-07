@@ -15,7 +15,7 @@ function SearchList<T>({
   onCancel,
   searchFields,
   renderItem,
-  placeholder = "검색..."
+  placeholder = "Search..."
 }: SearchListProps<T>) {
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -30,12 +30,12 @@ function SearchList<T>({
     <div className="bg-white rounded-lg shadow h-[600px]">
       <div className="p-6 h-full flex flex-col">
         <div className="flex justify-between items-center mb-6">
-          <h4 className="text-base font-medium">검색</h4>
+          <h4 className="text-base font-medium">Search</h4>
           <button
             onClick={onCancel}
             className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
           >
-            취소
+            Cancel
           </button>
         </div>
 
@@ -64,7 +64,7 @@ function SearchList<T>({
             </div>
           ) : (
             <div className="text-center text-gray-500 py-4">
-              검색 결과가 없습니다.
+              No search results found.
             </div>
           )}
         </div>

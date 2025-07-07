@@ -13,7 +13,7 @@ const ShipmentList = () => {
   const queryClient = useQueryClient();
   const [expandedShipmentId, setExpandedShipmentId] = useState<string | null>(null);
 
-  // 출하 목록 조회
+  // Load shipment list
   const { data: shipments = [], isLoading, error, refetch } = useQuery({
     queryKey: ['shipments'],
     queryFn: () => shipmentService.getShipments(),
@@ -39,15 +39,15 @@ const ShipmentList = () => {
   const getStatusLabel = (status: ShipmentStatus) => {
     switch (status) {
       case ShipmentStatus.PENDING:
-        return '출하 대기';
+        return 'Pending Shipment';
       case ShipmentStatus.READY:
-        return '운송 준비 완료';
+        return 'Ready for Transport';
       case ShipmentStatus.DELIVERED:
-        return '배송 완료';
+        return 'Delivered';
       case ShipmentStatus.FAILED:
-        return '배송 실패';
+        return 'Delivery Failed';
       case ShipmentStatus.CANCELLED:
-        return '취소';
+        return 'Cancelled';
       default:
         return status;
     }
@@ -62,8 +62,8 @@ const ShipmentList = () => {
       await shipmentService.updateShipmentStatus(shipmentId, newStatus);
       queryClient.invalidateQueries({ queryKey: ['shipments'] });
     } catch (error: any) {
-      console.error('상태 변경 실패:', error);
-      alert(`상태 변경 실패: ${error.message}`);
+      console.error('Status change failed:', error);
+      alert(`Status change failed: ${error.message}`);
     }
   };
 
@@ -146,12 +146,12 @@ const ShipmentList = () => {
   if (error) {
     return (
       <div className="text-center py-8">
-        <p className="text-red-600 mb-4">출하 목록을 불러오는데 실패했습니다.</p>
+        <p className="text-red-600 mb-4">Failed to load shipment list.</p>
         <button
           onClick={() => refetch()}
           className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
         >
-          다시 시도
+          Retry
         </button>
       </div>
     );
@@ -160,18 +160,18 @@ const ShipmentList = () => {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">출하 관리</h1>
+        <h1 className="text-2xl font-bold">Shipment Management</h1>
         <button
           onClick={() => navigate('/wholesaler/transactions/shipments/new')}
           className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
         >
-          출하 생성
+          Create Shipment
         </button>
       </div>
       {shipments.length === 0 ? (
         <div className="text-center py-8 text-gray-500">
-          <p>등록된 출하가 없습니다.</p>
-          <p className="text-sm mt-1">출하 생성 버튼을 클릭하여 새 출하를 등록하세요.</p>
+          <p>No shipments registered.</p>
+          <p className="text-sm mt-1">Click the Create Shipment button to register a new shipment.</p>
         </div>
       ) : (
         <div className="bg-white rounded-lg shadow">
@@ -181,22 +181,22 @@ const ShipmentList = () => {
                 <tr>
                   <th className="w-8 px-6 py-3"></th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    제목
+                    Title
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    공급자
+                    Supplier
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    수신자
+                    Receiver
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    출하일시
+                    Shipment Date
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    상태
+                    Status
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    관리
+                    Actions
                   </th>
                 </tr>
               </thead>
@@ -255,7 +255,7 @@ const ShipmentList = () => {
                           }}
                           className="text-blue-600 hover:text-blue-900 mr-2"
                         >
-                          수정
+                          Edit
                         </button>
                       </td>
                     </tr>

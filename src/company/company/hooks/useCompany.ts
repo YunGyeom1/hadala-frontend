@@ -17,14 +17,14 @@ export const useCompany = (companyId?: string) => {
       const data = await companyService.getMyCompany();
       setCompany(data);
     } catch (err) {
-      setError(err instanceof Error ? err.message : '회사 정보를 불러오는데 실패했습니다');
+      setError(err instanceof Error ? err.message : 'Failed to load company information');
     } finally {
       setLoading(false);
     }
   }, [companyId]);
 
   const updateCompany = useCallback(async (companyData: Partial<Company>) => {
-    if (!companyId) throw new Error('회사 ID가 필요합니다');
+    if (!companyId) throw new Error('Company ID is required');
     
     setLoading(true);
     setError(null);
@@ -34,7 +34,7 @@ export const useCompany = (companyId?: string) => {
       setCompany(updatedCompany);
       return updatedCompany;
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : '회사 수정에 실패했습니다';
+      const errorMessage = err instanceof Error ? err.message : 'Failed to update company';
       setError(errorMessage);
       throw err;
     } finally {

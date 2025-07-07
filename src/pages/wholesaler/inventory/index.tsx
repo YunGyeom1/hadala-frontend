@@ -8,7 +8,7 @@ const InventoryPage = () => {
     format(new Date(), 'yyyy-MM-dd')
   );
 
-  // 선택된 날짜의 스냅샷 찾기
+  // Find snapshot for selected date
   const selectedSnapshot = mockInventorySnapshot.rows.find(
     snapshot => snapshot.snapshot_date === selectedDate
   );
@@ -16,7 +16,7 @@ const InventoryPage = () => {
   return (
     <div className="p-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-4">재고 현황</h1>
+        <h1 className="text-2xl font-bold mb-4">Inventory Status</h1>
         <div className="flex items-center space-x-4">
           <input
             type="date"
@@ -34,7 +34,7 @@ const InventoryPage = () => {
         />
       ) : (
         <div className="text-center py-8 text-gray-500">
-          해당 날짜의 재고 데이터가 없습니다.
+          No inventory data available for the selected date.
         </div>
       )}
     </div>

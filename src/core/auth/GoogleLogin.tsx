@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { authService, User } from './auth';
 import { useProfile } from '../../profile/ProfileContext';
 
-// Google OAuth 클라이언트 타입 정의
+// Google OAuth client type definition
 declare global {
   interface Window {
     google: {
@@ -27,7 +27,7 @@ const GoogleLogin: React.FC<GoogleLoginProps> = ({ onSuccess, onError }) => {
   const navigate = useNavigate();
   const { refreshProfiles } = useProfile();
 
-  // Google 스크립트 로드
+  // Load Google script
   useEffect(() => {
     const loadGoogleScript = () => {
       return new Promise<void>((resolve) => {
@@ -61,18 +61,18 @@ const GoogleLogin: React.FC<GoogleLoginProps> = ({ onSuccess, onError }) => {
     initializeGoogleAuth();
   }, []);
 
-  // Google 로그인 응답 처리
+  // Handle Google login response
   const handleCredentialResponse = useCallback(async (response: any) => {
     try {
       console.log('Google ID Token received');
       
-      // 백엔드로 ID 토큰 전송
+      // Send ID token to backend
       const loginResponse = await authService.googleLogin(response.credential);
       
-      // 토큰 저장
+      // Save tokens
       authService.saveTokens(loginResponse.access_token, loginResponse.refresh_token);
       
-      // 사용자 정보 디코딩 및 저장
+      // Decode and save user information
       const userInfo = decodeJwtResponse(response.credential);
       const user: User = {
         id: userInfo.sub,
@@ -83,20 +83,20 @@ const GoogleLogin: React.FC<GoogleLoginProps> = ({ onSuccess, onError }) => {
       
       authService.saveUser(user);
       
-      // 프로필 정보 가져오기
+      // Get profile information
       await refreshProfiles();
       
-      // 성공 콜백 호출
+      // Call success callback
       if (onSuccess) {
         onSuccess(user);
       }
       
-      // 임시로 대시보드로 이동
+      // Temporarily navigate to dashboard
       navigate('/wholesaler/dashboard');
       
     } catch (error: any) {
       console.error('Google login error:', error);
-      const errorMessage = error.response?.data?.detail || '로그인 중 오류가 발생했습니다.';
+      const errorMessage = error.response?.data?.detail || 'An error occurred during login.';
       
       if (onError) {
         onError(errorMessage);
@@ -104,7 +104,7 @@ const GoogleLogin: React.FC<GoogleLoginProps> = ({ onSuccess, onError }) => {
     }
   }, [navigate, onSuccess, onError, refreshProfiles]);
 
-  // JWT 토큰 디코딩 (클라이언트 사이드)
+  // Decode JWT token (client-side)
   const decodeJwtResponse = (token: string) => {
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -117,7 +117,7 @@ const GoogleLogin: React.FC<GoogleLoginProps> = ({ onSuccess, onError }) => {
     return JSON.parse(jsonPayload);
   };
 
-  // Google 로그인 버튼 렌더링
+  // Render Google login button
   useEffect(() => {
     const renderGoogleButton = () => {
       const buttonElement = document.getElementById('google-login-button');
@@ -134,7 +134,7 @@ const GoogleLogin: React.FC<GoogleLoginProps> = ({ onSuccess, onError }) => {
       }
     };
 
-    // Google 스크립트 로드 확인 후 버튼 렌더링
+    // Check Google script loading and render button
     const checkAndRender = () => {
       if (window.google && window.google.accounts) {
         renderGoogleButton();
@@ -150,7 +150,7 @@ const GoogleLogin: React.FC<GoogleLoginProps> = ({ onSuccess, onError }) => {
     <div className="flex flex-col items-center space-y-4">
       <div id="google-login-button"></div>
       <p className="text-sm text-gray-600">
-        구글 계정으로 안전하게 로그인하세요
+        Sign in securely with your Google account
       </p>
     </div>
   );

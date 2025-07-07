@@ -11,7 +11,7 @@ interface ProfileSearchProps {
 
 const ProfileSearch: React.FC<ProfileSearchProps> = ({ 
   onSelect,
-  placeholder = "이름 또는 사용자명으로 검색...",
+  placeholder = "Search by name or username...",
   className = ""
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -27,20 +27,20 @@ const ProfileSearch: React.FC<ProfileSearchProps> = ({
         return;
       }
 
-      console.log('검색 시작:', searchTerm);
+      console.log('Search started:', searchTerm);
       setIsLoading(true);
       try {
-        // 실제 API 호출
+        // Actual API call
         const profiles = await profileService.searchProfiles({
           username: searchTerm,
           limit: 10
         });
-        console.log('API 응답:', profiles);
-        console.log('검색 결과 개수:', profiles.length);
-        console.log('검색 결과 상세:', JSON.stringify(profiles, null, 2));
+        console.log('API response:', profiles);
+        console.log('Search result count:', profiles.length);
+        console.log('Search result details:', JSON.stringify(profiles, null, 2));
         setSearchResults(profiles);
       } catch (error) {
-        console.error('프로필 검색 실패:', error);
+        console.error('Profile search failed:', error);
         setSearchResults([]);
       } finally {
         setIsLoading(false);
@@ -51,7 +51,7 @@ const ProfileSearch: React.FC<ProfileSearchProps> = ({
     return () => clearTimeout(debounceTimer);
   }, [searchTerm]);
 
-  // 다른 곳 클릭 시 검색 결과 숨기기
+  // Hide search results when clicking elsewhere
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
@@ -66,12 +66,12 @@ const ProfileSearch: React.FC<ProfileSearchProps> = ({
   }, []);
 
   const handleSelect = (profile: Profile) => {
-    console.log('ProfileSearch handleSelect 호출됨:', profile);
-    setSearchTerm(''); // 검색창 초기화
+    console.log('ProfileSearch handleSelect called:', profile);
+    setSearchTerm(''); // Clear search input
     setSearchResults([]);
-    console.log('onSelect 호출 전');
+    console.log('Before onSelect call');
     onSelect?.(profile);
-    console.log('onSelect 호출 후');
+    console.log('After onSelect call');
   };
 
   const handleCreateNew = () => {
@@ -87,7 +87,7 @@ const ProfileSearch: React.FC<ProfileSearchProps> = ({
   };
 
   const handleInputClick = () => {
-    // 클릭 시 아무것도 안 함
+    // Do nothing on click
   };
 
   return (
@@ -127,7 +127,7 @@ const ProfileSearch: React.FC<ProfileSearchProps> = ({
               </div>
             ))}
             
-            {/* 새 프로필 생성 옵션 */}
+            {/* Create new profile option */}
             <div
               onClick={handleCreateNew}
               className="px-4 py-2 hover:bg-blue-50 cursor-pointer border-t border-gray-200 bg-blue-25"
@@ -136,13 +136,13 @@ const ProfileSearch: React.FC<ProfileSearchProps> = ({
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-                <span className="font-medium">"{searchTerm}" 새 프로필 생성</span>
+                <span className="font-medium">Create new profile "{searchTerm}"</span>
               </div>
             </div>
           </div>
         )}
 
-        {/* 검색 결과가 없을 때 새 프로필 생성 옵션 */}
+        {/* Create new profile option when no search results */}
         {searchTerm.trim() && searchResults.length === 0 && !isLoading && (
           <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
             <div
@@ -153,9 +153,9 @@ const ProfileSearch: React.FC<ProfileSearchProps> = ({
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-                <span className="font-medium">"{searchTerm}" 새 프로필 생성</span>
+                <span className="font-medium">Create new profile "{searchTerm}"</span>
               </div>
-              <p className="text-sm text-gray-500 mt-1">검색 결과가 없습니다. 새 프로필을 생성하세요.</p>
+              <p className="text-sm text-gray-500 mt-1">No search results found. Create a new profile.</p>
             </div>
           </div>
         )}
