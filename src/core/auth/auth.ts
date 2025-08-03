@@ -1,17 +1,18 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+// API URL 설정
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-// Create axios instance
-const apiClient = axios.create({
+// Axios 인스턴스 생성
+const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Request interceptor - automatically add token
-apiClient.interceptors.request.use(
+// 요청 인터셉터 - 토큰 추가
+api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('access_token');
     if (token) {
@@ -24,34 +25,35 @@ apiClient.interceptors.request.use(
   }
 );
 
-// Response interceptor - auto refresh token when expired
-apiClient.interceptors.response.use(
-  (response) => response,
+// 응답 인터셉터 - 토큰 만료 처리
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
   async (error) => {
     const originalRequest = error.config;
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
-      try {
-        const refreshToken = localStorage.getItem('refresh_token');
-        if (refreshToken) {
-          const response = await apiClient.post('/auth/refresh', {
+      const refreshToken = localStorage.getItem('refresh_token');
+      if (refreshToken) {
+        try {
+          const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
             refresh_token: refreshToken,
           });
-          
+
           const { access_token } = response.data;
           localStorage.setItem('access_token', access_token);
-          
           originalRequest.headers.Authorization = `Bearer ${access_token}`;
-          return apiClient(originalRequest);
+
+          return api(originalRequest);
+        } catch (refreshError) {
+          localStorage.removeItem('access_token');
+          localStorage.removeItem('refresh_token');
+          window.location.href = '/login';
+          return Promise.reject(refreshError);
         }
-      } catch (refreshError) {
-        // Logout if refresh token is also expired
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        localStorage.removeItem('user');
-        window.location.href = '/login';
       }
     }
 
@@ -76,7 +78,7 @@ export interface User {
 export const authService = {
   // Google login
   async googleLogin(idToken: string): Promise<GoogleLoginResponse> {
-    const response = await apiClient.post('/auth/google-login', {
+    const response = await api.post('/auth/google-login', {
       id_token: idToken,
     });
     return response.data;
@@ -121,4 +123,4 @@ export const authService = {
   },
 };
 
-export default apiClient; 
+export default api; 

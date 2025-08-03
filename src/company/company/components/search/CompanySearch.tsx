@@ -49,10 +49,10 @@ const CompanySearch: React.FC<CompanySearchProps> = ({
     }
   }, [searchTerm, selectedType]);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSearch(searchTerm, selectedType || undefined);
-  };
+  // const handleSearch = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   onSearch(searchTerm, selectedType || undefined);
+  // };
 
   const handleSearchClick = () => {
     onSearch(searchTerm, selectedType || undefined);

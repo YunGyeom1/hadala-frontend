@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { 
   inventorySnapshotService,
   formatDate,
-  generateDateRange,
+  // generateDateRange,
   convertToInventorySnapshotResponse,
   aggregateItemsByCenter
 } from '../services/inventorySnapshotService';

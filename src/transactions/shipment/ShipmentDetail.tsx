@@ -1,8 +1,11 @@
-import React from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { ShipmentResponse } from './types';
-import { ProductQuality, ShipmentStatus, qualityToString } from '../common/types';
+
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
+// import { ProductQuality, ShipmentStatus, qualityToString } from '../common/types';
+import { ShipmentStatus, qualityToString } from '../common/types';
+import { ShipmentResponse } from './types';
+import { ContractResponse } from '../contract/types';
 import { shipmentService } from './services/shipmentService';
 import { useQuery } from '@tanstack/react-query';
 
@@ -38,11 +41,11 @@ const ShipmentDetail: React.FC<ShipmentDetailProps> = ({ shipment: propShipment 
     enabled: !!id && !propShipment,
   });
 
-  const shipment = propShipment || apiShipment;
-  const [status, setStatus] = React.useState<ShipmentStatus | string>(shipment?.shipment_status || '');
-  const [saving, setSaving] = React.useState(false);
+  const [shipment, setShipment] = useState<ShipmentResponse | null>(propShipment || apiShipment || null);
+  const [status, setStatus] = useState<ShipmentStatus | string>(shipment?.shipment_status || '');
+  const [saving, setSaving] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (shipment) {
       setStatus(shipment.shipment_status);
     }

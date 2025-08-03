@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { contractService } from './services/contractService';
-import { ContractResponse } from './types';
+// import { ContractResponse } from './types';
 import { ContractStatus, PaymentStatus } from '@/transactions/common/types';
 import { format } from 'date-fns';
 import { FiChevronDown, FiChevronRight } from 'react-icons/fi';

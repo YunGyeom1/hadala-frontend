@@ -82,9 +82,9 @@ const ShipmentForm = () => {
   };
 
   // Calculate total price function
-  const calculateTotalPrice = (items: ShipmentItem[]): number => {
-    return items.reduce((total, item) => total + (item.total_price || 0), 0);
-  };
+  // const calculateTotalPrice = (items: ShipmentItem[]): number => {
+  //   return items.reduce((total, item) => total + (item.price * item.quantity), 0);
+  // };
 
   // --- Data Loading ---
 
@@ -189,55 +189,55 @@ const ShipmentForm = () => {
     }
   };
 
-  const handleContractChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const contractId = e.target.value;
-    if (!contractId) {
-      setFormData(defaultForm);
-      setSelectedSupplierCompany(null);
-      setSelectedReceiverCompany(null);
-      setSelectedDepartureCenter(null);
-      setSelectedArrivalCenter(null);
-      setSelectedSupplierPerson(null);
-      setSelectedReceiverPerson(null);
-      return;
-    }
+  // const handleContractChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   const contractId = e.target.value;
+  //   if (!contractId) {
+  //     setFormData(defaultForm);
+  //     setSelectedSupplierCompany(null);
+  //     setSelectedReceiverCompany(null);
+  //     setSelectedDepartureCenter(null);
+  //     setSelectedArrivalCenter(null);
+  //     setSelectedSupplierPerson(null);
+  //     setSelectedReceiverPerson(null);
+  //     return;
+  //   }
 
-    try {
-      setLoading(true);
-      const contract = await contractService.getContract(contractId);
-      
-      setSelectedSupplierCompany(contract.supplier_company || null);
-      setSelectedReceiverCompany(contract.receiver_company || null);
-      setSelectedDepartureCenter(contract.departure_center || null);
-      setSelectedArrivalCenter(contract.arrival_center || null);
-      setSelectedSupplierPerson(contract.supplier_contractor || null);
-      setSelectedReceiverPerson(contract.receiver_contractor || null);
+  //   try {
+  //     setLoading(true);
+  //     const contract = await contractService.getContract(contractId);
+  //     
+  //     setSelectedSupplierCompany(contract.supplier_company || null);
+  //     setSelectedReceiverCompany(contract.receiver_company || null);
+  //     setSelectedDepartureCenter(contract.departure_center || null);
+  //     setSelectedArrivalCenter(contract.arrival_center || null);
+  //     setSelectedSupplierPerson(contract.supplier_contractor || null);
+  //     setSelectedReceiverPerson(contract.receiver_contractor || null);
 
-      setFormData(prev => ({
-        ...prev,
-        title: prev.title || `${contract.title} - Shipment`,
-        contract_id: contract.id,
-        supplier_person_id: contract.supplier_contractor_id || '',
-        supplier_company_id: contract.supplier_company_id || '',
-        receiver_person_id: contract.receiver_contractor_id || '',
-        receiver_company_id: contract.receiver_company_id || '',
-        departure_center_id: contract.departure_center_id || '',
-        arrival_center_id: contract.arrival_center_id || '',
-        items: contract.items.length > 0 ? contract.items.map(item => ({
-          product_name: item.product_name,
-          quality: item.quality as ProductQuality,
-          quantity: item.quantity,
-          unit_price: item.unit_price,
-          total_price: item.total_price,
-        })) : [{ ...defaultItem }],
-      }));
-    } catch (error) {
-      console.error("Failed to load contract information:", error);
-      alert("Failed to load selected contract information.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     setFormData(prev => ({
+  //       ...prev,
+  //       title: prev.title || `${contract.title} - Shipment`,
+  //       contract_id: contract.id,
+  //       supplier_person_id: contract.supplier_contractor_id || '',
+  //       supplier_company_id: contract.supplier_company_id || '',
+  //       receiver_person_id: contract.receiver_contractor_id || '',
+  //       receiver_company_id: contract.receiver_company_id || '',
+  //       departure_center_id: contract.departure_center_id || '',
+  //       arrival_center_id: contract.arrival_center_id || '',
+  //       items: contract.items.length > 0 ? contract.items.map(item => ({
+  //         product_name: item.product_name,
+  //         quality: item.quality as ProductQuality,
+  //         quantity: item.quantity,
+  //         unit_price: item.unit_price,
+  //         total_price: item.total_price,
+  //       })) : [{ ...defaultItem }],
+  //     }));
+  //   } catch (error) {
+  //     console.error("Failed to load contract information:", error);
+  //     alert("Failed to load selected contract information.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   
   const handleItemChange = (index: number, field: keyof ShipmentItem, value: string | number) => {
     setFormData(prev => {

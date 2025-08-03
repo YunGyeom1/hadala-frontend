@@ -19,7 +19,7 @@ interface ShipmentBasicInfoProps {
 const ShipmentBasicInfo: React.FC<ShipmentBasicInfoProps> = ({
   title,
   shipment_datetime,
-  contractId,
+  // contractId,
   selectedContract,
   isEditMode,
   createNewContract,

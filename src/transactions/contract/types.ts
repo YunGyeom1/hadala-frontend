@@ -1,4 +1,4 @@
-import { ContractStatus, PaymentStatus, ProductQuality } from '../common/types';
+import { ContractStatus, PaymentStatus } from '../common/types';
 import { Profile } from '@/profile/types';
 import { Company } from '@/company/company/types';
 import { Center } from '@/company/center/types';
@@ -17,7 +17,7 @@ export interface ContractItemCreate extends ContractItemBase {
 
 export interface ContractItemResponse extends ContractItemBase {
   id: string;
-  total_price: number;
+  contract_id: string;
   created_at: string;
   updated_at: string;
 }
