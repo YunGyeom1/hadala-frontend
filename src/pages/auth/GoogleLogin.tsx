@@ -52,8 +52,10 @@ const GoogleLogin: React.FC<GoogleLoginProps> = ({ onSuccess, onError }) => {
         window.google.accounts.id.initialize({
           client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
           callback: handleCredentialResponse,
+          context: 'signin',
           auto_select: false,
-          cancel_on_tap_outside: true,
+          ux_mode: 'popup',
+          itp_support: true,
         });
       }
     };
