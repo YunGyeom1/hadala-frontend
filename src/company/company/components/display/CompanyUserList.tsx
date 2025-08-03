@@ -169,13 +169,7 @@ const CompanyUserList: React.FC<CompanyUserListProps> = ({
     }
   };
 
-  const getStatusColor = (isActive: boolean) => {
-    return isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
-  };
 
-  const getStatusLabel = (isActive: boolean) => {
-    return isActive ? 'Active' : 'Inactive';
-  };
 
   if (loading) {
     return (
