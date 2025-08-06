@@ -1,12 +1,12 @@
 import axios from 'axios';
 
 // API URL 설정
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 // 디버그용 로그
 console.log('=== API Configuration ===');
-console.log('VITE_API_BASE_URL:', import.meta.env.VITE_API_BASE_URL);
-console.log('API_BASE_URL:', API_BASE_URL)  ;
+console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
+console.log('API_BASE_URL:', API_BASE_URL);
 console.log('Current origin:', window.location.origin);
 
 // Axios 인스턴스 생성
@@ -15,6 +15,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 30000, // 30초 타임아웃
 });
 
 // 요청 인터셉터 - 토큰 추가
@@ -82,12 +83,47 @@ export interface User {
 }
 
 export const authService = {
+  // Health check for backend
+  async healthCheck(): Promise<boolean> {
+    try {
+      console.log('=== Backend Health Check ===');
+      console.log('Checking backend at:', API_BASE_URL);
+      
+      const response = await axios.get(`${API_BASE_URL}/docs`, {
+        timeout: 10000,
+      });
+      console.log('Backend is reachable:', response.status);
+      return true;
+    } catch (error: any) {
+      console.error('Backend health check failed:', error);
+      console.error('Backend URL:', API_BASE_URL);
+      return false;
+    }
+  },
+
   // Google login
   async googleLogin(idToken: string): Promise<GoogleLoginResponse> {
-    const response = await api.post('/auth/google-login', {
-      id_token: idToken,
-    });
-    return response.data;
+    console.log('=== Google Login Request ===');
+    console.log('Request URL:', `${API_BASE_URL}/auth/google-login`);
+    console.log('Request payload:', { id_token: idToken.substring(0, 50) + '...' });
+    
+    try {
+      const response = await api.post('/auth/google-login', {
+        id_token: idToken,
+      });
+      console.log('Google login response:', response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error('Google login request failed:', error);
+      console.error('Error details:', {
+        message: error.message,
+        code: error.code,
+        response: error.response?.data,
+        status: error.response?.status,
+        config: error.config
+      });
+      throw error;
+    }
   },
 
   // Save tokens

@@ -131,6 +131,13 @@ const Login: React.FC = () => {
       console.log('Credential length:', response.credential?.length);
       console.log('Google ID Token received');
       
+      // Check backend connectivity first
+      console.log('Checking backend connectivity...');
+      const isBackendHealthy = await authService.healthCheck();
+      if (!isBackendHealthy) {
+        throw new Error('백엔드 서버에 연결할 수 없습니다. 서버 상태를 확인해주세요.');
+      }
+      
       // Send ID token to backend
       console.log('Sending token to backend...');
       const loginResponse = await authService.googleLogin(response.credential);
