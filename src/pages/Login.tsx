@@ -142,12 +142,10 @@ const Login: React.FC = () => {
         } else {
           console.error('Google script not loaded properly after retries');
           console.log('Creating fallback Google login button...');
-          createFallbackGoogleButton();
         }
       } catch (error) {
         console.error('Google Auth initialization failed:', error);
         console.log('Creating fallback Google login button...');
-        createFallbackGoogleButton();
       }
     };
 
