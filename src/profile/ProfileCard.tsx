@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Profile, ProfileType } from './types';
 import { ProfileCreateRequest } from './profile';
-import CompanySearch from '@/company/company/components/search/CompanySearch';
-import { Company } from '@/company/company/types';
 
 interface ProfileCardProps {
   profile?: Profile;
@@ -118,13 +116,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
     }
   };
 
-  const handleCompanySelect = (company: Company) => {
-    setEditedProfile({
-      ...editedProfile,
-      company_id: company.id,
-      company_name: company.name,
-    });
-  };
+
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
@@ -290,35 +282,16 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         
         {/* Company selection section */}
         <div>
-          <p className="text-gray-600">Company Selection</p>
-          {isEditing ? (
-            <div className="mt-2">
-              <CompanySearch
-                onSearch={() => {}} // Search is handled inside CompanySearch
-                onSelect={handleCompanySelect}
-                placeholder="Search and select a company..."
-                className="w-full"
-              />
-              {(editedProfile as any).company_name && (
-                <div className="mt-2 p-2 bg-green-50 border border-green-200 rounded-md">
-                  <p className="text-sm text-green-800">
-                    Selected company: <strong>{(editedProfile as any).company_name}</strong>
-                  </p>
-                </div>
-              )}
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <p className="text-gray-600">Company Name</p>
+              <p className="font-medium">{profile?.company_name || '-'}</p>
             </div>
-          ) : (
-            <div className="grid grid-cols-2 gap-6">
-              <div>
-                <p className="text-gray-600">Company Name</p>
-                <p className="font-medium">{profile?.company_name || '-'}</p>
-              </div>
-              <div>
-                <p className="text-gray-600">Role</p>
-                <p className="font-medium">{profile?.role || '-'}</p>
-              </div>
+            <div>
+              <p className="text-gray-600">Role</p>
+              <p className="font-medium">{profile?.role || '-'}</p>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

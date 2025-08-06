@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Company, CompanyType, CompanyCreateRequest } from '../../types';
 import { getCompanyTypeLabel } from '../../utils/companyUtils';
+import { useProfile } from '../../../../profile/ProfileContext';
+import { authService } from '../../../../core/auth/auth';
 
 interface CompanyCardProps {
   company?: Company;
@@ -17,12 +19,14 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
   onCreate,
   existingCompanies = []
 }) => {
+  const { currentProfile } = useProfile();
+  const user = authService.getUser();
   const [isEditing, setIsEditing] = useState(false);
   const [editedCompany, setEditedCompany] = useState<Company | CompanyCreateRequest>(
     company || {
       type,
       name: '',
-      owner_name: '',
+      owner_name: user?.name || currentProfile?.name || '',
       wholesale_company_detail_id: ''
     }
   );
@@ -64,7 +68,7 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
       setEditedCompany({
         type,
         name: '',
-        owner_name: '',
+        owner_name: user?.name || currentProfile?.name || '',
         wholesale_company_detail_id: ''
       });
     }
@@ -129,7 +133,7 @@ const CompanyCard: React.FC<CompanyCardProps> = ({
         </div>
         <div>
           <p className="text-gray-600">Owner Name</p>
-          <p className="font-medium">{company?.owner_name || '-'}</p>
+          <p className="font-medium">{user?.name || currentProfile?.name || company?.owner_name || '-'}</p>
         </div>
         <div>
           <p className="text-gray-600">Company Type</p>
