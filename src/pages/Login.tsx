@@ -57,12 +57,17 @@ const Login: React.FC = () => {
         script.src = 'https://accounts.google.com/gsi/client';
         script.async = true;
         script.defer = true;
+        script.crossOrigin = 'anonymous';
         script.onload = () => {
           console.log('Google script loaded successfully');
           resolve();
         };
         script.onerror = (error) => {
           console.error('Failed to load Google script:', error);
+          console.error('Script error details:', {
+            src: script.src,
+            error: error
+          });
         };
         document.head.appendChild(script);
         console.log('Google script element appended to head');
@@ -71,6 +76,8 @@ const Login: React.FC = () => {
 
     const initializeGoogleAuth = async () => {
       console.log('=== Google Auth Initialization ===');
+      console.log('Environment:', import.meta.env.MODE);
+      console.log('Base URL:', import.meta.env.BASE_URL);
       console.log('Loading Google script...');
       await loadGoogleScript();
       
@@ -78,6 +85,9 @@ const Login: React.FC = () => {
         console.log('Google script loaded successfully');
         console.log('Client ID:', import.meta.env.VITE_GOOGLE_CLIENT_ID);
         console.log('Hostname:', window.location.hostname);
+        console.log('Origin:', window.location.origin);
+        console.log('Protocol:', window.location.protocol);
+        console.log('User Agent:', navigator.userAgent);
         
         const config = {
           client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
@@ -85,15 +95,24 @@ const Login: React.FC = () => {
           auto_select: false,
           cancel_on_tap_outside: true,
           context: 'signin',
-          ux_mode: 'redirect',
+          ux_mode: 'popup',
           itp_support: true,
           prompt_parent_id: 'google-login-button',
           state_cookie_domain: window.location.hostname,
+          hosted_domain: window.location.hostname,
         };
         
         console.log('Google OAuth config:', config);
-        window.google.accounts.id.initialize(config);
-        console.log('Google OAuth initialized');
+        try {
+          window.google.accounts.id.initialize(config);
+          console.log('Google OAuth initialized successfully');
+        } catch (error: any) {
+          console.error('Failed to initialize Google OAuth:', error);
+          console.error('Error details:', {
+            message: error?.message,
+            stack: error?.stack
+          });
+        }
       } else {
         console.error('Google script not loaded properly');
       }
@@ -207,8 +226,16 @@ const Login: React.FC = () => {
         };
         
         console.log('Button config:', buttonConfig);
-        window.google.accounts.id.renderButton(buttonElement, buttonConfig);
-        console.log('Google button rendered successfully');
+        try {
+          window.google.accounts.id.renderButton(buttonElement, buttonConfig);
+          console.log('Google button rendered successfully');
+        } catch (error: any) {
+          console.error('Failed to render Google button:', error);
+          console.error('Button render error details:', {
+            message: error?.message,
+            stack: error?.stack
+          });
+        }
       } else {
         console.error('Cannot render Google button:', {
           buttonElement: !!buttonElement,
