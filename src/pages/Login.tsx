@@ -45,35 +45,57 @@ const Login: React.FC = () => {
   useEffect(() => {
     const loadGoogleScript = () => {
       return new Promise<void>((resolve) => {
+        console.log('=== Loading Google Script ===');
         if (window.google && window.google.accounts) {
+          console.log('Google script already loaded');
           resolve();
           return;
         }
 
+        console.log('Creating Google script element...');
         const script = document.createElement('script');
         script.src = 'https://accounts.google.com/gsi/client';
         script.async = true;
         script.defer = true;
-        script.onload = () => resolve();
+        script.onload = () => {
+          console.log('Google script loaded successfully');
+          resolve();
+        };
+        script.onerror = (error) => {
+          console.error('Failed to load Google script:', error);
+        };
         document.head.appendChild(script);
+        console.log('Google script element appended to head');
       });
     };
 
     const initializeGoogleAuth = async () => {
+      console.log('=== Google Auth Initialization ===');
+      console.log('Loading Google script...');
       await loadGoogleScript();
       
       if (window.google && window.google.accounts) {
-        window.google.accounts.id.initialize({
+        console.log('Google script loaded successfully');
+        console.log('Client ID:', import.meta.env.VITE_GOOGLE_CLIENT_ID);
+        console.log('Hostname:', window.location.hostname);
+        
+        const config = {
           client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
           callback: handleCredentialResponse,
           auto_select: false,
           cancel_on_tap_outside: true,
           context: 'signin',
-          ux_mode: 'popup',
+          ux_mode: 'redirect',
           itp_support: true,
           prompt_parent_id: 'google-login-button',
           state_cookie_domain: window.location.hostname,
-        });
+        };
+        
+        console.log('Google OAuth config:', config);
+        window.google.accounts.id.initialize(config);
+        console.log('Google OAuth initialized');
+      } else {
+        console.error('Google script not loaded properly');
       }
     };
 
@@ -85,16 +107,25 @@ const Login: React.FC = () => {
     try {
       setIsLoading(true);
       setError('');
+      console.log('=== Google Login Debug ===');
+      console.log('Response received:', response);
+      console.log('Credential length:', response.credential?.length);
       console.log('Google ID Token received');
       
       // Send ID token to backend
+      console.log('Sending token to backend...');
       const loginResponse = await authService.googleLogin(response.credential);
+      console.log('Backend response:', loginResponse);
       
       // Save tokens
+      console.log('Saving tokens...');
       authService.saveTokens(loginResponse.access_token, loginResponse.refresh_token);
       
       // Decode and save user information
+      console.log('Decoding user info...');
       const userInfo = decodeJwtResponse(response.credential);
+      console.log('Decoded user info:', userInfo);
+      
       const user: User = {
         id: userInfo.sub,
         email: userInfo.email,
@@ -102,28 +133,39 @@ const Login: React.FC = () => {
         picture: userInfo.picture,
       };
       
+      console.log('Created user object:', user);
       authService.saveUser(user);
       
       // Get profile information
+      console.log('Refreshing profiles...');
       await refreshProfiles();
       
       console.log('Login successful:', user);
       
       // If profile exists, navigate to first profile's dashboard, otherwise to profile page
+      console.log('Getting profiles for navigation...');
       const profiles = await profileService.getMyProfiles();
+      console.log('Available profiles:', profiles);
+      
       if (profiles.length > 0) {
         const firstProfile = profiles[0];
+        console.log('Navigating to profile dashboard:', firstProfile);
         navigate(`/${firstProfile.type}/dashboard`);
       } else {
+        console.log('No profiles found, navigating to profile page');
         navigate('/profile');
       }
       
     } catch (error: any) {
-      console.error('Google login error:', error);
+      console.error('=== Google Login Error ===');
+      console.error('Error details:', error);
+      console.error('Error response:', error.response);
+      console.error('Error message:', error.message);
       const errorMessage = error.response?.data?.detail || 'An error occurred during login.';
       setError(errorMessage);
     } finally {
       setIsLoading(false);
+      console.log('=== Google Login Process Complete ===');
     }
   }, [navigate, refreshProfiles]);
 
@@ -143,9 +185,14 @@ const Login: React.FC = () => {
   // Render Google login button
   useEffect(() => {
     const renderGoogleButton = () => {
+      console.log('=== Rendering Google Button ===');
       const buttonElement = document.getElementById('google-login-button');
+      console.log('Button element:', buttonElement);
+      console.log('Google object:', window.google);
+      
       if (buttonElement && window.google && window.google.accounts) {
-        window.google.accounts.id.renderButton(buttonElement, {
+        console.log('Rendering Google button...');
+        const buttonConfig = {
           type: 'standard',
           theme: 'outline',
           size: 'large',
@@ -154,18 +201,31 @@ const Login: React.FC = () => {
           logo_alignment: 'left',
           width: 300,
           click_listener: () => {
-            // Prevent default behavior and handle manually if needed
+            console.log('Google button clicked');
             return true;
           },
+        };
+        
+        console.log('Button config:', buttonConfig);
+        window.google.accounts.id.renderButton(buttonElement, buttonConfig);
+        console.log('Google button rendered successfully');
+      } else {
+        console.error('Cannot render Google button:', {
+          buttonElement: !!buttonElement,
+          google: !!window.google,
+          accounts: !!(window.google && window.google.accounts)
         });
       }
     };
 
     // Check Google script loading and render button
     const checkAndRender = () => {
+      console.log('Checking Google script availability...');
       if (window.google && window.google.accounts) {
+        console.log('Google script available, rendering button');
         renderGoogleButton();
       } else {
+        console.log('Google script not ready, retrying...');
         setTimeout(checkAndRender, 100);
       }
     };
