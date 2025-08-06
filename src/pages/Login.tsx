@@ -68,6 +68,11 @@ const Login: React.FC = () => {
           callback: handleCredentialResponse,
           auto_select: false,
           cancel_on_tap_outside: true,
+          context: 'signin',
+          ux_mode: 'popup',
+          itp_support: true,
+          prompt_parent_id: 'google-login-button',
+          state_cookie_domain: window.location.hostname,
         });
       }
     };
@@ -148,6 +153,10 @@ const Login: React.FC = () => {
           shape: 'rectangular',
           logo_alignment: 'left',
           width: 300,
+          click_listener: () => {
+            // Prevent default behavior and handle manually if needed
+            return true;
+          },
         });
       }
     };
